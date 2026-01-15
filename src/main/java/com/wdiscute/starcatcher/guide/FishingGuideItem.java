@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -21,11 +21,11 @@ public class FishingGuideItem extends Item
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand)
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand)
     {
-        if(level.isClientSide) openScreen();
+        if(level.isClientSide()) openScreen();
         level.playSound(null, player.blockPosition(), SoundEvents.BOOK_PAGE_TURN, SoundSource.PLAYERS);
-        return InteractionResultHolder.success(player.getItemInHand(usedHand));
+        return InteractionResult.SUCCESS;
     }
 
     @OnlyIn(Dist.CLIENT)

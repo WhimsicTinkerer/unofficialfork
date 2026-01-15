@@ -39,7 +39,7 @@ public class StandMenu extends AbstractContainerMenu
                 @Override
                 public boolean mayPickup(Player playerIn)
                 {
-                    if (level.isClientSide) return false;
+                    if (level.isClientSide()) return false;
 
                     sbe.entryCost.setStackInSlot(slotid, ItemStack.EMPTY);
                     sbe.tournament.settings.entryCost = SingleStackContainer.fromItemStackHandler(sbe.entryCost);
@@ -49,7 +49,7 @@ public class StandMenu extends AbstractContainerMenu
                 @Override
                 public boolean mayPlace(ItemStack stackInHand)
                 {
-                    if (level.isClientSide) return false;
+                    if (level.isClientSide()) return false;
 
                     sbe.entryCost.setStackInSlot(slotid, stackInHand.copy());
                     sbe.tournament.settings.entryCost = SingleStackContainer.fromItemStackHandler(sbe.entryCost);
@@ -67,7 +67,7 @@ public class StandMenu extends AbstractContainerMenu
     @Override
     public boolean clickMenuButton(Player player, int id)
     {
-        if (level.isClientSide) return false;
+        if (level.isClientSide()) return false;
 
         //six seven
         //¯\_(ツ)¯\_

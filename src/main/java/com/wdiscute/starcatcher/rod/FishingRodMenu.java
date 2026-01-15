@@ -1,6 +1,5 @@
 package com.wdiscute.starcatcher.rod;
 
-import com.mojang.datafixers.util.Pair;
 import com.wdiscute.starcatcher.Starcatcher;
 import com.wdiscute.starcatcher.StarcatcherTags;
 import com.wdiscute.starcatcher.io.ModDataAttachments;
@@ -9,12 +8,11 @@ import com.wdiscute.starcatcher.io.SingleStackContainer;
 import com.wdiscute.starcatcher.registry.ModItems;
 import com.wdiscute.starcatcher.registry.ModMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.ItemStackHandler;
@@ -23,9 +21,9 @@ import org.jetbrains.annotations.Nullable;
 
 public class FishingRodMenu extends AbstractContainerMenu
 {
-    private static final ResourceLocation BACKGROUND_BOBBER = Starcatcher.rl("item/background/bobber");
-    private static final ResourceLocation BACKGROUND_BAIT = Starcatcher.rl("item/background/bait");
-    private static final ResourceLocation BACKGROUND_HOOK = Starcatcher.rl("item/background/hook");
+    private static final Identifier BACKGROUND_BOBBER = Starcatcher.rl("item/background/bobber");
+    private static final Identifier BACKGROUND_BAIT = Starcatcher.rl("item/background/bait");
+    private static final Identifier BACKGROUND_HOOK = Starcatcher.rl("item/background/hook");
 
     public final ItemStackHandler inventory = new ItemStackHandler(3)
     {
@@ -79,9 +77,9 @@ public class FishingRodMenu extends AbstractContainerMenu
             }
 
             @Override
-            public @Nullable Pair<ResourceLocation, ResourceLocation> getNoItemIcon()
+            public @Nullable Identifier getNoItemIcon()
             {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, BACKGROUND_BOBBER);
+                return BACKGROUND_BOBBER;
             }
         });
 
@@ -95,9 +93,9 @@ public class FishingRodMenu extends AbstractContainerMenu
             }
 
             @Override
-            public @Nullable Pair<ResourceLocation, ResourceLocation> getNoItemIcon()
+            public @Nullable Identifier getNoItemIcon()
             {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, BACKGROUND_BAIT);
+                return BACKGROUND_BAIT;
             }
         });
 
@@ -111,9 +109,9 @@ public class FishingRodMenu extends AbstractContainerMenu
             }
 
             @Override
-            public @Nullable Pair<ResourceLocation, ResourceLocation> getNoItemIcon()
+            public @Nullable Identifier getNoItemIcon()
             {
-                return Pair.of(InventoryMenu.BLOCK_ATLAS, BACKGROUND_HOOK);
+                return BACKGROUND_HOOK;
             }
         });
     }
@@ -147,7 +145,7 @@ public class FishingRodMenu extends AbstractContainerMenu
     {
         super.removed(player);
 
-        if (!player.level().isClientSide)
+        if (!player.level().isClientSide())
         {
             ModDataComponents.set(is, ModDataComponents.BOBBER, new SingleStackContainer(inventory.getStackInSlot(0)));
             ModDataComponents.set(is, ModDataComponents.BAIT, new SingleStackContainer(inventory.getStackInSlot(1)));

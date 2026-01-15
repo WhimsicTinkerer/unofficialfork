@@ -1,33 +1,24 @@
 package com.wdiscute.starcatcher.bob;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.minecraft.client.model.HierarchicalModel;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 
-public class FishingBobModel<T extends FishingBobEntity> extends HierarchicalModel<T>
+// In 1.21.11, Model.renderToBuffer() and root() are final - no overriding needed
+public class FishingBobModel extends EntityModel<FishingBobRenderState>
 {
-    private final ModelPart root;
+    // Store reference to the inner "root" child part for animations
+    private final ModelPart rootPart;
 
     public FishingBobModel(ModelPart root) {
-        this.root = root.getChild("root");
+        super(root);
+        // The model has a child called "root" that we use for animations
+        this.rootPart = root.getChild("root");
     }
 
     @Override
-    public void setupAnim(FishingBobEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch)
+    public void setupAnim(FishingBobRenderState renderState)
     {
-        this.root().getAllParts().forEach(ModelPart::resetPose);
-    }
-
-    @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color)
-    {
-        root.render(poseStack, vertexConsumer, packedLight, packedOverlay);
-    }
-
-    @Override
-    public ModelPart root()
-    {
-        return root;
+        // Reset pose is handled by parent, but we can do custom animation here
+        this.rootPart.getAllParts().forEach(ModelPart::resetPose);
     }
 }

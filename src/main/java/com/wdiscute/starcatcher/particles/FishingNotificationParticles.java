@@ -4,15 +4,16 @@ package com.wdiscute.starcatcher.particles;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
 
-public class FishingNotificationParticles extends TextureSheetParticle
+public class FishingNotificationParticles extends SingleQuadParticle
 {
     private final SpriteSet sprites;
 
     protected FishingNotificationParticles(ClientLevel level, double x, double y, double z, SpriteSet spriteSet)
     {
-        super(level, x, y, z);
+        super(level, x, y, z, spriteSet.get(0, 1));
 
         this.xd = 0f;
         this.yd = 0f;
@@ -31,7 +32,6 @@ public class FishingNotificationParticles extends TextureSheetParticle
     {
         this.setSpriteFromAge(this.sprites);
 
-
         if(age % 20 > 10)
         {
             this.yd = 0.04f;
@@ -49,9 +49,9 @@ public class FishingNotificationParticles extends TextureSheetParticle
     }
 
     @Override
-    public ParticleRenderType getRenderType()
+    protected SingleQuadParticle.Layer getLayer()
     {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return SingleQuadParticle.Layer.TRANSLUCENT;
     }
 
 
@@ -66,7 +66,7 @@ public class FishingNotificationParticles extends TextureSheetParticle
 
         @Nullable
         @Override
-        public Particle createParticle(SimpleParticleType simpleParticleType, ClientLevel clientLevel, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(SimpleParticleType simpleParticleType, ClientLevel clientLevel, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource randomSource)
         {
             return new FishingNotificationParticles(clientLevel, x, y, z, this.spriteSet);
         }

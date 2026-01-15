@@ -3,7 +3,7 @@ package com.wdiscute.starcatcher.secretnotes;
 import com.wdiscute.starcatcher.registry.ModItems;
 import com.wdiscute.starcatcher.io.ModDataComponents;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +36,7 @@ public class NoteContainer extends Item
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand)
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand)
     {
         //give note
         ItemStack is = new ItemStack(ModItems.SECRET_NOTE.get());

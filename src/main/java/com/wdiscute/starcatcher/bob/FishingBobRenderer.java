@@ -3,35 +3,36 @@ package com.wdiscute.starcatcher.bob;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import com.wdiscute.starcatcher.StarcatcherTags;
-import com.wdiscute.starcatcher.registry.ModItems;
 import com.wdiscute.starcatcher.Starcatcher;
+import com.wdiscute.starcatcher.StarcatcherTags;
 import com.wdiscute.starcatcher.io.ModDataAttachments;
-import com.wdiscute.starcatcher.io.ModDataComponents;
 import com.wdiscute.starcatcher.registry.custom.tackleskin.AbstractTackleSkin;
-import net.dries007.tfc.client.overworld.Star;
+import com.wdiscute.starcatcher.registry.custom.tackleskin.BaseTackleSkin;
+import com.wdiscute.starcatcher.registry.custom.tackleskin.ITackleSkin;
+import com.wdiscute.starcatcher.registry.custom.tackleskin.TackleSkinRenderHelper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
+import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
-import static java.lang.Float.NaN;
-
-public class FishingBobRenderer extends EntityRenderer<FishingBobEntity>
+// In 1.21.11, EntityRenderer uses submit() instead of render()
+public class FishingBobRenderer extends EntityRenderer<FishingBobEntity, FishingBobRenderState>
 {
     final EntityRendererProvider.Context context;
+    private final Map<Identifier, AbstractTackleSkin> tackleSkinCache = new HashMap<>();
 
     public FishingBobRenderer(EntityRendererProvider.Context context)
     {
@@ -39,64 +40,107 @@ public class FishingBobRenderer extends EntityRenderer<FishingBobEntity>
         this.context = context;
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(FishingBobEntity fishingBobEntity)
+    private AbstractTackleSkin getTackleSkin(Identifier rl)
     {
-        return Starcatcher.rl("textures/entity/fishing/bob.png");
+        if (rl == null)
+        {
+            return tackleSkinCache.computeIfAbsent(Starcatcher.rl("base"), k -> new BaseTackleSkin());
+        }
+        return tackleSkinCache.computeIfAbsent(rl, key -> {
+            if (Minecraft.getInstance().level != null)
+            {
+                Optional<Supplier<ITackleSkin>> optional = Minecraft.getInstance().level
+                        .registryAccess()
+                        .lookupOrThrow(Starcatcher.TACKLE_SKIN)
+                        .getOptional(key);
+                if (optional.isPresent())
+                {
+                    // All ITackleSkin implementations extend AbstractTackleSkin
+                    return (AbstractTackleSkin) optional.get().get();
+                }
+            }
+            return new BaseTackleSkin();
+        });
     }
 
     @Override
-    public void render(FishingBobEntity fishingBobEntity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight)
+    public FishingBobRenderState createRenderState()
+    {
+        return new FishingBobRenderState();
+    }
+
+    @Override
+    public void extractRenderState(FishingBobEntity entity, FishingBobRenderState state, float partialTick)
+    {
+        super.extractRenderState(entity, state, partialTick);
+        state.entityYaw = Mth.rotLerp(partialTick, entity.yRotO, entity.getYRot());
+        state.owner = entity.getOwner() instanceof Player p ? p : null;
+        state.tackleSkinTexture = ModDataAttachments.get(entity, ModDataAttachments.TACKLE_SKIN);
+        state.lightCoords = this.getPackedLightCoords(entity, partialTick);
+
+        // Precompute line origin offset like vanilla does
+        if (state.owner != null)
+        {
+            Player player = state.owner;
+            float f = player.getAttackAnim(partialTick);
+            float f1 = Mth.sin(Mth.sqrt(f) * (float) Math.PI);
+            Vec3 vec3 = this.getPlayerHandPos(player, f1, partialTick);
+            Vec3 vec31 = entity.getPosition(partialTick).add(0.0, 0.25, 0.0);
+            state.lineOriginOffset = vec3.subtract(vec31);
+        }
+        else
+        {
+            state.lineOriginOffset = Vec3.ZERO;
+        }
+    }
+
+    @Override
+    public void submit(FishingBobRenderState state, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState)
     {
         poseStack.pushPose();
         poseStack.translate(0.0F, 1.5F, 0.0F);
         poseStack.scale(-1.0F, -1.0F, 1.0F);
 
         poseStack.mulPose(Axis.YP.rotationDegrees(180));
-        poseStack.mulPose(Axis.YP.rotationDegrees(entityYaw));
+        poseStack.mulPose(Axis.YP.rotationDegrees(state.entityYaw));
 
-        //render tackle based on tackle skin, defaults to BaseTackleSkin
-        ResourceLocation tackleRl = ModDataAttachments.get(fishingBobEntity, ModDataAttachments.TACKLE_SKIN);
-        Optional<Supplier<AbstractTackleSkin>> optional = fishingBobEntity.level().registryAccess().registryOrThrow(Starcatcher.TACKLE_SKIN).getOptional(tackleRl);
-        optional.ifPresent(supplier -> supplier.get().renderTackle(context, fishingBobEntity, entityYaw, partialTicks, poseStack, buffer, packedLight));
+        // Render the tackle skin model using the client-only render helper
+        AbstractTackleSkin tackleSkin = getTackleSkin(state.tackleSkinTexture);
+        TackleSkinRenderHelper.submitTackle(tackleSkin, context, state, poseStack, collector, state.lightCoords);
+
         poseStack.popPose();
 
-
-        //render fishing line from bobber to player
-        if (fishingBobEntity.getOwner() instanceof Player player)
+        // Render fishing line from bobber to player
+        if (state.owner != null)
         {
-            poseStack.pushPose();
-            float f = player.getAttackAnim(partialTicks);
-            float f1 = Mth.sin(Mth.sqrt(f) * (float) Math.PI);
-            Vec3 vec3 = this.getPlayerHandPos(player, f1, partialTicks);
-            Vec3 vec31 = fishingBobEntity.getPosition(partialTicks).add(0.0, 0.25, 0.0);
-            float f2 = (float) (vec3.x - vec31.x);
-            float f3 = (float) (vec3.y - vec31.y);
-            float f4 = (float) (vec3.z - vec31.z);
-            VertexConsumer vertexconsumer1 = buffer.getBuffer(RenderType.lineStrip());
-            PoseStack.Pose posestack$pose1 = poseStack.last();
+            float f = (float) state.lineOriginOffset.x;
+            float f1 = (float) state.lineOriginOffset.y;
+            float f2 = (float) state.lineOriginOffset.z;
+            float lineWidth = Minecraft.getInstance().getWindow().getAppropriateLineWidth();
 
-            for (int j = 0; j <= 16; j++)
-            {
-                stringVertex(0xff000000, f2, f3, f4, vertexconsumer1, posestack$pose1, fraction(j, 16), fraction(j + 1, 16));
-            }
-
-            //PLEASE FOR THE LOVE OF GOD DONT REMOVE THIS LINE JUST DONT PLEASE THIS TOOK TOO FUCKING LONG DONT YOU DARE TOUCH IT
-            vertexconsumer1.addVertex(NaN, NaN, NaN).setColor(0).setNormal(posestack$pose1, 0, 0, 0);
-
-            poseStack.popPose();
-            super.render(fishingBobEntity, entityYaw, partialTicks, poseStack, buffer, packedLight);
-
+            collector.submitCustomGeometry(poseStack, RenderTypes.lines(), (pose, consumer) -> {
+                for (int j = 0; j < 16; j++)
+                {
+                    float stringFraction = fraction(j, 16);
+                    float nextStringFraction = fraction(j + 1, 16);
+                    stringVertex(f, f1, f2, consumer, pose, stringFraction, nextStringFraction, lineWidth);
+                    stringVertex(f, f1, f2, consumer, pose, nextStringFraction, stringFraction, lineWidth);
+                }
+            });
         }
 
-
+        super.submit(state, poseStack, collector, cameraState);
     }
 
-    private static void stringVertex(int color, float x, float y, float z, VertexConsumer consumer, PoseStack.Pose pose, float stringFraction, float nextStringFraction
+    private static void stringVertex(
+        float x, float y, float z,
+        VertexConsumer consumer,
+        PoseStack.Pose pose,
+        float stringFraction,
+        float nextStringFraction,
+        float lineWidth
     )
     {
-        if (color == 0xffff9999) color = -16777216;
-
         float f = x * stringFraction;
         float f1 = y * (stringFraction * stringFraction + stringFraction) * 0.5F + 0.25F;
         float f2 = z * stringFraction;
@@ -107,7 +151,7 @@ public class FishingBobRenderer extends EntityRenderer<FishingBobEntity>
         f3 /= f6;
         f4 /= f6;
         f5 /= f6;
-        consumer.addVertex(pose, f, f1, f2).setColor(color).setNormal(pose, f3, f4, f5);
+        consumer.addVertex(pose, f, f1, f2).setColor(-16777216).setNormal(pose, f3, f4, f5).setLineWidth(lineWidth);
     }
 
     private static float fraction(int numerator, int denominator)
@@ -148,6 +192,4 @@ public class FishingBobRenderer extends EntityRenderer<FishingBobEntity>
             return player.getEyePosition(partialTick).add(-d1 * d2 - d0 * d3, (double) f2 - 0.45 * (double) f1, -d0 * d2 + d1 * d3);
         }
     }
-
-
 }

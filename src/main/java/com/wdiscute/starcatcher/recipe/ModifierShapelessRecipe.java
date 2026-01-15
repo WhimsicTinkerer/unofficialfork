@@ -1,19 +1,22 @@
 package com.wdiscute.starcatcher.recipe;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.wdiscute.starcatcher.registry.ModRecipes;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.ShapelessCraftingRecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -22,11 +25,12 @@ public class ModifierShapelessRecipe implements CraftingRecipe
     final String group;
     final CraftingBookCategory category;
     final ItemStack result;
-    final NonNullList<Ingredient> ingredients;
+    final List<Ingredient> ingredients;
     private final boolean isSimple;
-    private final List<ResourceLocation> modifiers;
+    private final List<Identifier> modifiers;
+    private @Nullable PlacementInfo placementInfo;
 
-    public ModifierShapelessRecipe(String group, CraftingBookCategory category, ItemStack result, NonNullList<Ingredient> ingredients, List<ResourceLocation> modifiers)
+    public ModifierShapelessRecipe(String group, CraftingBookCategory category, ItemStack result, List<Ingredient> ingredients, List<Identifier> modifiers)
     {
         this.group = group;
         this.category = category;
@@ -37,13 +41,13 @@ public class ModifierShapelessRecipe implements CraftingRecipe
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends CraftingRecipe> getSerializer()
     {
         return ModRecipes.MODIFIER_SHAPELESS_RECIPE.get();
     }
 
     @Override
-    public String getGroup()
+    public String group()
     {
         return this.group;
     }
@@ -55,15 +59,13 @@ public class ModifierShapelessRecipe implements CraftingRecipe
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries)
+    public PlacementInfo placementInfo()
     {
-        return this.result;
-    }
-
-    @Override
-    public NonNullList<Ingredient> getIngredients()
-    {
-        return this.ingredients;
+        if (this.placementInfo == null)
+        {
+            this.placementInfo = PlacementInfo.create(this.ingredients);
+        }
+        return this.placementInfo;
     }
 
     public boolean matches(CraftingInput input, Level level)
@@ -93,49 +95,42 @@ public class ModifierShapelessRecipe implements CraftingRecipe
         return this.result.copy();
     }
 
-    /**
-     * Used to determine if this recipe can fit in a grid of the given width/height
-     */
     @Override
-    public boolean canCraftInDimensions(int width, int height)
+    public List<RecipeDisplay> display()
     {
-        return width * height >= this.ingredients.size();
+        return List.of(
+            new ShapelessCraftingRecipeDisplay(
+                this.ingredients.stream().map(Ingredient::display).toList(),
+                new SlotDisplay.ItemStackSlotDisplay(this.result),
+                new SlotDisplay.ItemSlotDisplay(Items.CRAFTING_TABLE)
+            )
+        );
     }
 
     public static class Serializer implements RecipeSerializer<ModifierShapelessRecipe>
     {
         private static final MapCodec<ModifierShapelessRecipe> CODEC = RecordCodecBuilder.mapCodec(
-                p_340779_ -> p_340779_.group(
-                                Codec.STRING.optionalFieldOf("group", "").forGetter(p_301127_ -> p_301127_.group),
-                                CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(p_301133_ -> p_301133_.category),
-                                ItemStack.STRICT_CODEC.fieldOf("result").forGetter(p_301142_ -> p_301142_.result),
-                                Ingredient.CODEC_NONEMPTY
-                                        .listOf()
-                                        .fieldOf("ingredients")
-                                        .flatXmap(
-                                                p_301021_ ->
-                                                {
-                                                    Ingredient[] aingredient = p_301021_.toArray(Ingredient[]::new); // Neo skip the empty check and immediately create the array.
-                                                    if (aingredient.length == 0)
-                                                    {
-                                                        return DataResult.error(() -> "No ingredients for shapeless recipe");
-                                                    }
-                                                    else
-                                                    {
-                                                        return aingredient.length > 3 * 3
-                                                                ? DataResult.error(() -> "Too many ingredients for shapeless recipe. The maximum is: %s".formatted(3 * 3))
-                                                                : DataResult.success(NonNullList.of(Ingredient.EMPTY, aingredient));
-                                                    }
-                                                },
-                                                DataResult::success
-                                        )
-                                        .forGetter(p_300975_ -> p_300975_.ingredients),
-                                ResourceLocation.CODEC.listOf().fieldOf("modifiers").forGetter(p_311730_ -> p_311730_.modifiers)
+                instance -> instance.group(
+                                Codec.STRING.optionalFieldOf("group", "").forGetter(recipe -> recipe.group),
+                                CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(recipe -> recipe.category),
+                                ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+                                Codec.lazyInitialized(() -> Ingredient.CODEC.listOf(1, 9)).fieldOf("ingredients").forGetter(recipe -> recipe.ingredients),
+                                Identifier.CODEC.listOf().fieldOf("modifiers").forGetter(recipe -> recipe.modifiers)
                         )
-                        .apply(p_340779_, ModifierShapelessRecipe::new)
+                        .apply(instance, ModifierShapelessRecipe::new)
         );
-        public static final StreamCodec<RegistryFriendlyByteBuf, ModifierShapelessRecipe> STREAM_CODEC = StreamCodec.of(
-                ModifierShapelessRecipe.Serializer::toNetwork, ModifierShapelessRecipe.Serializer::fromNetwork
+        public static final StreamCodec<RegistryFriendlyByteBuf, ModifierShapelessRecipe> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.STRING_UTF8,
+                recipe -> recipe.group,
+                CraftingBookCategory.STREAM_CODEC,
+                recipe -> recipe.category,
+                ItemStack.STREAM_CODEC,
+                recipe -> recipe.result,
+                Ingredient.CONTENTS_STREAM_CODEC.apply(ByteBufCodecs.list()),
+                recipe -> recipe.ingredients,
+                Identifier.STREAM_CODEC.apply(ByteBufCodecs.list()),
+                recipe -> recipe.modifiers,
+                ModifierShapelessRecipe::new
         );
 
         @Override
@@ -148,33 +143,6 @@ public class ModifierShapelessRecipe implements CraftingRecipe
         public StreamCodec<RegistryFriendlyByteBuf, ModifierShapelessRecipe> streamCodec()
         {
             return STREAM_CODEC;
-        }
-
-        private static ModifierShapelessRecipe fromNetwork(RegistryFriendlyByteBuf buffer)
-        {
-            String s = buffer.readUtf();
-            CraftingBookCategory craftingbookcategory = buffer.readEnum(CraftingBookCategory.class);
-            int i = buffer.readVarInt();
-            NonNullList<Ingredient> nonnulllist = NonNullList.withSize(i, Ingredient.EMPTY);
-            nonnulllist.replaceAll(p_319735_ -> Ingredient.CONTENTS_STREAM_CODEC.decode(buffer));
-            ItemStack itemstack = ItemStack.STREAM_CODEC.decode(buffer);
-            List<ResourceLocation> modifiers = ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer);
-            return new ModifierShapelessRecipe(s, craftingbookcategory, itemstack, nonnulllist, modifiers);
-        }
-
-        private static void toNetwork(RegistryFriendlyByteBuf buffer, ModifierShapelessRecipe recipe)
-        {
-            buffer.writeUtf(recipe.group);
-            buffer.writeEnum(recipe.category);
-            buffer.writeVarInt(recipe.ingredients.size());
-
-            for (Ingredient ingredient : recipe.ingredients)
-            {
-                Ingredient.CONTENTS_STREAM_CODEC.encode(buffer, ingredient);
-            }
-
-            ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
-            ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.modifiers);
         }
     }
 

@@ -57,6 +57,6 @@ public class VanillaLootModifier extends AbstractCatchModifier
         //add item entity to level
         level.addFreshEntity(itemFished);
 
-        instance.kill();
+        instance.kill((ServerLevel) level);
     }
 }

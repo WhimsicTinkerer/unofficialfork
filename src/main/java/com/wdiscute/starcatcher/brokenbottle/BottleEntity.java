@@ -10,7 +10,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.projectile.ThrowableItemProjectile;
+import net.minecraft.world.entity.projectile.throwableitemprojectile.ThrowableItemProjectile;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -25,11 +25,11 @@ public class BottleEntity extends ThrowableItemProjectile
     }
 
     public BottleEntity(Level level, LivingEntity shooter) {
-        super(ModEntities.BOTTLE.get(), shooter, level);
+        super(ModEntities.BOTTLE.get(), shooter, level, new ItemStack(ModItems.BROKEN_BOTTLE.get()));
     }
 
     public BottleEntity(Level level, double x, double y, double z) {
-        super(ModEntities.BOTTLE.get(), x, y, z, level);
+        super(ModEntities.BOTTLE.get(), x, y, z, level, new ItemStack(ModItems.BROKEN_BOTTLE.get()));
     }
 
     @Override
@@ -77,7 +77,7 @@ public class BottleEntity extends ThrowableItemProjectile
     protected void onHit(HitResult result)
     {
         super.onHit(result);
-        if (!this.level().isClientSide)
+        if (!this.level().isClientSide())
         {
             level().playSound(
                     null,

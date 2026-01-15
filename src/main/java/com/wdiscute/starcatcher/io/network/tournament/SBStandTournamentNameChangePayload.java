@@ -19,8 +19,8 @@ public record SBStandTournamentNameChangePayload(UUID uuid, String name) impleme
 {
 
     public static final StreamCodec<ByteBuf, GameProfile> GAME_PROFILE_STREAM_CODEC = StreamCodec.composite(
-            UUIDUtil.STREAM_CODEC, GameProfile::getId,
-            ByteBufCodecs.STRING_UTF8, GameProfile::getName,
+            UUIDUtil.STREAM_CODEC, GameProfile::id,
+            ByteBufCodecs.STRING_UTF8, GameProfile::name,
             GameProfile::new
     );
 

@@ -12,7 +12,7 @@ import com.wdiscute.starcatcher.io.attachments.FishingGuideAttachment;
 import com.wdiscute.starcatcher.io.network.FishingStartedPayload;
 import com.wdiscute.starcatcher.registry.custom.catchmodifiers.AbstractCatchModifier;
 import com.wdiscute.starcatcher.registry.custom.minigamemodifiers.AbstractMinigameModifier;
-import com.wdiscute.starcatcher.registry.custom.tackleskin.AbstractTackleSkin;
+import com.wdiscute.starcatcher.registry.custom.tackleskin.ITackleSkin;
 import com.wdiscute.starcatcher.storage.FishProperties;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
@@ -20,7 +20,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.ResourceArgument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -52,7 +52,13 @@ public class ModCommands
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher, CommandBuildContext context)
     {
         dispatcher.register(Commands.literal("starcatcher")
-                .requires(sourceStack -> sourceStack.hasPermission(2))
+                .requires(sourceStack -> {
+                    try {
+                        return sourceStack.getPlayer() != null && sourceStack.getServer().getPlayerList().isOp(sourceStack.getPlayer().nameAndId());
+                    } catch (Exception e) {
+                        return sourceStack.getServer() != null; // Allow for console/server
+                    }
+                })
 
 
                 //starcatcher simulate_fish starcatcher:aurora
@@ -194,14 +200,14 @@ public class ModCommands
 
     private static int revokeFish(ServerPlayer player, ResourceKey<FishProperties> fish)
     {
-        FishingGuideAttachment.getFishesCaught(player).remove(fish.location());
+        FishingGuideAttachment.getFishesCaught(player).remove(fish.identifier());
         FishingGuideAttachment.sync(player);
         return 0;
     }
 
     private static int awardAllFish(ServerPlayer player, int ticks, int size, int weight)
     {
-        for (FishProperties fp : player.level().registryAccess().registryOrThrow(Starcatcher.FISH_REGISTRY))
+        for (FishProperties fp : player.level().registryAccess().lookupOrThrow(Starcatcher.FISH_REGISTRY))
             FishCaughtCounter.awardFishCaughtCounter(fp, player, ticks, size, weight, false, false);
 
         return 0;
@@ -209,7 +215,7 @@ public class ModCommands
 
     private static int awardAllFish(ServerPlayer player)
     {
-        for (FishProperties fp : player.level().registryAccess().registryOrThrow(Starcatcher.FISH_REGISTRY))
+        for (FishProperties fp : player.level().registryAccess().lookupOrThrow(Starcatcher.FISH_REGISTRY))
             FishCaughtCounter.awardFishCaughtCounter(fp, player, 0, 0, 0, false, false);
 
         return 0;
@@ -217,7 +223,7 @@ public class ModCommands
 
     private static int awardFish(ServerPlayer player, ResourceKey<FishProperties> fish, int ticks, int size, int weight) throws CommandSyntaxException
     {
-        Optional<FishProperties> optional = player.level().registryAccess().registryOrThrow(Starcatcher.FISH_REGISTRY).getOptional(fish);
+        Optional<FishProperties> optional = player.level().registryAccess().lookupOrThrow(Starcatcher.FISH_REGISTRY).getOptional(fish);
         if (optional.isPresent())
             FishCaughtCounter.awardFishCaughtCounter(optional.get(), player, ticks, size, weight, false, false);
         else
@@ -256,13 +262,13 @@ public class ModCommands
 
         if (ModDataComponents.has(stack, ModDataComponents.MINIGAME_MODIFIERS))
         {
-            List<ResourceLocation> mods = new ArrayList<>(ModDataComponents.get(stack, ModDataComponents.MINIGAME_MODIFIERS));
-            mods.add(modifier.location());
+            List<Identifier> mods = new ArrayList<>(ModDataComponents.get(stack, ModDataComponents.MINIGAME_MODIFIERS));
+            mods.add(modifier.identifier());
             ModDataComponents.set(stack, ModDataComponents.MINIGAME_MODIFIERS, mods);
         }
         else
         {
-            ModDataComponents.set(stack, ModDataComponents.MINIGAME_MODIFIERS, List.of(modifier.location()));
+            ModDataComponents.set(stack, ModDataComponents.MINIGAME_MODIFIERS, List.of(modifier.identifier()));
         }
 
         return 1;
@@ -275,24 +281,24 @@ public class ModCommands
 
         if (ModDataComponents.has(stack, ModDataComponents.CATCH_MODIFIERS))
         {
-            List<ResourceLocation> mods = new ArrayList<>(ModDataComponents.get(stack, ModDataComponents.CATCH_MODIFIERS));
-            mods.add(modifier.location());
+            List<Identifier> mods = new ArrayList<>(ModDataComponents.get(stack, ModDataComponents.CATCH_MODIFIERS));
+            mods.add(modifier.identifier());
             ModDataComponents.set(stack, ModDataComponents.CATCH_MODIFIERS, mods);
         }
         else
         {
-            ModDataComponents.set(stack, ModDataComponents.CATCH_MODIFIERS, List.of(modifier.location()));
+            ModDataComponents.set(stack, ModDataComponents.CATCH_MODIFIERS, List.of(modifier.identifier()));
         }
 
         return 1;
     }
 
-    private static int addTackleSkin(ServerPlayer player, ResourceKey<Supplier<AbstractTackleSkin>> tackleSkin) throws CommandSyntaxException
+    private static int addTackleSkin(ServerPlayer player, ResourceKey<Supplier<ITackleSkin>> tackleSkin) throws CommandSyntaxException
     {
         ItemStack stack = player.getMainHandItem();
         if (!stack.is(StarcatcherTags.RODS)) throw ERROR_ROD.create(null);
 
-        ModDataComponents.set(stack, ModDataComponents.TACKLE_SKIN, tackleSkin.location());
+        ModDataComponents.set(stack, ModDataComponents.TACKLE_SKIN, tackleSkin.identifier());
 
         return 1;
     }
@@ -301,7 +307,7 @@ public class ModCommands
     {
         if (!player.getMainHandItem().is(StarcatcherTags.RODS)) throw ERROR_ROD.create(null);
 
-        Optional<FishProperties> optional = player.level().registryAccess().registryOrThrow(Starcatcher.FISH_REGISTRY).getOptional(fish);
+        Optional<FishProperties> optional = player.level().registryAccess().lookupOrThrow(Starcatcher.FISH_REGISTRY).getOptional(fish);
 
         if (optional.isPresent())
         {
@@ -310,7 +316,7 @@ public class ModCommands
         }
         else
         {
-            throw ERROR_FISH_ENTRY_INVALID.create(fish.location());
+            throw ERROR_FISH_ENTRY_INVALID.create(fish.identifier());
         }
     }
 }

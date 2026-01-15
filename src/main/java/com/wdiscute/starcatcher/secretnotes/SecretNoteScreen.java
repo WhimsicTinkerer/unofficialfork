@@ -1,17 +1,18 @@
 package com.wdiscute.starcatcher.secretnotes;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import com.wdiscute.libtooltips.Tooltips;
 import com.wdiscute.starcatcher.Starcatcher;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public class SecretNoteScreen extends Screen
 {
-    private static final ResourceLocation BACKGROUND = Starcatcher.rl("textures/gui/secret_note.png");
+    private static final Identifier BACKGROUND = Starcatcher.rl("textures/gui/secret_note.png");
 
     private final String translationKey;
 
@@ -48,15 +49,15 @@ public class SecretNoteScreen extends Screen
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers)
+    public boolean keyPressed(KeyEvent event)
     {
-        InputConstants.Key key = InputConstants.getKey(keyCode, scanCode);
-        if (this.minecraft.options.keyInventory.isActiveAndMatches(key))
+        // Check if inventory key was pressed
+        if (this.minecraft.options.keyInventory.matches(event))
         {
             this.onClose();
             return true;
         }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     public SecretNoteScreen(SecretNote.Note note)
@@ -65,9 +66,9 @@ public class SecretNoteScreen extends Screen
         this.translationKey = "gui.secret_note." + note.getSerializedName() + ".";
     }
 
-    private void renderImage(GuiGraphics guiGraphics, ResourceLocation rl)
+    private void renderImage(GuiGraphics guiGraphics, Identifier rl)
     {
-        guiGraphics.blit(rl, uiX, uiY, 0, 0, 512, 256, 512, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, rl, uiX, uiY, 0, 0, 512, 256, 512, 256);
     }
 
     @Override

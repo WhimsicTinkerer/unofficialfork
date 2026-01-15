@@ -23,66 +23,52 @@ java {
 
 repositories
 {
+    //modrinth - primary for libtooltips and tiny multiblock lib
+    maven {
+        url = "https://api.modrinth.com/maven"
+    }
+
     //emi
     maven {
         name = "TerraformersMC"
         url = "https://maven.terraformersmc.com/"
     }
 
-    //favouriteless
-    maven {
-        url = "https://maven.favouriteless.net/releases"
-    }
-
-    //modrinth
-    maven {
-        url = "https://api.modrinth.com/maven"
-    }
+    // favouriteless maven - disabled (server down)
+    // maven {
+    //     url = "https://maven.favouriteless.net/releases"
+    // }
 }
 
 dependencies {
-    jarJar(implementation(group: 'com.wdiscute', name: 'libtooltips')) {
-        version {
-            // Version used in your workspace and bundled in mod jar
-            prefer '1.4'
-        }
-    }
+    // libtooltips via Modrinth maven (favouriteless maven is down)
+    jarJar(implementation("maven.modrinth:libtooltips:1.4"))
 
-    //tiny multiblock lib
-    jarJar(implementation("maven.modrinth:tiny-multiblock-lib:neo-1.21.1-${tiny_multiblock_lib_version}"))
+    // TODO: Re-enable when 1.21.11 versions are available
+    //tiny multiblock lib - commented out until 1.21.11 version available
+    //jarJar(implementation("maven.modrinth:tiny-multiblock-lib:neo-1.21.11-${tiny_multiblock_lib_version}"))
 
-    //EMI
-    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
-    runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
+    //EMI - commented out until 1.21.11 version available
+    //compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
+    //runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 
-    //Serene Seasons
-    compileOnly files(".compatmods/SereneSeasons-neoforge-1.21.1-10.1.0.3.jar")
-    compileOnly files(".compatmods/GlitchCore-neoforge-1.21.1-2.1.0.0.jar")
-    //runtimeOnly files(".compatmods/SereneSeasons-neoforge-1.21.1-10.1.0.3.jar")
-    //runtimeOnly files(".compatmods/GlitchCore-neoforge-1.21.1-2.1.0.0.jar")
+    //Serene Seasons - commented out until 1.21.11 version available
+    //compileOnly files(".compatmods/SereneSeasons-neoforge-1.21.1-10.1.0.3.jar")
+    //compileOnly files(".compatmods/GlitchCore-neoforge-1.21.1-2.1.0.0.jar")
 
-    //Ecliptic Seasons
-    compileOnly files(".compatmods/EclipticSeasons-1.21.1-neoforge-0.12.5-all.jar")
-    //runtimeOnly files(".compatmods/EclipticSeasons-1.21.1-neoforge-0.12.5-all.jar")
+    //Ecliptic Seasons - commented out until 1.21.11 version available
+    //compileOnly files(".compatmods/EclipticSeasons-1.21.1-neoforge-0.12.5-all.jar")
 
-    //terrafirmacraft for seasons
-    //compileOnly files(".compatmods/Patchouli-1.21.1-92-NEOFORGE.jar")
-    compileOnly files(".compatmods/TerraFirmaCraft-NeoForge-1.21.1-4.0.13-beta.jar")
-    //runtimeOnly files(".compatmods/Patchouli-1.21.1-92-NEOFORGE.jar")
-    //runtimeOnly files(".compatmods/TerraFirmaCraft-NeoForge-1.21.1-4.0.13-beta.jar")
+    //terrafirmacraft for seasons - commented out until 1.21.11 version available
+    //compileOnly files(".compatmods/TerraFirmaCraft-NeoForge-1.21.1-4.0.13-beta.jar")
 
-    //distant horizons
+    //distant horizons - commented out until 1.21.11 version available
     //compileOnly files(".compatmods/DistantHorizons-2.3.6-b-1.21.1-fabric-neoforge.jar")
-    //runtimeOnly files(".compatmods/DistantHorizons-2.3.6-b-1.21.1-fabric-neoforge.jar")
 
-    //ftb teams
-    compileOnly files(".compatmods/ftb-teams-neoforge-2101.1.7.jar")
-    compileOnly files(".compatmods/ftb-library-neoforge-2101.1.28.jar")
-    compileOnly files(".compatmods/architectury-13.0.8-neoforge.jar")
-    //runtimeOnly files(".compatmods/ftb-teams-neoforge-2101.1.7.jar")
-    //runtimeOnly files(".compatmods/ftb-teams-neoforge-2101.1.7.jar")
-    //runtimeOnly files(".compatmods/ftb-library-neoforge-2101.1.28.jar")
-    //runtimeOnly files(".compatmods/architectury-13.0.8-neoforge.jar")
+    //ftb teams - commented out until 1.21.11 version available
+    //compileOnly files(".compatmods/ftb-teams-neoforge-2101.1.7.jar")
+    //compileOnly files(".compatmods/ftb-library-neoforge-2101.1.28.jar")
+    //compileOnly files(".compatmods/architectury-13.0.8-neoforge.jar")
 
 }
 

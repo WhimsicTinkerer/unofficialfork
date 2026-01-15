@@ -14,7 +14,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
@@ -44,21 +44,21 @@ public class StarcatcherFishingRodItem extends Item implements MenuProvider
         );
     }
 
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand)
+    public InteractionResult use(Level level, Player player, InteractionHand hand)
     {
         ItemStack is = player.getItemInHand(hand);
 
         if (!is.is(StarcatcherTags.RODS))
-            return InteractionResultHolder.pass(is);
+            return InteractionResult.PASS;
 
         FishingBobAttachment fishingBobAttachment = ModDataAttachments.get(player, ModDataAttachments.FISHING_BOB.get());
         if (player.isCrouching() && fishingBobAttachment.isEmpty())
         {
             player.openMenu(this);
-            return InteractionResultHolder.success(is);
+            return InteractionResult.SUCCESS;
         }
 
-        if (level.isClientSide) return InteractionResultHolder.success(is);
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
 
 
         if (fishingBobAttachment.isEmpty())
@@ -91,7 +91,7 @@ public class StarcatcherFishingRodItem extends Item implements MenuProvider
                     {
                         ModTackleSkins.get(player.level(), player.getItemInHand(hand)).onRetrieve(player);
 
-                        fbe.kill();
+                        fbe.kill((ServerLevel) level);
                         ModDataAttachments.remove(player, ModDataAttachments.FISHING_BOB.get());
                     }
                 }
@@ -100,18 +100,18 @@ public class StarcatcherFishingRodItem extends Item implements MenuProvider
         }
 
 
-        return InteractionResultHolder.success(is);
+        return InteractionResult.SUCCESS;
     }
 
 
-    @Override
-    public boolean hasCraftingRemainingItem(ItemStack stack)
+    // Note: hasCraftingRemainingItem and getCraftingRemainingItem removed in 1.21.11
+    // Crafting remainder is now handled via Item.Properties.craftRemainder()
+    public boolean hasCraftingRemainder(ItemStack stack)
     {
         return true;
     }
 
-    @Override
-    public ItemStack getCraftingRemainingItem(ItemStack itemStack)
+    public ItemStack getCraftingRemainder(ItemStack itemStack)
     {
         return itemStack.copy();
     }

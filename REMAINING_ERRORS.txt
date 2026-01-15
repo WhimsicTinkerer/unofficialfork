@@ -1,0 +1,200 @@
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:261: error: incompatible types: Matrix3x2fStack cannot be converted to PoseStack
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:275: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:278: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:281: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:287: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:296: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:299: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:303: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:348: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:355: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:382: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:392: error: incompatible types: Matrix3x2fStack cannot be converted to PoseStack
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:402: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:407: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:410: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:413: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:414: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:623: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:636: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:693: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:700: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/guide/NewSettingsScreen.java:186: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/guide/NewSettingsScreen.java:192: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/guide/NewSettingsScreen.java:196: error: method mouseClicked in class AbstractWidget cannot be applied to given types;
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/guide/NewSettingsScreen.java:236: error: incompatible types: Identifier cannot be converted to RenderPipeline
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/guide/NewSettingsScreen.java:241: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/guide/NewSettingsScreen.java:245: error: method mouseClicked in class AbstractWidget cannot be applied to given types;
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/custom/tackleskin/AbstractTackleSkin.java:31: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/ActiveSweetSpot.java:51: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/custom/sweetspotbehaviour/AbstractSweetSpotBehaviour.java:52: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/custom/sweetspotbehaviour/AbstractSweetSpotBehaviour.java:53: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/custom/sweetspotbehaviour/AbstractSweetSpotBehaviour.java:55: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/custom/sweetspotbehaviour/AbstractSweetSpotBehaviour.java:60: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/custom/sweetspotbehaviour/AbstractSweetSpotBehaviour.java:61: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobModel.java:24: error: renderToBuffer(PoseStack,VertexConsumer,int,int,int) in FishingBobModel cannot override renderToBuffer(PoseStack,VertexConsumer,int,int,int) in Model
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobModel.java:29: error: root() in FishingBobModel cannot override root() in Model
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobEntity.java:124: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobEntity.java:317: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobEntity.java:321: error: method kill in class Entity cannot be applied to given types;
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobEntity.java:479: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/util/TrustedHolder.java:15: error: <T#1>createStandAlone(HolderOwner<T#1>,ResourceKey<T#1>) in TrustedHolder cannot hide <T#2>createStandAlone(HolderOwner<T#2>,ResourceKey<T#2>) in Reference
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobRenderer.java:57: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobRenderer.java:87: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobRenderer.java:99: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:26: error: ModifierShapedRecipe is not abstract and does not override abstract method getSerializer() in CraftingRecipe
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:55: error: getSerializer() in ModifierShapedRecipe cannot implement getSerializer() in CraftingRecipe
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:54: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:60: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:72: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:78: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:81: error: incompatible types: List<Optional<Ingredient>> cannot be converted to NonNullList<Ingredient>
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:90: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:138: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:142: error: invalid method reference
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:20: error: ModifierShapelessRecipe is not abstract and does not override abstract method getSerializer() in CraftingRecipe
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:40: error: getSerializer() in ModifierShapelessRecipe cannot implement getSerializer() in CraftingRecipe
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:39: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:45: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:57: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:63: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:99: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:109: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:110: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:111: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:112: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:127: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:133: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:158: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:23: error: FishingRodSmithingRecipe is not abstract and does not override abstract method additionIngredient() in SmithingRecipe
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:103: error: getSerializer() in FishingRodSmithingRecipe cannot implement getSerializer() in SmithingRecipe
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:109: error: getType() in FishingRodSmithingRecipe cannot implement getType() in SmithingRecipe
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:72: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:78: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:84: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:90: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:96: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:99: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:102: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:108: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:114: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:117: error: invalid method reference
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/network/tournament/CBActiveTournamentUpdatePayload.java:53: error: invalid method reference
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/network/tournament/CBActiveTournamentUpdatePayload.java:54: error: invalid method reference
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/network/tournament/SBStandTournamentNameChangePayload.java:22: error: invalid method reference
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/network/tournament/SBStandTournamentNameChangePayload.java:23: error: invalid method reference
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/TournamentSavedData.java:38: error: method computeIfAbsent in class DimensionDataStorage cannot be applied to given types;
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/TournamentSavedData.java:52: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/ModDataAttachments.java:34: error: no suitable method found for serialize(Codec<FishingGuideAttachment>)
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/ModDataAttachments.java:44: error: no suitable method found for serialize(PrimitiveCodec<Boolean>)
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/ModDataAttachments.java:53: error: no suitable method found for serialize(Codec<List<LegacyFishCaughtCounter>>)
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/ModDataAttachments.java:63: error: no suitable method found for serialize(Codec<List<Identifier>>)
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/ModDataAttachments.java:73: error: no suitable method found for serialize(Codec<List<Identifier>>)
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/ModDataAttachments.java:83: error: no suitable method found for serialize(Codec<Identifier>)
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/tournament/TournamentHandler.java:142: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/blocks/StandBlockEntity.java:101: error: method does not override or implement a method from a supertype
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/blocks/StandBlockEntity.java:104: error: method saveAdditional in class BlockEntity cannot be applied to given types;
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/blocks/StandBlockEntity.java:106: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/blocks/StandBlockEntity.java:109: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/blocks/StandBlockEntity.java:139: error: cannot find symbol
+/Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/blocks/StandBlockEntity.java:139: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/guide/NewSettingsScreen.java:196: error: method mouseClicked in class AbstractWidget cannot be applied to given types;
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/guide/NewSettingsScreen.java:245: error: method mouseClicked in class AbstractWidget cannot be applied to given types;
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobEntity.java:321: error: method kill in class Entity cannot be applied to given types;
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/TournamentSavedData.java:38: error: method computeIfAbsent in class DimensionDataStorage cannot be applied to given types;
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/blocks/StandBlockEntity.java:104: error: method saveAdditional in class BlockEntity cannot be applied to given types;
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/ModDataAttachments.java:34: error: no suitable method found for serialize(Codec<FishingGuideAttachment>)
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/ModDataAttachments.java:44: error: no suitable method found for serialize(PrimitiveCodec<Boolean>)
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/ModDataAttachments.java:53: error: no suitable method found for serialize(Codec<List<LegacyFishCaughtCounter>>)
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/ModDataAttachments.java:63: error: no suitable method found for serialize(Codec<List<Identifier>>)
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/ModDataAttachments.java:73: error: no suitable method found for serialize(Codec<List<Identifier>>)
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/ModDataAttachments.java:83: error: no suitable method found for serialize(Codec<Identifier>)
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:142: error: invalid method reference
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:117: error: invalid method reference
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/network/tournament/CBActiveTournamentUpdatePayload.java:53: error: invalid method reference
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/network/tournament/CBActiveTournamentUpdatePayload.java:54: error: invalid method reference
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/network/tournament/SBStandTournamentNameChangePayload.java:22: error: invalid method reference
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/network/tournament/SBStandTournamentNameChangePayload.java:23: error: invalid method reference
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:109: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:110: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:111: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:112: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:127: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:133: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:158: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/guide/NewSettingsScreen.java:192: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/guide/NewSettingsScreen.java:241: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobEntity.java:317: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobEntity.java:479: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobRenderer.java:57: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:54: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:60: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:72: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:78: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:90: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:138: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:39: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:45: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:57: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:63: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:99: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:72: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:78: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:84: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:90: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:96: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:102: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:108: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:114: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/io/TournamentSavedData.java:52: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/blocks/StandBlockEntity.java:101: error: method does not override or implement a method from a supertype
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:402: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:407: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:413: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:414: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:623: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:636: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/custom/tackleskin/AbstractTackleSkin.java:31: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/ActiveSweetSpot.java:51: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/custom/sweetspotbehaviour/AbstractSweetSpotBehaviour.java:52: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/custom/sweetspotbehaviour/AbstractSweetSpotBehaviour.java:53: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/custom/sweetspotbehaviour/AbstractSweetSpotBehaviour.java:55: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/custom/sweetspotbehaviour/AbstractSweetSpotBehaviour.java:60: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/custom/sweetspotbehaviour/AbstractSweetSpotBehaviour.java:61: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobRenderer.java:87: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:99: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/tournament/TournamentHandler.java:142: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/blocks/StandBlockEntity.java:106: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/blocks/StandBlockEntity.java:109: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/blocks/StandBlockEntity.java:139: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/registry/blocks/StandBlockEntity.java:139: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobModel.java:24: error: renderToBuffer(PoseStack,VertexConsumer,int,int,int) in FishingBobModel cannot override renderToBuffer(PoseStack,VertexConsumer,int,int,int) in Model
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobModel.java:29: error: root() in FishingBobModel cannot override root() in Model
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobEntity.java:124: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/bob/FishingBobRenderer.java:99: error: cannot find symbol
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/util/TrustedHolder.java:15: error: <T#1>createStandAlone(HolderOwner<T#1>,ResourceKey<T#1>) in TrustedHolder cannot hide <T#2>createStandAlone(HolderOwner<T#2>,ResourceKey<T#2>) in Reference
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:55: error: getSerializer() in ModifierShapedRecipe cannot implement getSerializer() in CraftingRecipe
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:40: error: getSerializer() in ModifierShapelessRecipe cannot implement getSerializer() in CraftingRecipe
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:103: error: getSerializer() in FishingRodSmithingRecipe cannot implement getSerializer() in SmithingRecipe
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:109: error: getType() in FishingRodSmithingRecipe cannot implement getType() in SmithingRecipe
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:26: error: ModifierShapedRecipe is not abstract and does not override abstract method getSerializer() in CraftingRecipe
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapelessRecipe.java:20: error: ModifierShapelessRecipe is not abstract and does not override abstract method getSerializer() in CraftingRecipe
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/FishingRodSmithingRecipe.java:23: error: FishingRodSmithingRecipe is not abstract and does not override abstract method additionIngredient() in SmithingRecipe
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:261: error: incompatible types: Matrix3x2fStack cannot be converted to PoseStack
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:275: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:278: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:281: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:287: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:296: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:299: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:303: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:348: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:355: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:382: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:392: error: incompatible types: Matrix3x2fStack cannot be converted to PoseStack
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:410: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:693: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/minigame/FishingMinigameScreen.java:700: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/guide/NewSettingsScreen.java:186: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/guide/NewSettingsScreen.java:236: error: incompatible types: Identifier cannot be converted to RenderPipeline
+  /Users/davidnailon/Desktop/Porting/starcatcher/src/main/java/com/wdiscute/starcatcher/recipe/ModifierShapedRecipe.java:81: error: incompatible types: List<Optional<Ingredient>> cannot be converted to NonNullList<Ingredient>

@@ -14,7 +14,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.animal.fish.AbstractFish;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
@@ -70,18 +70,18 @@ public class FishEntity extends AbstractFish
     public void tick()
     {
         super.tick();
-        if(getBodyArmorItem().isEmpty() && !level().isClientSide)
+        if(getBodyArmorItem().isEmpty() && !level().isClientSide())
         {
             shouldDropItem = false;
             List<FishProperties> available = new ArrayList<>();
 
-            for (FishProperties fp : level().registryAccess().registryOrThrow(Starcatcher.FISH_REGISTRY))
+            for (FishProperties fp : level().registryAccess().lookupOrThrow(Starcatcher.FISH_REGISTRY))
             {
                 if (FishProperties.getChance(fp, this, ModItems.ROD.toStack()) > 0 && fp.catchInfo().fish().is(StarcatcherTags.BUCKETABLE_FISHES)) available.add(fp);
             }
 
             if(available.isEmpty())
-                kill();
+                kill((ServerLevel) level());
             else
             {
                 FishProperties fp = available.get(U.r.nextInt(available.size() - 1));

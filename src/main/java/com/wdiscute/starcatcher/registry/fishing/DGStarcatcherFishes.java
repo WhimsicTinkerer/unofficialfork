@@ -459,7 +459,7 @@ public class DGStarcatcherFishes
                 .withSizeAndWeight(FishProperties.sizeWeight(620, 270, 700000, 300000))
                 .withDifficulty(FishProperties.Difficulty.HEAVY_FIVE_NORMAL)
                 .withRarity(FishProperties.Rarity.EPIC)
-                .withWorldRestrictions(FishProperties.WorldRestrictions.OVERWORLD.withBiomes(Biomes.LUSH_CAVES.location())
+                .withWorldRestrictions(FishProperties.WorldRestrictions.OVERWORLD.withBiomes(Biomes.LUSH_CAVES.identifier())
                         .withBiomesTags(BiomeTags.IS_JUNGLE.location())));
 
 

@@ -61,7 +61,7 @@ public record TrophyProperties(
                     RarityProgress.CODEC.fieldOf("all").forGetter(TrophyProperties::all),
                     Codec.unboundedMap(FishProperties.Rarity.CODEC, RarityProgress.CODEC).fieldOf("progress").forGetter(TrophyProperties::progress),
                     Codec.INT.fieldOf("chance_to_catch").forGetter(TrophyProperties::chanceToCatch),
-                    Codec.BOOL.fieldOf("repeatable").forGetter(TrophyProperties::alwaysShow)
+                    Codec.BOOL.fieldOf("repeatable").forGetter(TrophyProperties::repeatable)
             ).apply(instance, TrophyProperties::new)
     );
 

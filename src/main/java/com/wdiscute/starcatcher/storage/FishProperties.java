@@ -28,7 +28,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
@@ -100,7 +100,7 @@ public record FishProperties(
 
     public static final StreamCodec<RegistryFriendlyByteBuf, List<FishProperties>> STREAM_CODEC_LIST = STREAM_CODEC.apply(ByteBufCodecs.list());
 
-    public ResourceLocation toLoc(Level level){
+    public Identifier toLoc(Level level){
         return U.getRlFromFp(level, this);
     }
 
@@ -365,21 +365,21 @@ public record FishProperties(
     //region bait
 
     public record BaitRestrictions(
-            List<ResourceLocation> correctBait,
+            List<Identifier> correctBait,
             boolean consumesBait,
             int correctBaitChanceAdded
     )
     {
         public static final Codec<BaitRestrictions> CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
-                        Codec.list(ResourceLocation.CODEC).fieldOf("correct_baits").forGetter(BaitRestrictions::correctBait),
+                        Codec.list(Identifier.CODEC).fieldOf("correct_baits").forGetter(BaitRestrictions::correctBait),
                         Codec.BOOL.fieldOf("consumes_bait").forGetter(BaitRestrictions::consumesBait),
                         Codec.INT.fieldOf("correct_bait_chance_added").forGetter(BaitRestrictions::correctBaitChanceAdded)
                 ).apply(instance, BaitRestrictions::new));
 
 
         public static final StreamCodec<ByteBuf, BaitRestrictions> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.fromCodec(Codec.list(ResourceLocation.CODEC)), BaitRestrictions::correctBait,
+                ByteBufCodecs.fromCodec(Codec.list(Identifier.CODEC)), BaitRestrictions::correctBait,
                 ByteBufCodecs.BOOL, BaitRestrictions::consumesBait,
                 ByteBufCodecs.INT, BaitRestrictions::correctBaitChanceAdded,
                 BaitRestrictions::new
@@ -430,7 +430,7 @@ public record FishProperties(
                 true,
                 50);
 
-        public BaitRestrictions withCorrectBait(ResourceLocation... correctBait)
+        public BaitRestrictions withCorrectBait(Identifier... correctBait)
         {
             return new BaitRestrictions(List.of(correctBait), this.consumesBait, this.correctBaitChanceAdded);
         }
@@ -450,13 +450,13 @@ public record FishProperties(
 
     //region world
     public record WorldRestrictions(
-            List<ResourceLocation> dims,
-            List<ResourceLocation> dimsBlacklist,
-            List<ResourceLocation> biomes,
-            List<ResourceLocation> biomesTags,
-            List<ResourceLocation> biomesBlacklist,
-            List<ResourceLocation> biomesBlacklistTags,
-            List<ResourceLocation> fluids,
+            List<Identifier> dims,
+            List<Identifier> dimsBlacklist,
+            List<Identifier> biomes,
+            List<Identifier> biomesTags,
+            List<Identifier> biomesBlacklist,
+            List<Identifier> biomesBlacklistTags,
+            List<Identifier> fluids,
             List<Seasons> seasons,
             int mustBeCaughtBelowY,
             int mustBeCaughtAboveY
@@ -512,33 +512,33 @@ public record FishProperties(
                 List.of(),
                 List.of(),
                 List.of(),
-                List.of(ResourceLocation.withDefaultNamespace("water")),
+                List.of(Identifier.withDefaultNamespace("water")),
                 List.of(Seasons.ALL),
                 Integer.MAX_VALUE,
                 Integer.MIN_VALUE);
 
         public static final Codec<WorldRestrictions> CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
-                        Codec.list(ResourceLocation.CODEC).fieldOf("dimensions").forGetter(WorldRestrictions::dims),
-                        Codec.list(ResourceLocation.CODEC).fieldOf("dimensions_blacklist").forGetter(WorldRestrictions::dimsBlacklist),
-                        Codec.list(ResourceLocation.CODEC).fieldOf("biomes").forGetter(WorldRestrictions::biomes),
-                        Codec.list(ResourceLocation.CODEC).fieldOf("biomes_tags").forGetter(WorldRestrictions::biomesTags),
-                        Codec.list(ResourceLocation.CODEC).fieldOf("biomes_blacklist").forGetter(WorldRestrictions::biomesBlacklist),
-                        Codec.list(ResourceLocation.CODEC).fieldOf("biomes_blacklist_tags").forGetter(WorldRestrictions::biomesBlacklistTags),
-                        Codec.list(ResourceLocation.CODEC).fieldOf("fluids").forGetter(WorldRestrictions::fluids),
+                        Codec.list(Identifier.CODEC).fieldOf("dimensions").forGetter(WorldRestrictions::dims),
+                        Codec.list(Identifier.CODEC).fieldOf("dimensions_blacklist").forGetter(WorldRestrictions::dimsBlacklist),
+                        Codec.list(Identifier.CODEC).fieldOf("biomes").forGetter(WorldRestrictions::biomes),
+                        Codec.list(Identifier.CODEC).fieldOf("biomes_tags").forGetter(WorldRestrictions::biomesTags),
+                        Codec.list(Identifier.CODEC).fieldOf("biomes_blacklist").forGetter(WorldRestrictions::biomesBlacklist),
+                        Codec.list(Identifier.CODEC).fieldOf("biomes_blacklist_tags").forGetter(WorldRestrictions::biomesBlacklistTags),
+                        Codec.list(Identifier.CODEC).fieldOf("fluids").forGetter(WorldRestrictions::fluids),
                         Seasons.LIST_CODEC.fieldOf("seasons").forGetter(WorldRestrictions::seasons),
                         Codec.INT.fieldOf("below_y").forGetter(WorldRestrictions::mustBeCaughtBelowY),
                         Codec.INT.fieldOf("above_y").forGetter(WorldRestrictions::mustBeCaughtAboveY)
                 ).apply(instance, WorldRestrictions::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, WorldRestrictions> STREAM_CODEC = ExtraComposites.composite(
-                ByteBufCodecs.fromCodec(Codec.list(ResourceLocation.CODEC)), WorldRestrictions::dims,
-                ByteBufCodecs.fromCodec(Codec.list(ResourceLocation.CODEC)), WorldRestrictions::dimsBlacklist,
-                ByteBufCodecs.fromCodec(Codec.list(ResourceLocation.CODEC)), WorldRestrictions::biomes,
-                ByteBufCodecs.fromCodec(Codec.list(ResourceLocation.CODEC)), WorldRestrictions::biomesTags,
-                ByteBufCodecs.fromCodec(Codec.list(ResourceLocation.CODEC)), WorldRestrictions::biomesBlacklist,
-                ByteBufCodecs.fromCodec(Codec.list(ResourceLocation.CODEC)), WorldRestrictions::biomesBlacklistTags,
-                ByteBufCodecs.fromCodec(Codec.list(ResourceLocation.CODEC)), WorldRestrictions::fluids,
+                ByteBufCodecs.fromCodec(Codec.list(Identifier.CODEC)), WorldRestrictions::dims,
+                ByteBufCodecs.fromCodec(Codec.list(Identifier.CODEC)), WorldRestrictions::dimsBlacklist,
+                ByteBufCodecs.fromCodec(Codec.list(Identifier.CODEC)), WorldRestrictions::biomes,
+                ByteBufCodecs.fromCodec(Codec.list(Identifier.CODEC)), WorldRestrictions::biomesTags,
+                ByteBufCodecs.fromCodec(Codec.list(Identifier.CODEC)), WorldRestrictions::biomesBlacklist,
+                ByteBufCodecs.fromCodec(Codec.list(Identifier.CODEC)), WorldRestrictions::biomesBlacklistTags,
+                ByteBufCodecs.fromCodec(Codec.list(Identifier.CODEC)), WorldRestrictions::fluids,
                 Seasons.LIST_STREAM_CODEC, WorldRestrictions::seasons,
                 ByteBufCodecs.VAR_INT, WorldRestrictions::mustBeCaughtBelowY,
                 ByteBufCodecs.VAR_INT, WorldRestrictions::mustBeCaughtAboveY,
@@ -547,271 +547,271 @@ public record FishProperties(
 
         public static final WorldRestrictions OVERWORLD =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location());
+                        .withDims(Level.OVERWORLD.identifier());
 
         public static final WorldRestrictions OVERWORLD_LUSH_CAVES =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
-                        .withBiomes(Biomes.LUSH_CAVES.location())
+                        .withDims(Level.OVERWORLD.identifier())
+                        .withBiomes(Biomes.LUSH_CAVES.identifier())
                         .withMustBeCaughtBelowY(50);
 
         public static final WorldRestrictions OVERWORLD_STONE_CAVES =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withMustBeCaughtBelowY(50)
                         .withMustBeCaughtAboveY(0);
 
         public static final WorldRestrictions OVERWORLD_DEEPSLATE =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withMustBeCaughtBelowY(0);
 
         public static final WorldRestrictions OVERWORLD_DRIPSTONE_CAVES =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
-                        .withBiomes(Biomes.DRIPSTONE_CAVES.location())
+                        .withDims(Level.OVERWORLD.identifier())
+                        .withBiomes(Biomes.DRIPSTONE_CAVES.identifier())
                         .withMustBeCaughtBelowY(50)
                         .withMustBeCaughtAboveY(0);
 
         public static final WorldRestrictions OVERWORLD_DEEP_DARK =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
-                        .withBiomes(Biomes.DEEP_DARK.location())
+                        .withDims(Level.OVERWORLD.identifier())
+                        .withBiomes(Biomes.DEEP_DARK.identifier())
                         .withMustBeCaughtBelowY(50);
 
         public static final WorldRestrictions OVERWORLD_RIVER =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_RIVER)
                         .withMustBeCaughtAboveY(50)
                         .withMustBeCaughtBelowY(100);
 
         public static final WorldRestrictions OVERWORLD_OCEAN =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags((StarcatcherTags.IS_OCEAN))
                         .withMustBeCaughtAboveY(50)
                         .withMustBeCaughtBelowY(100);
 
         public static final WorldRestrictions OVERWORLD_WARM_OCEAN =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_WARM_OCEAN)
                         .withMustBeCaughtAboveY(50)
                         .withMustBeCaughtBelowY(100);
 
         public static final WorldRestrictions OVERWORLD_DEEP_OCEAN =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_DEEP_OCEAN)
                         .withMustBeCaughtAboveY(50)
                         .withMustBeCaughtBelowY(100);
 
         public static final WorldRestrictions OVERWORLD_LAKE =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesBlacklistTags(StarcatcherTags.IS_OCEAN, StarcatcherTags.IS_RIVER)
                         .withMustBeCaughtAboveY(50)
                         .withMustBeCaughtBelowY(100);
 
         public static final WorldRestrictions OVERWORLD_FRESHWATER =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesBlacklistTags(StarcatcherTags.IS_OCEAN)
                         .withMustBeCaughtAboveY(50);
 
         public static final WorldRestrictions OVERWORLD_COLD_FRESHWATER =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_COLD_LAKE, StarcatcherTags.IS_COLD_RIVER)
                         .withMustBeCaughtAboveY(50);
 
         public static final WorldRestrictions OVERWORLD_WARM_FRESHWATER =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_WARM_LAKE, StarcatcherTags.IS_WARM_RIVER)
                         .withMustBeCaughtAboveY(50);
 
         public static final WorldRestrictions OVERWORLD_WARM_LAKE =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_WARM_LAKE)
                         .withMustBeCaughtAboveY(50)
                         .withMustBeCaughtBelowY(100);
 
         public static final WorldRestrictions OVERWORLD_COLD_RIVER =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_COLD_RIVER)
                         .withMustBeCaughtAboveY(50)
                         .withMustBeCaughtBelowY(100);
 
         public static final WorldRestrictions OVERWORLD_COLD_OCEAN =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_COLD_OCEAN)
                         .withMustBeCaughtAboveY(50)
                         .withMustBeCaughtBelowY(100);
 
         public static final WorldRestrictions OVERWORLD_COLD_LAKE =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_COLD_LAKE)
                         .withMustBeCaughtAboveY(50)
                         .withMustBeCaughtBelowY(100);
 
         public static final WorldRestrictions OVERWORLD_COLD_MOUNTAIN =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_COLD_LAKE)
                         .withMustBeCaughtAboveY(100);
 
         public static final WorldRestrictions OVERWORLD_BEACH =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_BEACH)
                         .withMustBeCaughtAboveY(50);
 
         public static final WorldRestrictions OVERWORLD_MUSHROOM_FIELDS =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_MUSHROOM_FIELDS)
                         .withMustBeCaughtAboveY(50);
 
         public static final WorldRestrictions OVERWORLD_JUNGLE =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(BiomeTags.IS_JUNGLE.location())
                         .withMustBeCaughtAboveY(50);
 
         public static final WorldRestrictions OVERWORLD_TAIGA =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(BiomeTags.IS_TAIGA.location())
                         .withMustBeCaughtAboveY(50);
 
         public static final WorldRestrictions OVERWORLD_CHERRY_GROVE =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_CHERRY_GROVE)
                         .withMustBeCaughtAboveY(50);
 
         public static final WorldRestrictions OVERWORLD_SWAMP =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_SWAMP)
                         .withMustBeCaughtAboveY(50);
 
         public static final WorldRestrictions OVERWORLD_DARK_FOREST =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(StarcatcherTags.IS_DARK_FOREST)
                         .withMustBeCaughtAboveY(50);
 
         public static final WorldRestrictions OVERWORLD_FOREST =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withBiomesTags(BiomeTags.IS_FOREST.location())
                         .withMustBeCaughtAboveY(50);
 
         public static final WorldRestrictions OVERWORLD_SURFACE =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withMustBeCaughtAboveY(50);
 
         public static final WorldRestrictions OVERWORLD_LAVA_SURFACE =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
-                        .withFluids(ResourceLocation.withDefaultNamespace("lava"))
+                        .withDims(Level.OVERWORLD.identifier())
+                        .withFluids(Identifier.withDefaultNamespace("lava"))
                         .withMustBeCaughtAboveY(50);
 
         public static final WorldRestrictions OVERWORLD_LAVA_UNDERGROUND =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
-                        .withFluids(ResourceLocation.withDefaultNamespace("lava"))
+                        .withDims(Level.OVERWORLD.identifier())
+                        .withFluids(Identifier.withDefaultNamespace("lava"))
                         .withMustBeCaughtBelowY(50);
 
         public static final WorldRestrictions OVERWORLD_UNDERGROUND =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
+                        .withDims(Level.OVERWORLD.identifier())
                         .withMustBeCaughtBelowY(50);
 
         public static final WorldRestrictions OVERWORLD_LAVA_DEEPSLATE =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.OVERWORLD.location())
-                        .withFluids(ResourceLocation.withDefaultNamespace("lava"))
+                        .withDims(Level.OVERWORLD.identifier())
+                        .withFluids(Identifier.withDefaultNamespace("lava"))
                         .withMustBeCaughtBelowY(0);
 
         public static final WorldRestrictions NETHER_LAVA =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.NETHER.location())
-                        .withFluids(ResourceLocation.withDefaultNamespace("lava"));
+                        .withDims(Level.NETHER.identifier())
+                        .withFluids(Identifier.withDefaultNamespace("lava"));
 
         public static final WorldRestrictions NETHER_LAVA_CRIMSON_FOREST =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.NETHER.location())
-                        .withBiomes(Biomes.CRIMSON_FOREST.location())
-                        .withFluids(ResourceLocation.withDefaultNamespace("lava"));
+                        .withDims(Level.NETHER.identifier())
+                        .withBiomes(Biomes.CRIMSON_FOREST.identifier())
+                        .withFluids(Identifier.withDefaultNamespace("lava"));
 
         public static final WorldRestrictions NETHER_LAVA_WARPED_FOREST =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.NETHER.location())
-                        .withBiomes(Biomes.WARPED_FOREST.location())
-                        .withFluids(ResourceLocation.withDefaultNamespace("lava"));
+                        .withDims(Level.NETHER.identifier())
+                        .withBiomes(Biomes.WARPED_FOREST.identifier())
+                        .withFluids(Identifier.withDefaultNamespace("lava"));
 
         public static final WorldRestrictions NETHER_LAVA_SOUL_SAND_VALLEY =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.NETHER.location())
-                        .withBiomes(Biomes.SOUL_SAND_VALLEY.location())
-                        .withFluids(ResourceLocation.withDefaultNamespace("lava"));
+                        .withDims(Level.NETHER.identifier())
+                        .withBiomes(Biomes.SOUL_SAND_VALLEY.identifier())
+                        .withFluids(Identifier.withDefaultNamespace("lava"));
 
         public static final WorldRestrictions NETHER_LAVA_BASALT_DELTAS =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.NETHER.location())
-                        .withBiomes(Biomes.BASALT_DELTAS.location())
-                        .withFluids(ResourceLocation.withDefaultNamespace("lava"));
+                        .withDims(Level.NETHER.identifier())
+                        .withBiomes(Biomes.BASALT_DELTAS.identifier())
+                        .withFluids(Identifier.withDefaultNamespace("lava"));
 
         public static final WorldRestrictions END =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.END.location());
+                        .withDims(Level.END.identifier());
 
         public static final WorldRestrictions END_OUTER_ISLANDS =
                 WorldRestrictions.DEFAULT
-                        .withDims(Level.END.location())
+                        .withDims(Level.END.identifier())
                         .withBiomesTags(BiomeTags.IS_END.location())
-                        .withBiomesBlacklist(Biomes.THE_END.location());
+                        .withBiomesBlacklist(Biomes.THE_END.identifier());
 
-        public WorldRestrictions withDims(ResourceLocation... dims)
+        public WorldRestrictions withDims(Identifier... dims)
         {
             return new WorldRestrictions(List.of(dims), this.dimsBlacklist, this.biomes, this.biomesTags, this.biomesBlacklist, this.biomesBlacklistTags, this.fluids, this.seasons, this.mustBeCaughtBelowY, this.mustBeCaughtAboveY);
         }
 
-        public WorldRestrictions withDimsBlacklist(ResourceLocation... dimsBlacklist)
+        public WorldRestrictions withDimsBlacklist(Identifier... dimsBlacklist)
         {
             return new WorldRestrictions(this.dims, List.of(dimsBlacklist), this.biomes, this.biomesTags, this.biomesBlacklist, this.biomesBlacklistTags, this.fluids, this.seasons, this.mustBeCaughtBelowY, this.mustBeCaughtAboveY);
         }
 
-        public WorldRestrictions withBiomes(ResourceLocation... biome)
+        public WorldRestrictions withBiomes(Identifier... biome)
         {
             return new WorldRestrictions(this.dims, this.dimsBlacklist, List.of(biome), this.biomesTags, this.biomesBlacklist, this.biomesBlacklistTags, this.fluids, this.seasons, this.mustBeCaughtBelowY, this.mustBeCaughtAboveY);
         }
 
-        public WorldRestrictions withBiomesTags(ResourceLocation... biomesTag)
+        public WorldRestrictions withBiomesTags(Identifier... biomesTag)
         {
             return new WorldRestrictions(this.dims, this.dimsBlacklist, this.biomes, List.of(biomesTag), this.biomesBlacklist, this.biomesBlacklistTags, this.fluids, this.seasons, this.mustBeCaughtBelowY, this.mustBeCaughtAboveY);
         }
 
-        public WorldRestrictions withBiomesBlacklist(ResourceLocation... biomesBlacklist)
+        public WorldRestrictions withBiomesBlacklist(Identifier... biomesBlacklist)
         {
             return new WorldRestrictions(this.dims, this.dimsBlacklist, this.biomes, this.biomesTags, List.of(biomesBlacklist), this.biomesBlacklistTags, this.fluids, this.seasons, this.mustBeCaughtBelowY, this.mustBeCaughtAboveY);
         }
 
-        public WorldRestrictions withBiomesBlacklistTags(ResourceLocation... biomesBlacklistTags)
+        public WorldRestrictions withBiomesBlacklistTags(Identifier... biomesBlacklistTags)
         {
             return new WorldRestrictions(this.dims, this.dimsBlacklist, this.biomes, this.biomesTags, this.biomesBlacklist, List.of(biomesBlacklistTags), this.fluids, this.seasons, this.mustBeCaughtBelowY, this.mustBeCaughtAboveY);
         }
 
-        public WorldRestrictions withFluids(ResourceLocation... fluids)
+        public WorldRestrictions withFluids(Identifier... fluids)
         {
             return new WorldRestrictions(this.dims, this.dimsBlacklist, this.biomes, this.biomesTags, this.biomesBlacklist, this.biomesBlacklistTags, List.of(fluids), this.seasons, this.mustBeCaughtBelowY, this.mustBeCaughtAboveY);
         }
@@ -838,17 +838,17 @@ public record FishProperties(
             int speed,
             int penalty,
             float decay,
-            List<ResourceLocation> modifiers,
+            List<Identifier> modifiers,
             List<SweetSpot> sweetSpots
     )
     {
 
-        public Difficulty(int speed, int penalty, float decay, List<ResourceLocation> modifiers, SweetSpot... sweetSpots)
+        public Difficulty(int speed, int penalty, float decay, List<Identifier> modifiers, SweetSpot... sweetSpots)
         {
             this(speed, penalty, decay, modifiers, Arrays.stream(sweetSpots).toList());
         }
 
-        public Difficulty withModifiers(List<ResourceLocation> modifiers)
+        public Difficulty withModifiers(List<Identifier> modifiers)
         {
             return new Difficulty(this.speed, this.penalty, this.decay, modifiers, this.sweetSpots);
         }
@@ -1131,7 +1131,7 @@ public record FishProperties(
                         Codec.INT.fieldOf("speed").forGetter(Difficulty::speed),
                         Codec.INT.fieldOf("missPenalty").forGetter(Difficulty::penalty),
                         Codec.FLOAT.fieldOf("decay").forGetter(Difficulty::decay),
-                        ResourceLocation.CODEC.listOf().fieldOf("modifiers").forGetter(Difficulty::modifiers),
+                        Identifier.CODEC.listOf().fieldOf("modifiers").forGetter(Difficulty::modifiers),
                         SweetSpot.LIST_CODEC.fieldOf("sweetspots").forGetter(Difficulty::sweetSpots)
                 ).apply(instance, Difficulty::new));
 
@@ -1140,15 +1140,15 @@ public record FishProperties(
                 ByteBufCodecs.INT, Difficulty::speed,
                 ByteBufCodecs.INT, Difficulty::penalty,
                 ByteBufCodecs.FLOAT, Difficulty::decay,
-                ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()), Difficulty::modifiers,
+                Identifier.STREAM_CODEC.apply(ByteBufCodecs.list()), Difficulty::modifiers,
                 SweetSpot.LIST_STREAM_CODEC, Difficulty::sweetSpots,
                 Difficulty::new
         );
     }
 
     public record SweetSpot(
-            ResourceLocation sweetSpotType,
-            ResourceLocation texturePath,
+            Identifier sweetSpotType,
+            Identifier texturePath,
             int size,
             int reward,
             boolean isFlip,
@@ -1157,37 +1157,37 @@ public record FishProperties(
             int particleColor
     )
     {
-        public SweetSpot(ResourceLocation sweetSpotType, ResourceLocation texturePath, int size, int reward, int particleColor)
+        public SweetSpot(Identifier sweetSpotType, Identifier texturePath, int size, int reward, int particleColor)
         {
             this(sweetSpotType, texturePath, size, reward, false, 0, 0, particleColor);
         }
 
-        private static final ResourceLocation RL_NORMAL = Starcatcher.rl("textures/gui/minigame/spots/normal.png");
-        private static final ResourceLocation RL_NORMAL_STEADY = Starcatcher.rl("textures/gui/minigame/spots/normal_steady.png");
-        private static final ResourceLocation RL_THIN = Starcatcher.rl("textures/gui/minigame/spots/thin.png");
-        private static final ResourceLocation RL_THIN_STEADY = Starcatcher.rl("textures/gui/minigame/spots/thin_steady.png");
-        private static final ResourceLocation RL_FREEZE = Starcatcher.rl("textures/gui/minigame/spots/frozen.png");
-        private static final ResourceLocation RL_TREASURE = Starcatcher.rl("textures/gui/minigame/spots/treasure.png");
-        private static final ResourceLocation RL_WITHER = Starcatcher.rl("textures/gui/minigame/spots/wither.png");
-        private static final ResourceLocation RL_WITHER_BIG = Starcatcher.rl("textures/gui/minigame/spots/wither_big.png");
-        private static final ResourceLocation RL_CREEPER = Starcatcher.rl("textures/gui/minigame/spots/creeper.png");
-        private static final ResourceLocation RL_TNT = Starcatcher.rl("textures/gui/minigame/spots/tnt.png");
-        private static final ResourceLocation RL_STONE = Starcatcher.rl("textures/gui/minigame/spots/stone.png");
-        private static final ResourceLocation RL_AQUA = Starcatcher.rl("textures/gui/minigame/spots/aqua.png");
+        private static final Identifier RL_NORMAL = Starcatcher.rl("textures/gui/minigame/spots/normal.png");
+        private static final Identifier RL_NORMAL_STEADY = Starcatcher.rl("textures/gui/minigame/spots/normal_steady.png");
+        private static final Identifier RL_THIN = Starcatcher.rl("textures/gui/minigame/spots/thin.png");
+        private static final Identifier RL_THIN_STEADY = Starcatcher.rl("textures/gui/minigame/spots/thin_steady.png");
+        private static final Identifier RL_FREEZE = Starcatcher.rl("textures/gui/minigame/spots/frozen.png");
+        private static final Identifier RL_TREASURE = Starcatcher.rl("textures/gui/minigame/spots/treasure.png");
+        private static final Identifier RL_WITHER = Starcatcher.rl("textures/gui/minigame/spots/wither.png");
+        private static final Identifier RL_WITHER_BIG = Starcatcher.rl("textures/gui/minigame/spots/wither_big.png");
+        private static final Identifier RL_CREEPER = Starcatcher.rl("textures/gui/minigame/spots/creeper.png");
+        private static final Identifier RL_TNT = Starcatcher.rl("textures/gui/minigame/spots/tnt.png");
+        private static final Identifier RL_STONE = Starcatcher.rl("textures/gui/minigame/spots/stone.png");
+        private static final Identifier RL_AQUA = Starcatcher.rl("textures/gui/minigame/spots/aqua.png");
 
-        private static final ResourceLocation RL_NETHER_CRAB_CLAW = Starcatcher.rl("textures/gui/minigame/spots/nether_crab_claw.png");
-        private static final ResourceLocation RL_NETHER_CRAB_LEG = Starcatcher.rl("textures/gui/minigame/spots/nether_crab_leg.png");
+        private static final Identifier RL_NETHER_CRAB_CLAW = Starcatcher.rl("textures/gui/minigame/spots/nether_crab_claw.png");
+        private static final Identifier RL_NETHER_CRAB_LEG = Starcatcher.rl("textures/gui/minigame/spots/nether_crab_leg.png");
 
-        private static final ResourceLocation RL_END_CRAB_LEG = Starcatcher.rl("textures/gui/minigame/spots/end_crab_leg.png");
-        private static final ResourceLocation RL_END_CRAB_CLAW = Starcatcher.rl("textures/gui/minigame/spots/end_crab_claw.png");
+        private static final Identifier RL_END_CRAB_LEG = Starcatcher.rl("textures/gui/minigame/spots/end_crab_leg.png");
+        private static final Identifier RL_END_CRAB_CLAW = Starcatcher.rl("textures/gui/minigame/spots/end_crab_claw.png");
 
-        private static final ResourceLocation RL_DEEPSLATE_CRAB_LEG = Starcatcher.rl("textures/gui/minigame/spots/deepslate_crab_leg.png");
-        private static final ResourceLocation RL_DEEPSLATE_CRAB_CLAW = Starcatcher.rl("textures/gui/minigame/spots/deepslate_crab_claw.png");
+        private static final Identifier RL_DEEPSLATE_CRAB_LEG = Starcatcher.rl("textures/gui/minigame/spots/deepslate_crab_leg.png");
+        private static final Identifier RL_DEEPSLATE_CRAB_CLAW = Starcatcher.rl("textures/gui/minigame/spots/deepslate_crab_claw.png");
 
-        private static final ResourceLocation RL_OBSIDIAN_CRAB_LEG = Starcatcher.rl("textures/gui/minigame/spots/obsidian_crab_leg.png");
-        private static final ResourceLocation RL_OBSIDIAN_CRAB_CLAW = Starcatcher.rl("textures/gui/minigame/spots/obsidian_crab_claw.png");
+        private static final Identifier RL_OBSIDIAN_CRAB_LEG = Starcatcher.rl("textures/gui/minigame/spots/obsidian_crab_leg.png");
+        private static final Identifier RL_OBSIDIAN_CRAB_CLAW = Starcatcher.rl("textures/gui/minigame/spots/obsidian_crab_claw.png");
 
-        private static final ResourceLocation RL_THIN_STEADY_MOSSY = Starcatcher.rl("textures/gui/minigame/spots/thin_mossy.png");
+        private static final Identifier RL_THIN_STEADY_MOSSY = Starcatcher.rl("textures/gui/minigame/spots/thin_mossy.png");
 
 
         public SweetSpot flip()
@@ -1387,8 +1387,8 @@ public record FishProperties(
 
         public static final Codec<SweetSpot> CODEC = RecordCodecBuilder.create(instance ->
                 instance.group(
-                        ResourceLocation.CODEC.fieldOf("sweet_spot_type").forGetter(SweetSpot::sweetSpotType),
-                        ResourceLocation.CODEC.fieldOf("texture_path").forGetter(SweetSpot::texturePath),
+                        Identifier.CODEC.fieldOf("sweet_spot_type").forGetter(SweetSpot::sweetSpotType),
+                        Identifier.CODEC.fieldOf("texture_path").forGetter(SweetSpot::texturePath),
                         Codec.INT.fieldOf("hitbox_size_in_pixels").forGetter(SweetSpot::size),
                         Codec.INT.fieldOf("reward").forGetter(SweetSpot::reward),
                         Codec.BOOL.fieldOf("is_flip").forGetter(SweetSpot::isFlip),
@@ -1400,8 +1400,8 @@ public record FishProperties(
         public static final Codec<List<SweetSpot>> LIST_CODEC = CODEC.listOf();
 
         public static final StreamCodec<FriendlyByteBuf, SweetSpot> STREAM_CODEC = ExtraComposites.composite(
-                ResourceLocation.STREAM_CODEC, SweetSpot::sweetSpotType,
-                ResourceLocation.STREAM_CODEC, SweetSpot::texturePath,
+                Identifier.STREAM_CODEC, SweetSpot::sweetSpotType,
+                Identifier.STREAM_CODEC, SweetSpot::texturePath,
                 ByteBufCodecs.INT, SweetSpot::size,
                 ByteBufCodecs.INT, SweetSpot::reward,
                 ByteBufCodecs.BOOL, SweetSpot::isFlip,
@@ -1548,13 +1548,11 @@ public record FishProperties(
         }
     }
 
-    public static List<ResourceLocation> getBiomesAsList(FishProperties fp, Level level)
+    public static List<Identifier> getBiomesAsList(FishProperties fp, Level level)
     {
-        level.registryAccess().registry(Registries.BIOME);
+        List<Identifier> rls = new ArrayList<>();
 
-        List<ResourceLocation> rls = new ArrayList<>();
-
-        for (ResourceLocation rl : fp.wr.biomesTags)
+        for (Identifier rl : fp.wr.biomesTags)
         {
             TagKey<Biome> biomeBeingChecked = TagKey.create(Registries.BIOME, rl);
 
@@ -1566,12 +1564,12 @@ public record FishProperties(
                 {
                     String biomeString = biomeHolder.getRegisteredName();
 
-                    rls.add(ResourceLocation.parse(biomeString));
+                    rls.add(Identifier.parse(biomeString));
                 }
             }
         }
 
-        for (ResourceLocation rl : fp.wr.biomes)
+        for (Identifier rl : fp.wr.biomes)
         {
             Optional<Holder.Reference<Biome>> optional = level.registryAccess().lookupOrThrow(Registries.BIOME).get(ResourceKey.create(Registries.BIOME, rl));
             if (optional.isPresent()) if (!rls.contains(rl)) rls.add(rl);
@@ -1580,13 +1578,11 @@ public record FishProperties(
         return rls;
     }
 
-    public static List<ResourceLocation> getBiomesBlacklistAsList(FishProperties fp, Level level)
+    public static List<Identifier> getBiomesBlacklistAsList(FishProperties fp, Level level)
     {
-        level.registryAccess().registry(Registries.BIOME);
+        List<Identifier> rls = new ArrayList<>();
 
-        List<ResourceLocation> rls = new ArrayList<>();
-
-        for (ResourceLocation rl : fp.wr.biomesBlacklistTags)
+        for (Identifier rl : fp.wr.biomesBlacklistTags)
         {
             TagKey<Biome> biomeBeingChecked = TagKey.create(Registries.BIOME, rl);
 
@@ -1598,12 +1594,12 @@ public record FishProperties(
                 {
                     String biomeString = biomeHolder.getRegisteredName();
 
-                    rls.add(ResourceLocation.parse(biomeString));
+                    rls.add(Identifier.parse(biomeString));
                 }
             }
         }
 
-        for (ResourceLocation rl : fp.wr.biomesBlacklist)
+        for (Identifier rl : fp.wr.biomesBlacklist)
         {
             Optional<Holder.Reference<Biome>> optional = level.registryAccess().lookupOrThrow(Registries.BIOME).get(ResourceKey.create(Registries.BIOME, rl));
             if (optional.isPresent()) if (!rls.contains(rl)) rls.add(rl);
@@ -1619,7 +1615,7 @@ public record FishProperties(
 
     public static List<FishProperties> getFPs(RegistryAccess registryAccess)
     {
-        return registryAccess.registryOrThrow(Starcatcher.FISH_REGISTRY).stream().toList();
+        return registryAccess.lookupOrThrow(Starcatcher.FISH_REGISTRY).stream().toList();
     }
 
     public static int getChance(FishProperties fp, Entity entity, ItemStack rod)
@@ -1660,7 +1656,7 @@ public record FishProperties(
     {
         List<FishProperties> list = new ArrayList<>();
 
-        for (FishProperties fp : entity.level().registryAccess().registryOrThrow(Starcatcher.FISH_REGISTRY))
+        for (FishProperties fp : entity.level().registryAccess().lookupOrThrow(Starcatcher.FISH_REGISTRY))
             if (isDimensionCorrect(entity, fp) && isBiomeCorrect(entity, fp) && isElevationCorrect(entity, fp) && fp.hasGuideEntry && fp.baseChance != 0) list.add(fp);
 
         return list;
@@ -1738,9 +1734,9 @@ public record FishProperties(
     public static boolean isBiomeCorrect(Entity entity, FishProperties fp)
     {
         Level level = entity.level();
-        List<ResourceLocation> biomes = getBiomesAsList(fp, level);
-        List<ResourceLocation> blacklist = getBiomesBlacklistAsList(fp, level);
-        ResourceLocation currentBiome = level.getBiome(entity.blockPosition()).getKey().location();
+        List<Identifier> biomes = getBiomesAsList(fp, level);
+        List<Identifier> blacklist = getBiomesBlacklistAsList(fp, level);
+        Identifier currentBiome = level.getBiome(entity.blockPosition()).getKey().identifier();
 
         if (!biomes.isEmpty() && !biomes.contains(currentBiome))
             return false;
@@ -1753,10 +1749,10 @@ public record FishProperties(
     public static boolean isDimensionCorrect(Entity entity, FishProperties fp)
     {
         //dimension  check
-        if (!fp.wr.dims.isEmpty() && !fp.wr().dims().contains(entity.level().dimension().location()))
+        if (!fp.wr.dims.isEmpty() && !fp.wr().dims().contains(entity.level().dimension().identifier()))
             return false;
 
-        if (fp.wr.dimsBlacklist.contains(entity.level().dimension().location()))
+        if (fp.wr.dimsBlacklist.contains(entity.level().dimension().identifier()))
             return false;
         return true;
     }
@@ -1799,9 +1795,9 @@ public record FishProperties(
         return new SizeAndWeight(sizeAvg, sizeDev, weightAvg, weightDev);
     }
 
-    public static ResourceLocation rl(String ns, String path)
+    public static Identifier rl(String ns, String path)
     {
-        return ResourceLocation.fromNamespaceAndPath(ns, path);
+        return Identifier.fromNamespaceAndPath(ns, path);
     }
 
 }

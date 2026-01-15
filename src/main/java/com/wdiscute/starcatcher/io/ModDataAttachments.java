@@ -4,9 +4,9 @@ import com.mojang.serialization.Codec;
 import com.wdiscute.starcatcher.Starcatcher;
 import com.wdiscute.starcatcher.io.attachments.FishingBobAttachment;
 import com.wdiscute.starcatcher.io.attachments.FishingGuideAttachment;
-import net.dries007.tfc.client.overworld.Star;
+// import net.dries007.tfc.client.overworld.Star; // TFC not available for 1.21.11
 import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
@@ -31,7 +31,7 @@ public class ModDataAttachments
 
     public static final Supplier<AttachmentType<FishingGuideAttachment>> FISHING_GUIDE = ATTACHMENT_TYPES.register(
             "fishing_guide", () -> AttachmentType.builder(FishingGuideAttachment::createDefault)
-                    .serialize(FishingGuideAttachment.CODEC)
+                    .serialize(FishingGuideAttachment.CODEC.fieldOf("value"))
                     .sync(FishingGuideAttachment.STREAM_CODEC)
                     .copyOnDeath()
                     .build()
@@ -41,7 +41,7 @@ public class ModDataAttachments
     @Deprecated // use FISHING_GUIDE attachment!!!
     public static final Supplier<AttachmentType<Boolean>> RECEIVED_GUIDE = ATTACHMENT_TYPES.register(
             "received_guide", () -> AttachmentType.builder(() -> false)
-                    .serialize(Codec.BOOL)
+                    .serialize(Codec.BOOL.fieldOf("value"))
                     .sync(ByteBufCodecs.BOOL)
                     .build()
     );
@@ -50,38 +50,38 @@ public class ModDataAttachments
     public static final Supplier<AttachmentType<List<LegacyFishCaughtCounter>>> FISHES_CAUGHT = ATTACHMENT_TYPES.register(
             "fishes_caught", () ->
                     AttachmentType.builder(() -> List.<LegacyFishCaughtCounter>of())
-                            .serialize(LegacyFishCaughtCounter.LIST_CODEC)
+                            .serialize(LegacyFishCaughtCounter.LIST_CODEC.fieldOf("value"))
                             .sync(LegacyFishCaughtCounter.LIST_STREAM_CODEC)
                             .copyOnDeath()
                             .build()
     );
 
     @Deprecated  // use FISHING_GUIDE attachment!!!
-    public static final Supplier<AttachmentType<List<ResourceLocation>>> TROPHIES_CAUGHT = ATTACHMENT_TYPES.register(
+    public static final Supplier<AttachmentType<List<Identifier>>> TROPHIES_CAUGHT = ATTACHMENT_TYPES.register(
             "trophies_caught", () ->
-                    AttachmentType.builder(() -> List.<ResourceLocation>of())
-                            .serialize(ResourceLocation.CODEC.listOf())
-                            .sync(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()))
+                    AttachmentType.builder(() -> List.<Identifier>of())
+                            .serialize(Identifier.CODEC.listOf().fieldOf("value"))
+                            .sync(Identifier.STREAM_CODEC.apply(ByteBufCodecs.list()))
                             .copyOnDeath()
                             .build()
     );
 
     @Deprecated // use FISHING_GUIDE attachment!!!
-    public static final Supplier<AttachmentType<List<ResourceLocation>>> FISHES_NOTIFICATION = ATTACHMENT_TYPES.register(
+    public static final Supplier<AttachmentType<List<Identifier>>> FISHES_NOTIFICATION = ATTACHMENT_TYPES.register(
             "fishes_notification", () ->
-                    AttachmentType.builder(() -> List.<ResourceLocation>of())
-                            .serialize(ResourceLocation.CODEC.listOf())
-                            .sync(ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()))
+                    AttachmentType.builder(() -> List.<Identifier>of())
+                            .serialize(Identifier.CODEC.listOf().fieldOf("value"))
+                            .sync(Identifier.STREAM_CODEC.apply(ByteBufCodecs.list()))
                             .copyOnDeath()
                             .build()
     );
 
 
-    public static final Supplier<AttachmentType<ResourceLocation>> TACKLE_SKIN = ATTACHMENT_TYPES.register(
+    public static final Supplier<AttachmentType<Identifier>> TACKLE_SKIN = ATTACHMENT_TYPES.register(
             "tackle_skin", () ->
                     AttachmentType.builder(() -> Starcatcher.rl("base"))
-                            .serialize(ResourceLocation.CODEC)
-                            .sync(ResourceLocation.STREAM_CODEC)
+                            .serialize(Identifier.CODEC.fieldOf("value"))
+                            .sync(Identifier.STREAM_CODEC)
                             .build()
     );
 

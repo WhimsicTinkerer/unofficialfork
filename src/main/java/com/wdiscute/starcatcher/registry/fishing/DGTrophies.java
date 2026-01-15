@@ -18,7 +18,7 @@ public class DGTrophies
 
     private static ResourceKey<TrophyProperties> createKey(TrophyProperties tp)
     {
-        return ResourceKey.create(Starcatcher.TROPHY_REGISTRY, tp.fish().getKey().location());
+        return ResourceKey.create(Starcatcher.TROPHY_REGISTRY, tp.fish().getKey().identifier());
     }
 
     private static void register(BootstrapContext<TrophyProperties> context, TrophyProperties.Builder builder)
@@ -199,7 +199,7 @@ public class DGTrophies
                 context, TrophyProperties.builder().setFishProperties(
                                 overworldFish(ModItems.BAMBOO_ROD)
                                         .withWorldRestrictions(FishProperties.WorldRestrictions.OVERWORLD
-                                                .withBiomes(Biomes.BAMBOO_JUNGLE.location())))
+                                                .withBiomes(Biomes.BAMBOO_JUNGLE.identifier())))
                         .setTrophyType(TrophyProperties.TrophyType.EXTRA)
                         .setChanceToCatch(1)
                         .setRepeatable(true)

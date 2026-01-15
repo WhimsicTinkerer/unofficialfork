@@ -34,7 +34,7 @@ public class BucketTooltipRenderer implements ClientTooltipComponent {
     }
 
     @Override
-    public int getHeight() {
+    public int getHeight(Font font) {
         return isEmpty() ? 0 : 18;
     }
 
@@ -46,8 +46,8 @@ public class BucketTooltipRenderer implements ClientTooltipComponent {
         return hasProperties() ? ret : 16 ;
     }
 
-    @Override
-    public void renderImage(Font font, int x, int y, GuiGraphics guiGraphics) {
+    // Note: render method signature changed in 1.21.11
+    public void render(GuiGraphics guiGraphics, Font font, int x, int y) {
         if (!isEmpty()) {
             guiGraphics.renderItem(tooltip.fish(), x, y);
 

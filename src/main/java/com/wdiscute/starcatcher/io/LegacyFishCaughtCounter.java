@@ -6,14 +6,14 @@ import com.wdiscute.starcatcher.storage.FishProperties;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
 @Deprecated
 public record LegacyFishCaughtCounter(
-        ResourceLocation fp,
+        Identifier fp,
         int count,
         int fastestTicks,
         float averageTicks,
@@ -26,7 +26,7 @@ public record LegacyFishCaughtCounter(
 
     public static final Codec<LegacyFishCaughtCounter> CODEC = RecordCodecBuilder.create(instance ->
             instance.group(
-                    ResourceLocation.CODEC.fieldOf("fps").forGetter(LegacyFishCaughtCounter::fp),
+                    Identifier.CODEC.fieldOf("fps").forGetter(LegacyFishCaughtCounter::fp),
                     Codec.INT.optionalFieldOf("count", 0).forGetter(LegacyFishCaughtCounter::count),
                     Codec.INT.optionalFieldOf("fastest_ticks", 0).forGetter(LegacyFishCaughtCounter::fastestTicks),
                     Codec.FLOAT.optionalFieldOf("average_ticks", 0.0f).forGetter(LegacyFishCaughtCounter::averageTicks),
@@ -38,7 +38,7 @@ public record LegacyFishCaughtCounter(
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, LegacyFishCaughtCounter> STREAM_CODEC = ExtraComposites.composite(
-            ResourceLocation.STREAM_CODEC, LegacyFishCaughtCounter::fp,
+            Identifier.STREAM_CODEC, LegacyFishCaughtCounter::fp,
             ByteBufCodecs.VAR_INT, LegacyFishCaughtCounter::count,
             ByteBufCodecs.VAR_INT, LegacyFishCaughtCounter::fastestTicks,
             ByteBufCodecs.FLOAT, LegacyFishCaughtCounter::averageTicks,

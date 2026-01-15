@@ -15,16 +15,16 @@ public class ModBlockEntities
 
 
     public static final Supplier<BlockEntityType<TrophyBlockEntity>> TROPHY = BLOCK_ENTITIES.register("trophy",
-            () -> BlockEntityType.Builder.of(TrophyBlockEntity::new,
+            () -> new BlockEntityType<>(TrophyBlockEntity::new,
                             ModBlocks.TROPHY_GOLD.get(),
                             ModBlocks.TROPHY_SILVER.get(),
                             ModBlocks.TROPHY_BRONZE.get()
-                    ).build(null));
+                    ));
 
     public static final Supplier<BlockEntityType<StandBlockEntity>> STAND = BLOCK_ENTITIES.register("stand",
-            () -> BlockEntityType.Builder.of(StandBlockEntity::new,
+            () -> new BlockEntityType<>(StandBlockEntity::new,
                             ModBlocks.STAND.get()
-                    ).build(null));
+                    ));
 
 
 

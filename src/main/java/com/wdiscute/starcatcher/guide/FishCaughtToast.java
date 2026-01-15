@@ -6,17 +6,18 @@ import com.wdiscute.starcatcher.U;
 import com.wdiscute.starcatcher.storage.FishProperties;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.toasts.Toast;
-import net.minecraft.client.gui.components.toasts.ToastComponent;
+import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
 
 public class FishCaughtToast implements Toast
 {
-    private static final ResourceLocation BACKGROUND_SPRITE = Starcatcher.rl("toast/fish_caught");
+    private static final Identifier BACKGROUND_SPRITE = Starcatcher.rl("toast/fish_caught");
     private final Component title;
     private final String description;
     private static final String gibberish = "§kaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -47,15 +48,20 @@ public class FishCaughtToast implements Toast
         return 51;
     }
 
-    public Visibility render(GuiGraphics guiGraphics, ToastComponent toastComponent, long timeSinceLastVisible)
+    private long lastTime = 0;
+    private Visibility visibility = Visibility.SHOW;
+
+    @Override
+    public Visibility getWantedVisibility()
     {
-        guiGraphics.blitSprite(BACKGROUND_SPRITE, 0, 0, width(), height());
+        return visibility;
+    }
 
-        guiGraphics.renderItem(is, 6, 29);
-
-        guiGraphics.drawString(toastComponent.getMinecraft().font, this.title, 40, 13, 0x635040, false);
-
-        int lettersRevealed = Math.clamp((timeSinceLastVisible - 500) / 150, 0, description.length());
+    @Override
+    public void update(ToastManager toastManager, long timeSinceLastVisible)
+    {
+        lastTime = timeSinceLastVisible;
+        int lettersRevealed = (int) Math.clamp((timeSinceLastVisible - 500) / 150, 0, description.length());
 
         if (old != lettersRevealed)
         {
@@ -63,19 +69,24 @@ public class FishCaughtToast implements Toast
             old = lettersRevealed;
         }
 
+        visibility = timeSinceLastVisible < 10000 ? Visibility.SHOW : Visibility.HIDE;
+    }
+
+    @Override
+    public void render(GuiGraphics guiGraphics, Font font, long timeSinceLastVisible)
+    {
+        guiGraphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, width(), height());
+
+        guiGraphics.renderItem(is, 6, 29);
+
+        guiGraphics.drawString(font, this.title, 40, 13, 0x635040, false);
+
+        int lettersRevealed = (int) Math.clamp((timeSinceLastVisible - 500) / 150, 0, description.length());
+
         Component comp = Tooltips.decodeString(pre + description.substring(0, lettersRevealed) + post).copy()
                 .append(Component.literal(gibberish.substring(0, description.length() - lettersRevealed + 2)).withStyle(Style.EMPTY.withColor(0x635040)));
 
-        guiGraphics.drawString(toastComponent.getMinecraft().font, comp, 40, 22, 0x635040, false);
-
-        if (timeSinceLastVisible < 10000)
-        {
-            return Visibility.SHOW;
-        }
-        else
-        {
-            return Visibility.HIDE;
-        }
+        guiGraphics.drawString(font, comp, 40, 22, 0x635040, false);
     }
 
 }

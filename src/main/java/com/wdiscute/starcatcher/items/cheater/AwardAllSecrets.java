@@ -5,9 +5,9 @@ import com.wdiscute.starcatcher.U;
 import com.wdiscute.starcatcher.io.ModDataAttachments;
 import com.wdiscute.starcatcher.io.attachments.FishingGuideAttachment;
 import com.wdiscute.starcatcher.storage.TrophyProperties;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -26,12 +26,12 @@ public class AwardAllSecrets extends Item
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand)
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand)
     {
         //awards all secrets
-        Map<ResourceLocation, Integer> trophies = FishingGuideAttachment.getTrophiesCaught(player);
+        Map<Identifier, Integer> trophies = FishingGuideAttachment.getTrophiesCaught(player);
 
-        level.registryAccess().registryOrThrow(Starcatcher.TROPHY_REGISTRY).forEach(
+        level.registryAccess().lookupOrThrow(Starcatcher.TROPHY_REGISTRY).forEach(
                 tp ->
                 {
                     if(tp.trophyType() == TrophyProperties.TrophyType.SECRET)
@@ -40,7 +40,7 @@ public class AwardAllSecrets extends Item
 
         FishingGuideAttachment.setTrophiesCaught(player, trophies);
 
-        return InteractionResultHolder.success(player.getItemInHand(usedHand));
+        return InteractionResult.SUCCESS;
     }
 
 }

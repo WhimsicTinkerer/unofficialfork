@@ -135,7 +135,7 @@ public class ModEvents
 
         if (event.getItemStack().is(Items.BONE_MEAL) && level.getBlockState(event.getPos()).getBlock() instanceof FarmBlock)
         {
-            if (!level.isClientSide && Config.ENABLE_BONE_MEAL_ON_FARMLAND_FOR_WORMS.getAsBoolean())
+            if (!level.isClientSide() && Config.ENABLE_BONE_MEAL_ON_FARMLAND_FOR_WORMS.getAsBoolean())
             {
                 ItemStack is;
                 float i = level.getRandom().nextFloat();

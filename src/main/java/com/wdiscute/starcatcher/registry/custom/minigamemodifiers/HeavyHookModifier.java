@@ -1,7 +1,6 @@
 package com.wdiscute.starcatcher.registry.custom.minigamemodifiers;
 
 import com.wdiscute.starcatcher.minigame.ActiveSweetSpot;
-import org.checkerframework.checker.index.qual.PolyUpperBound;
 
 public class HeavyHookModifier extends AbstractMinigameModifier
 {

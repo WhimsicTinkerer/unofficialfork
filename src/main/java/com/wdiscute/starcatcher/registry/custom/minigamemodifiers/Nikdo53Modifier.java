@@ -8,13 +8,15 @@ import com.wdiscute.starcatcher.minigame.FishingMinigameScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
+import org.joml.Matrix3x2fStack;
 
 public class Nikdo53Modifier extends AbstractMinigameModifier
 {
-    public static final ResourceLocation POINTER_SMALL = Starcatcher.rl("textures/gui/minigame/modifiers/nikdo53_pointer_1.png");
-    public static final ResourceLocation POINTER_LARGE = Starcatcher.rl("textures/gui/minigame/modifiers/nikdo53_pointer_2.png");
-    public static final ResourceLocation WHEEL = Starcatcher.rl("textures/gui/minigame/modifiers/nikdo53_wheel.png");
+    public static final Identifier POINTER_SMALL = Starcatcher.rl("textures/gui/minigame/modifiers/nikdo53_pointer_1.png");
+    public static final Identifier POINTER_LARGE = Starcatcher.rl("textures/gui/minigame/modifiers/nikdo53_pointer_2.png");
+    public static final Identifier WHEEL = Starcatcher.rl("textures/gui/minigame/modifiers/nikdo53_wheel.png");
 
     public int pointerLayer = 0;
     public int maxPointerLayer;
@@ -104,12 +106,13 @@ public class Nikdo53Modifier extends AbstractMinigameModifier
         poseStack.translate(0, -9 * layer, 0);
 
         // Dim when not in use
-        if (pointerLayer != layer)
-            RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
+        // TODO: RenderSystem.setShaderColor was removed in 1.21.11, find replacement
+        // if (pointerLayer != layer)
+        //     RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
 
         spot.behaviour.render(guiGraphics, poseStack, partialTick);
 
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+        // RenderSystem.setShaderColor(1, 1, 1, 1);
 
         poseStack.popPose();
     }
@@ -117,29 +120,30 @@ public class Nikdo53Modifier extends AbstractMinigameModifier
     @Override
     public void renderBackground(GuiGraphics guiGraphics, float partialTick, int width, int height) {
         super.renderBackground(guiGraphics, partialTick, width, height);
-        PoseStack poseStack = guiGraphics.pose();
+        Matrix3x2fStack poseStack = guiGraphics.pose();
 
         //render A
-        guiGraphics.blit(FishingMinigameScreen.TEXTURE, width / 2 - 40, height / 2 + 40, 32, 16, isHoldingLeft ? 32 : 0, 128, 32, 16, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FishingMinigameScreen.TEXTURE, width / 2 - 40, height / 2 + 40, isHoldingLeft ? 32 : 0, 128, 32, 16, 256, 256);
 
         //render D
-        guiGraphics.blit(FishingMinigameScreen.TEXTURE, width / 2 + 8, height / 2 + 40, 32, 16, isHoldingRight ? 32 : 0, 144, 32, 16, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FishingMinigameScreen.TEXTURE, width / 2 + 8, height / 2 + 40, isHoldingRight ? 32 : 0, 144, 32, 16, 256, 256);
 
 
-        poseStack.pushPose();
+        poseStack.pushMatrix();
 
         // kapiten reference!1!1!1!1!!
-        poseStack.translate(width >> 1, height >> 1, 0);
+        poseStack.translate(width >> 1, height >> 1);
 
         // Dim when not in use
-        if (pointerLayer != 1)
-            RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
+        // TODO: RenderSystem.setShaderColor was removed in 1.21.11, find replacement
+        // if (pointerLayer != 1)
+        //     RenderSystem.setShaderColor(0.5f, 0.5f, 0.5f, 1);
 
         FishingMinigameScreen.renderPoseCentered(guiGraphics, WHEEL, 128);
 
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+        // RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        poseStack.popPose();
+        poseStack.popMatrix();
     }
 
     @Override

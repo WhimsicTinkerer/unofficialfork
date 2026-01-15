@@ -19,7 +19,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -121,7 +121,10 @@ public class FishingBobEntity extends Projectile
         double d0 = player.getX() - (double) f3 * 0.3;
         double d1 = player.getEyeY();
         double d2 = player.getZ() - (double) f2 * 0.3;
-        this.moveTo(d0, d1, d2, playerYRot, playerXRot);
+        // moveTo removed in 1.21.11 - use setPos + setYRot + setXRot
+        this.setPos(d0, d1, d2);
+        this.setYRot(playerYRot);
+        this.setXRot(playerXRot);
         Vec3 vec3 = new Vec3(-f3, Mth.clamp(-(f5 / f4), -5.0F, 5.0F), -f2);
         double d3 = vec3.length();
         vec3 = vec3.multiply(0.6 / d3 + this.random.triangle(0.5F, 0.0103365), 0.6 / d3 + this.random.triangle(0.5F, 0.0103365), 0.6 / d3 + this.random.triangle(0.5F, 0.0103365));
@@ -131,7 +134,7 @@ public class FishingBobEntity extends Projectile
         this.yRotO = this.getYRot();
         this.xRotO = this.getXRot();
 
-        if (!level.isClientSide)
+        if (!level.isClientSide())
             ModDataAttachments.get(player, ModDataAttachments.FISHING_BOB).setUuid(player, this.uuid);
 
         currentState = FishHookState.FLYING;
@@ -144,7 +147,7 @@ public class FishingBobEntity extends Projectile
         //server only
         List<FishProperties> available = new ArrayList<>(List.of());
 
-        Map<ResourceLocation, Integer> data = FishingGuideAttachment.getTrophiesCaught(player);
+        Map<Identifier, Integer> data = FishingGuideAttachment.getTrophiesCaught(player);
 
         List<TrophyProperties> trophiesCaught = new ArrayList<>(U.getTpsFromRls(level(), data.keySet().stream().toList()));
 
@@ -166,7 +169,7 @@ public class FishingBobEntity extends Projectile
 
         //check if any trophy can be caught
         e:
-        for (TrophyProperties tp : level().registryAccess().registryOrThrow(Starcatcher.TROPHY_REGISTRY))
+        for (TrophyProperties tp : level().registryAccess().lookupOrThrow(Starcatcher.TROPHY_REGISTRY))
         {
             //if tp can be caught
             for (FishProperties.Rarity value : FishProperties.Rarity.values())
@@ -200,7 +203,7 @@ public class FishingBobEntity extends Projectile
 
                 U.getRlsFromTps(level(), trophiesCaught).forEach(loc -> data.putIfAbsent(loc, 0));
 
-                kill();
+                kill((ServerLevel) level());
                 return;
             }
         }
@@ -209,7 +212,7 @@ public class FishingBobEntity extends Projectile
         modifiers.forEach(AbstractCatchModifier::onReelAfterTreasureCheck);
 
         //if no trophy is available, get chances of getting each fish
-        for (FishProperties fp : level().registryAccess().registryOrThrow(Starcatcher.FISH_REGISTRY))
+        for (FishProperties fp : level().registryAccess().lookupOrThrow(Starcatcher.FISH_REGISTRY))
         {
             int chance = FishProperties.getChance(fp, this, rod);
 
@@ -220,7 +223,7 @@ public class FishingBobEntity extends Projectile
         }
 
         //if no fish is available, reset player fishing data and award nothing
-        if (available.isEmpty()) this.kill();
+        if (available.isEmpty()) this.kill((ServerLevel) level());
 
         //trigger modifiers for which fish to get based on available
         for (AbstractCatchModifier acm : modifiers)
@@ -238,7 +241,7 @@ public class FishingBobEntity extends Projectile
         //should cancel to prevent normal minigame/item fished (only used for vanilla bobber)
         if(modifiers.stream().anyMatch(AbstractCatchModifier::shouldCancelBeforeSkipsMinigameCheck))
         {
-            this.kill();
+            this.kill((ServerLevel) level());
             return;
         }
 
@@ -279,7 +282,7 @@ public class FishingBobEntity extends Projectile
 
     private boolean shouldStopFishing(Player player)
     {
-        if (level().isClientSide) return false;
+        if (level().isClientSide()) return false;
 
         //if any modifier wants to stop fishing
         if(modifiers.stream().anyMatch(acm -> acm.shouldStopFishing())) return true;
@@ -293,7 +296,7 @@ public class FishingBobEntity extends Projectile
         }
         else
         {
-            this.kill();
+            this.kill((ServerLevel) level());
             return true;
         }
     }
@@ -308,17 +311,17 @@ public class FishingBobEntity extends Projectile
     public void lavaHurt()
     {
         super.lavaHurt();
-        if (!netherite_upgraded && !level().isClientSide)
+        if (!netherite_upgraded && !level().isClientSide())
         {
-            kill();
+            kill((ServerLevel) level());
         }
     }
 
     @Override
-    public void kill()
+    public void kill(ServerLevel level)
     {
         ModDataAttachments.remove(player, ModDataAttachments.FISHING_BOB);
-        super.kill();
+        super.kill(level);
     }
 
     @Override
@@ -326,7 +329,7 @@ public class FishingBobEntity extends Projectile
     {
         super.tick();
 
-        if (!level().isClientSide)
+        if (!level().isClientSide())
         {
             if (currentState == FishHookState.FLYING) entityData.set(STATE, 1);
             if (currentState == FishHookState.BOBBING) entityData.set(STATE, 2);
@@ -360,7 +363,7 @@ public class FishingBobEntity extends Projectile
             if (!fluid.isEmpty())
             {
                 this.setDeltaMovement(this.getDeltaMovement().multiply(0.3, 0.3, 0.3));
-                if (!level().isClientSide) this.currentState = FishHookState.BOBBING;
+                if (!level().isClientSide()) this.currentState = FishHookState.BOBBING;
                 return;
             }
         }
@@ -390,7 +393,7 @@ public class FishingBobEntity extends Projectile
             {
                 ModDataAttachments.remove(player, ModDataAttachments.FISHING_BOB);
                 ModTackleSkins.get(level(), rod).onMissed(player);
-                kill();
+                kill((ServerLevel) level());
             }
         }
         else
@@ -401,7 +404,7 @@ public class FishingBobEntity extends Projectile
         //if theres no fluid on block or under, changes to FLYING
         if (fluid.isEmpty() && fluidBellow.isEmpty())
         {
-            if (!level().isClientSide) currentState = FishHookState.FLYING;
+            if (!level().isClientSide()) currentState = FishHookState.FLYING;
         }
 
         //TODO check for water level instead of just blockstate to make the entity sit better in water
@@ -455,7 +458,7 @@ public class FishingBobEntity extends Projectile
 
     private void checkForFish()
     {
-        if (!level().isClientSide && currentState == FishHookState.BOBBING)
+        if (!level().isClientSide() && currentState == FishHookState.BOBBING)
         {
             ticksInFluid++;
             int i = random.nextInt(chanceToFishEachTick);
@@ -468,7 +471,7 @@ public class FishingBobEntity extends Projectile
                             1, 0, 0, 0, 0);
 
                 this.setPos(position().x, position().y - 0.5f, position().z);
-                if (!level().isClientSide) currentState = FishHookState.BITING;
+                if (!level().isClientSide()) currentState = FishHookState.BITING;
                 this.playSound(SoundEvents.FISHING_BOBBER_SPLASH, 0.25F, 1.0F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
             }
         }
@@ -476,12 +479,8 @@ public class FishingBobEntity extends Projectile
 
     }
 
-    @Override
-    public AABB getBoundingBoxForCulling()
-    {
-        AABB box = new AABB(-10, -10, -10, 10, 10, 10);
-        return box.move(position());
-    }
+    // getBoundingBoxForCulling() removed in 1.21.11
+    // The default bounding box behavior should suffice
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder)

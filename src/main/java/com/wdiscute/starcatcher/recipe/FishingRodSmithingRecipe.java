@@ -5,20 +5,23 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.wdiscute.starcatcher.Starcatcher;
 import com.wdiscute.starcatcher.io.ModDataComponents;
 import com.wdiscute.starcatcher.registry.ModRecipes;
-import com.wdiscute.starcatcher.registry.custom.tackleskin.AbstractTackleSkin;
+import com.wdiscute.starcatcher.registry.custom.tackleskin.ITackleSkin;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
+import net.minecraft.world.item.crafting.display.SmithingRecipeDisplay;
 import net.minecraft.world.level.Level;
+import org.jspecify.annotations.Nullable;
 
-import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.stream.Stream;
 
 public record FishingRodSmithingRecipe(
         Ingredient template,
@@ -26,7 +29,7 @@ public record FishingRodSmithingRecipe(
 )
         implements SmithingRecipe
 {
-
+    @Override
     public boolean matches(SmithingRecipeInput input, Level level)
     {
         //netherite upgrade
@@ -38,9 +41,9 @@ public record FishingRodSmithingRecipe(
         //bobber skins - only allow if ingredient slot is empty
         if (ModDataComponents.has(input.template(), ModDataComponents.TACKLE_SKIN) && input.addition().isEmpty())
         {
-            ResourceLocation rl = ModDataComponents.get(input.template(), ModDataComponents.TACKLE_SKIN);
+            Identifier rl = ModDataComponents.get(input.template(), ModDataComponents.TACKLE_SKIN);
 
-            Optional<Supplier<AbstractTackleSkin>> optional = level.registryAccess().registryOrThrow(Starcatcher.TACKLE_SKIN).getOptional(rl);
+            Optional<Supplier<ITackleSkin>> optional = level.registryAccess().lookupOrThrow(Starcatcher.TACKLE_SKIN).getOptional(rl);
 
             return optional.isPresent();
         }
@@ -70,51 +73,47 @@ public record FishingRodSmithingRecipe(
     }
 
     @Override
-    public boolean canCraftInDimensions(int width, int height)
+    public Optional<Ingredient> templateIngredient()
     {
-        return true;
+        return Optional.of(this.template);
     }
 
     @Override
-    public boolean isTemplateIngredient(ItemStack stack)
+    public Ingredient baseIngredient()
     {
-        return this.template.test(stack);
+        return this.rod;
     }
 
     @Override
-    public boolean isBaseIngredient(ItemStack stack)
+    public Optional<Ingredient> additionIngredient()
     {
-        return this.rod.test(stack);
+        return Optional.empty();
     }
 
     @Override
-    public boolean isAdditionIngredient(ItemStack stack)
-    {
-        return true;
-    }
-
-    @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries)
-    {
-        return Arrays.stream(this.rod.getItems()).findFirst().get();
-    }
-
-    @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends SmithingRecipe> getSerializer()
     {
         return ModRecipes.FISHING_ROD_SMITHING.get();
     }
 
     @Override
-    public RecipeType<?> getType()
+    public PlacementInfo placementInfo()
     {
-        return RecipeType.SMITHING;
+        return PlacementInfo.createFromOptionals(List.of(Optional.of(this.template), Optional.of(this.rod), Optional.empty()));
     }
 
     @Override
-    public boolean isIncomplete()
+    public List<RecipeDisplay> display()
     {
-        return Stream.of(this.template, this.rod).anyMatch(Ingredient::hasNoItems);
+        return List.of(
+            new SmithingRecipeDisplay(
+                this.template.display(),
+                this.rod.display(),
+                SlotDisplay.Empty.INSTANCE,
+                this.rod.display(),
+                new SlotDisplay.ItemSlotDisplay(Items.SMITHING_TABLE)
+            )
+        );
     }
 
     public static class Serializer implements RecipeSerializer<FishingRodSmithingRecipe>

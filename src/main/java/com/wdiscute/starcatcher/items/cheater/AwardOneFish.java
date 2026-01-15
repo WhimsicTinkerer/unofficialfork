@@ -7,10 +7,10 @@ import com.wdiscute.starcatcher.io.attachments.FishingGuideAttachment;
 import com.wdiscute.starcatcher.storage.FishProperties;
 import com.wdiscute.starcatcher.io.network.FishCaughtPayload;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -28,18 +28,18 @@ public class AwardOneFish extends Item
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand)
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand)
     {
-        if(!player.isCreative()) return InteractionResultHolder.pass(player.getItemInHand(usedHand));
-        if (level.isClientSide()) return InteractionResultHolder.success(player.getItemInHand(usedHand));
+        if(!player.isCreative()) return InteractionResult.PASS;
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
 
-        Map<ResourceLocation, FishCaughtCounter> fishesCaught = FishingGuideAttachment.getFishesCaught(player);
+        Map<Identifier, FishCaughtCounter> fishesCaught = FishingGuideAttachment.getFishesCaught(player);
 
-        Optional<Holder.Reference<FishProperties>> optional = level.registryAccess().registryOrThrow(Starcatcher.FISH_REGISTRY).getRandom(level.random);
+        Optional<Holder.Reference<FishProperties>> optional = level.registryAccess().lookupOrThrow(Starcatcher.FISH_REGISTRY).getRandom(level.random);
 
         if(optional.isPresent())
         {
-            if(optional.get().is(U.rl("minecraft", "nether_star"))) return InteractionResultHolder.pass(player.getItemInHand(usedHand));
+            if(optional.get().is(U.rl("minecraft", "nether_star"))) return InteractionResult.PASS;
             FishProperties fp = optional.get().value();
 
             //todo fix this awarding repeated entries. It should check which entries the player doesnt have to award a new one instead
@@ -53,7 +53,7 @@ public class AwardOneFish extends Item
 
         FishingGuideAttachment.sync(player);
 
-        return InteractionResultHolder.success(player.getItemInHand(usedHand));
+        return InteractionResult.SUCCESS;
     }
 
 

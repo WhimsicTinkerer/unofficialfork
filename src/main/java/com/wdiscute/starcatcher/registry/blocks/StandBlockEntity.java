@@ -3,11 +3,9 @@ package com.wdiscute.starcatcher.registry.blocks;
 import com.mojang.authlib.GameProfile;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.wdiscute.starcatcher.io.NBTCodecHelper;
 import com.wdiscute.starcatcher.tournament.StandMenu;
 import com.wdiscute.starcatcher.tournament.Tournament;
 import com.wdiscute.starcatcher.tournament.TournamentHandler;
-import com.wdiscute.starcatcher.tournament.TournamentPlayerScore;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.UUIDUtil;
@@ -17,7 +15,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -25,6 +23,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import net.nikdo53.tinymultiblocklib.blockentities.AbstractMultiBlockEntity;
 import org.jetbrains.annotations.Nullable;
@@ -99,18 +99,18 @@ public class StandBlockEntity extends AbstractMultiBlockEntity implements MenuPr
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries)
+    protected void saveAdditional(ValueOutput output)
     {
-        super.saveAdditional(tag, registries);
+        super.saveAdditional(output);
 
         if (!isCenter()) return;
 
         if (uuid != null)
-            tag.putUUID("tournament_uuid", uuid);
+            output.store("tournament_uuid", UUIDUtil.CODEC, uuid);
 
-        NBTCodecHelper.encode(Tournament.CODEC, tournament, tag, "tournament");
+        output.storeNullable("tournament", Tournament.CODEC, tournament);
         StarcatcherGameProfileCache cache = gameProfilesHelper(level, tournament);
-        NBTCodecHelper.encode(StarcatcherGameProfileCache.GAME_PROFILES_CODEC, cache, tag, "profiles");
+        output.store("profiles", StarcatcherGameProfileCache.GAME_PROFILES_CODEC, cache);
     }
 
     public record StarcatcherGameProfileCache(Map<UUID, String> map)
@@ -125,17 +125,23 @@ public class StandBlockEntity extends AbstractMultiBlockEntity implements MenuPr
 
     public static StarcatcherGameProfileCache gameProfilesHelper(Level level, Tournament tournament)
     {
-        if (level.isClientSide) return new StarcatcherGameProfileCache(new HashMap<>());
+        if (level.isClientSide()) return new StarcatcherGameProfileCache(new HashMap<>());
         if (tournament == null) return new StarcatcherGameProfileCache(new HashMap<>());
 
         Map<UUID, String> map = new HashMap<>();
         tournament.playerScores.forEach(entry ->
         {
-            GameProfileCache profileCache = level.getServer().getProfileCache();
-            if (profileCache != null)
+            // GameProfileCache was removed in 1.21.11, use PlayerList to get online players
+            ServerPlayer serverPlayer = level.getServer().getPlayerList().getPlayer(entry.playerUUID);
+            if (serverPlayer != null)
             {
-                Optional<GameProfile> gameProfile = profileCache.get(entry.playerUUID);
-                gameProfile.ifPresent(i -> map.put(i.getId(), i.getName()));
+                GameProfile profile = serverPlayer.getGameProfile();
+                map.put(profile.id(), profile.name());
+            }
+            else
+            {
+                // Fallback for offline players
+                map.put(entry.playerUUID, "Unknown");
             }
         });
 
@@ -143,29 +149,22 @@ public class StandBlockEntity extends AbstractMultiBlockEntity implements MenuPr
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries)
+    protected void loadAdditional(ValueInput input)
     {
-        super.loadAdditional(tag, registries);
+        super.loadAdditional(input);
 
         if (!isCenter()) return;
 
-        if (tag.contains("tournament_uuid"))
-            uuid = tag.getUUID("tournament_uuid");
-
-        tournament = NBTCodecHelper.decode(Tournament.CODEC, tag, "tournament");
-        var awd = NBTCodecHelper.decode(StarcatcherGameProfileCache.GAME_PROFILES_CODEC, tag, "profiles");
-        if (awd != null)
-            profiles = awd.map;
+        input.read("tournament_uuid", UUIDUtil.CODEC).ifPresent(u -> uuid = u);
+        input.read("tournament", Tournament.CODEC).ifPresent(t -> tournament = t);
+        input.read("profiles", StarcatcherGameProfileCache.GAME_PROFILES_CODEC).ifPresent(cache -> profiles = cache.map);
     }
 
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries)
     {
-
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
-        return tag;
+        return this.saveCustomOnly(registries);
     }
 
     @Override

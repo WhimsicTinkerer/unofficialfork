@@ -9,6 +9,7 @@ import net.minecraft.world.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
@@ -16,7 +17,6 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -36,7 +36,7 @@ public class StandBlock extends AbstractMultiBlock implements IPreviewableMultib
 {
 
     public static final EnumProperty<StandPart> PART = EnumProperty.create("stand_part", StandPart.class);
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     public StandBlock()
     {
@@ -57,7 +57,7 @@ public class StandBlock extends AbstractMultiBlock implements IPreviewableMultib
     }
 
     @Override
-    public @Nullable DirectionProperty getDirectionProperty() {
+    public @Nullable EnumProperty<Direction> getDirectionProperty() {
         return FACING;
     }
 
@@ -81,7 +81,7 @@ public class StandBlock extends AbstractMultiBlock implements IPreviewableMultib
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult)
     {
-        if (level.isClientSide) return InteractionResult.SUCCESS;
+        if (level.isClientSide()) return InteractionResult.SUCCESS;
 
         BlockPos center = IMultiBlock.getCenter(level, pos);
         if (level.getBlockEntity(center) instanceof StandBlockEntity sbe)
@@ -101,17 +101,18 @@ public class StandBlock extends AbstractMultiBlock implements IPreviewableMultib
         return InteractionResult.SUCCESS;
     }
 
+    // Note: onRemove signature changed in 1.21.11 to use ServerLevel
     @Override
-    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston)
+    protected void affectNeighborsAfterRemoval(BlockState state, ServerLevel level, BlockPos pos, boolean movedByPiston)
     {
         //before super since super removed BE
         BlockPos center = IMultiBlock.getCenter(level, pos);
-        if(level.getBlockEntity(center) instanceof StandBlockEntity sbe && !level.isClientSide && sbe.tournament != null)
+        if(level.getBlockEntity(center) instanceof StandBlockEntity sbe && sbe.tournament != null)
         {
             TournamentHandler.cancelTournament(level, sbe.tournament);
         }
 
-        super.onRemove(state, level, pos, newState, movedByPiston);
+        super.affectNeighborsAfterRemoval(state, level, pos, movedByPiston);
     }
 
     private static final VoxelShape SHAPE_NORTH = makeShapeNorth();

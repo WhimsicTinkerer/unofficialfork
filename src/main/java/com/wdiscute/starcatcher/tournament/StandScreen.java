@@ -5,13 +5,18 @@ import com.wdiscute.starcatcher.U;
 import com.wdiscute.starcatcher.io.network.tournament.SBStandTournamentNameChangePayload;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import net.neoforged.neoforge.network.PacketDistributor;
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
 
 import java.util.*;
 
@@ -23,8 +28,8 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
     private EditBox nameEditBox;
     private boolean nameWasFocused;
 
-    private static final ResourceLocation BACKGROUND_OWNER = Starcatcher.rl("textures/gui/tournament/background_owner.png");
-    private static final ResourceLocation BACKGROUND = Starcatcher.rl("textures/gui/tournament/background.png");
+    private static final Identifier BACKGROUND_OWNER = Starcatcher.rl("textures/gui/tournament/background_owner.png");
+    private static final Identifier BACKGROUND = Starcatcher.rl("textures/gui/tournament/background.png");
 
     int uiX;
     int uiY;
@@ -57,7 +62,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1)
     {
-        this.renderBlurredBackground(i);
+        this.renderBlurredBackground(guiGraphics);
     }
 
     private void onFocusNameEditBox()
@@ -69,7 +74,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
     private void onUnfocusNameEditBox()
     {
         //send packet
-        PacketDistributor.sendToServer(new SBStandTournamentNameChangePayload(tournament.tournamentUUID, nameEditBox.getValue()));
+        minecraft.getConnection().send(new SBStandTournamentNameChangePayload(tournament.tournamentUUID, nameEditBox.getValue()));
         tournament.name = nameEditBox.getValue();
         nameEditBox.setValue("");
     }
@@ -134,7 +139,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
                 durationComp = Component.literal(tournament.settings.durationInTicks / 24000 + " ");
             durationTooltip.add(durationComp.append(Component.translatable("gui.starcatcher.tournament.duration.days")));
 
-            guiGraphics.renderTooltip(this.font, durationTooltip, Optional.empty(), mouseX, mouseY);
+            renderTooltipFromComponents(guiGraphics, durationTooltip, mouseX, mouseY);
         }
 
 
@@ -151,7 +156,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
             List<Component> durationTooltip = new ArrayList<>();
             durationTooltip.add(Component.translatable("gui.starcatcher.tournament.scoring.later"));
 
-            guiGraphics.renderTooltip(this.font, durationTooltip, Optional.empty(), mouseX, mouseY);
+            renderTooltipFromComponents(guiGraphics, durationTooltip, mouseX, mouseY);
         }
 
 
@@ -190,10 +195,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
         {
             guiGraphics.drawString(this.font, Component.translatable("gui.guide.hover"), uiX + 65, uiY + 140 + 4 * 12, 0x635040, false);
             if (x > 62 && x < 180 && y > 186 && y < 197)
-                guiGraphics.renderTooltip(
-                        this.font,
-                        others,
-                        Optional.empty(), mouseX, mouseY);
+                renderTooltipFromComponents(guiGraphics, others, mouseX, mouseY);
         }
 
 
@@ -206,7 +208,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
                 guiGraphics.drawString(this.font, Component.translatable("gui.starcatcher.tournament.start"), uiX + 236, uiY + 188, 0x635040, false);
                 if (x > 226 && x < 340 && y > 183 && y < 200)
                 {
-                    guiGraphics.renderTooltip(this.font, Component.translatable("gui.starcatcher.tournament.undone"), mouseX, mouseY);
+                    renderTooltipFromComponent(guiGraphics, Component.translatable("gui.starcatcher.tournament.undone"), mouseX, mouseY);
                 }
             }
 
@@ -215,7 +217,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
             {
                 if (x > 226 && x < 340 && y > 183 && y < 200)
                 {
-                    guiGraphics.renderTooltip(this.font, Component.translatable("gui.starcatcher.tournament.undone"), mouseX, mouseY);
+                    renderTooltipFromComponent(guiGraphics, Component.translatable("gui.starcatcher.tournament.undone"), mouseX, mouseY);
                 }
                 guiGraphics.drawString(this.font, Component.translatable("gui.starcatcher.tournament.cancel"), uiX + 236, uiY + 188, 0x635040, false);
             }
@@ -225,7 +227,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
             {
                 if (x > 226 && x < 340 && y > 183 && y < 200)
                 {
-                    guiGraphics.renderTooltip(this.font, Component.translatable("gui.starcatcher.tournament.undone"), mouseX, mouseY);
+                    renderTooltipFromComponent(guiGraphics, Component.translatable("gui.starcatcher.tournament.undone"), mouseX, mouseY);
                 }
                 guiGraphics.drawString(this.font, Component.translatable("gui.starcatcher.tournament.new"), uiX + 236, uiY + 188, 0x635040, false);
             }
@@ -257,7 +259,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
         //duration decrease, shift does x10
         if (x > 53 && x < 117 && y > 88 && y < 107 && isOwner && scrollY < -0.5f)
         {
-            if (!hasShiftDown())
+            if (!InputConstants.isKeyDown(minecraft.getWindow(), InputConstants.KEY_LSHIFT))
                 minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 101);
             else
                 minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 102);
@@ -266,7 +268,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
         //duration increase, shift does x10
         if (x > 53 && x < 117 && y > 88 && y < 107 && isOwner && scrollY > 0.5f)
         {
-            if (!hasShiftDown())
+            if (!InputConstants.isKeyDown(minecraft.getWindow(), InputConstants.KEY_LSHIFT))
                 minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 103);
             else
                 minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 104);
@@ -276,8 +278,10 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button)
+    public boolean mouseClicked(MouseButtonEvent event, boolean p_432883_)
     {
+        double mouseX = event.x();
+        double mouseY = event.y();
         double x = mouseX - uiX;
         double y = mouseY - uiY;
         assert minecraft != null;
@@ -308,7 +312,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
         //duration decrease, shift does x10
         if (x > 50 && x < 60 && y > 98 && y < 107 && isOwner)
         {
-            if (!hasShiftDown())
+            if (!InputConstants.isKeyDown(minecraft.getWindow(), InputConstants.KEY_LSHIFT))
                 minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 101);
             else
                 minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 102);
@@ -317,7 +321,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
         //duration increase, shift does x10
         if (x > 109 && x < 119 && y > 99 && y < 109 && isOwner)
         {
-            if (!hasShiftDown())
+            if (!InputConstants.isKeyDown(minecraft.getWindow(), InputConstants.KEY_LSHIFT))
                 minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 103);
             else
                 minecraft.gameMode.handleInventoryButtonClick(this.menu.containerId, 104);
@@ -334,7 +338,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
         }
 
         nameEditBox.setFocused(false);
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(event, p_432883_);
     }
 
     public static String getPlayerFromUUID(UUID uuid)
@@ -354,26 +358,41 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
     {
     }
 
-    private void renderImage(GuiGraphics guiGraphics, ResourceLocation rl)
+    private void renderImage(GuiGraphics guiGraphics, Identifier rl)
     {
-        guiGraphics.blit(rl, uiX, uiY, 0, 0, 420, 260, 420, 260);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, rl, uiX, uiY, 420, 260, 0, 0, 420, 260, 420, 260);
     }
 
-    private void renderImage(GuiGraphics guiGraphics, ResourceLocation rl, int xOffset, int yOffset)
+    private void renderImage(GuiGraphics guiGraphics, Identifier rl, int xOffset, int yOffset)
     {
-        guiGraphics.blit(rl, uiX + xOffset, uiY + yOffset, 0, 0, 420, 260, 420, 260);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, rl, uiX + xOffset, uiY + yOffset, 420, 260, 0, 0, 420, 260, 420, 260);
+    }
+
+    // Helper to render tooltips from List<Component> - 1.21.11 API requires ClientTooltipComponent
+    private void renderTooltipFromComponents(GuiGraphics guiGraphics, List<Component> components, int mouseX, int mouseY)
+    {
+        List<ClientTooltipComponent> tooltipComponents = components.stream()
+                .map(c -> ClientTooltipComponent.create(c.getVisualOrderText()))
+                .toList();
+        guiGraphics.renderTooltip(this.font, tooltipComponents, mouseX, mouseY, DefaultTooltipPositioner.INSTANCE, null);
+    }
+
+    // Helper to render single component tooltip
+    private void renderTooltipFromComponent(GuiGraphics guiGraphics, Component component, int mouseX, int mouseY)
+    {
+        renderTooltipFromComponents(guiGraphics, List.of(component), mouseX, mouseY);
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers)
+    public boolean keyPressed(KeyEvent event)
     {
-        if (keyCode == 256)
+        if (event.key() == 256)
         {
             this.minecraft.player.closeContainer();
         }
 
-        boolean editbox = this.nameEditBox.keyPressed(keyCode, scanCode, modifiers) || this.nameEditBox.canConsumeInput();
-        return editbox || super.keyPressed(keyCode, scanCode, modifiers);
+        boolean editbox = this.nameEditBox.keyPressed(event) || this.nameEditBox.canConsumeInput();
+        return editbox || super.keyPressed(event);
     }
 
     @Override
@@ -381,7 +400,7 @@ public class StandScreen extends AbstractContainerScreen<StandMenu>
     {
         super.onClose();
         if (!nameEditBox.getValue().isEmpty())
-            PacketDistributor.sendToServer(new SBStandTournamentNameChangePayload(tournament.tournamentUUID, nameEditBox.getValue()));
+            minecraft.getConnection().send(new SBStandTournamentNameChangePayload(tournament.tournamentUUID, nameEditBox.getValue()));
     }
 
     public StandScreen(StandMenu menu, Inventory playerInventory, Component title)

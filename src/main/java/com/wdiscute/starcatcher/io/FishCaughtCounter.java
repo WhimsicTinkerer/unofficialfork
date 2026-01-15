@@ -12,13 +12,12 @@ import com.wdiscute.starcatcher.storage.FishProperties;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import javax.annotation.Nonnull;
 import java.util.Map;
 
 public record FishCaughtCounter(
@@ -65,7 +64,7 @@ public record FishCaughtCounter(
         return get(player, U.getRlFromFp(player.level(), loc));
     }
 
-    public static FishCaughtCounter get(Player player, ResourceLocation loc)
+    public static FishCaughtCounter get(Player player, Identifier loc)
     {
         return FishingGuideAttachment.getFishesCaught(player).get(loc);
     }
@@ -80,7 +79,7 @@ public record FishCaughtCounter(
         return new FishCaughtCounter(this.count, this.fastestTicks, this.averageTicks, this.size, this.weight, this.caughtGolden, perfectCatch, false);
     }
 
-    @Nonnull
+
     public static FishCaughtCounter create(int ticks, int size, int weight, boolean perfectCatch)
     {
         return new FishCaughtCounter(1, ticks, (float) ticks, size, weight, false, perfectCatch, true);
@@ -119,8 +118,8 @@ public record FishCaughtCounter(
             return;
         }
 
-        Map<ResourceLocation, FishCaughtCounter> fishesCaught = FishingGuideAttachment.getFishesCaught(player);
-        ResourceLocation loc = player.level().registryAccess().registryOrThrow(Starcatcher.FISH_REGISTRY).getKey(fpCaught);
+        Map<Identifier, FishCaughtCounter> fishesCaught = FishingGuideAttachment.getFishesCaught(player);
+        Identifier loc = player.level().registryAccess().lookupOrThrow(Starcatcher.FISH_REGISTRY).getKey(fpCaught);
         FishCaughtCounter fishCaughtCounter = fishesCaught.get(loc);
 
         boolean newFish = fishCaughtCounter == null;

@@ -19,7 +19,7 @@ public class IgnoreDaytimeWeatherRestrictions extends AbstractCatchModifier
     public List<FishProperties> modifyAvailablePool(List<FishProperties> ignore)
     {
         List<FishProperties> available = new ArrayList<>();
-        for (FishProperties fp : instance.level().registryAccess().registryOrThrow(Starcatcher.FISH_REGISTRY))
+        for (FishProperties fp : instance.level().registryAccess().lookupOrThrow(Starcatcher.FISH_REGISTRY))
         {
             int chance = getChanceMeteorological(fp, instance, instance.rod);
 

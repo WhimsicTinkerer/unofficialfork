@@ -13,7 +13,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.players.GameProfileCache;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -29,15 +29,20 @@ public record CBActiveTournamentUpdatePayload(List<GameProfile> listSignups, Tou
 
     public static CBActiveTournamentUpdatePayload helper(Player player, Tournament tournament)
     {
-        if (player.level().isClientSide) throw new RuntimeException();
+        if (player.level().isClientSide()) throw new RuntimeException();
         List<GameProfile> list = new ArrayList<>();
         for (var entry : tournament.playerScores)
         {
-            GameProfileCache profileCache = player.level().getServer().getProfileCache();
-            if (profileCache != null)
+            // GameProfileCache was removed in 1.21.11, use PlayerList to get online players
+            ServerPlayer serverPlayer = player.level().getServer().getPlayerList().getPlayer(entry.playerUUID);
+            if (serverPlayer != null)
             {
-                Optional<GameProfile> gameProfile = profileCache.get(entry.playerUUID);
-                gameProfile.ifPresent(list::add);
+                list.add(serverPlayer.getGameProfile());
+            }
+            else
+            {
+                // Fallback: create a minimal profile with just the UUID if player is offline
+                list.add(new GameProfile(entry.playerUUID, "Unknown"));
             }
         }
 
@@ -45,8 +50,8 @@ public record CBActiveTournamentUpdatePayload(List<GameProfile> listSignups, Tou
     }
 
     public static final StreamCodec<ByteBuf, GameProfile> GAME_PROFILE_STREAM_CODEC = StreamCodec.composite(
-            UUIDUtil.STREAM_CODEC, GameProfile::getId,
-            ByteBufCodecs.STRING_UTF8, GameProfile::getName,
+            UUIDUtil.STREAM_CODEC, GameProfile::id,
+            ByteBufCodecs.STRING_UTF8, GameProfile::name,
             GameProfile::new
     );
 

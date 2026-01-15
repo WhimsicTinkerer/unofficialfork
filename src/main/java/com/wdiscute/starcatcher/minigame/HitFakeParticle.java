@@ -1,18 +1,18 @@
 package com.wdiscute.starcatcher.minigame;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wdiscute.starcatcher.Starcatcher;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.FastColor;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.ARGB;
+import org.joml.Matrix3x2fStack;
 import org.joml.Vector2d;
 
 import java.util.Random;
 
 public class HitFakeParticle
 {
-    public static final ResourceLocation TEXTURE = Starcatcher.rl("textures/gui/minigame/minigame.png");
+    public static final Identifier TEXTURE = Starcatcher.rl("textures/gui/minigame/minigame.png");
 
     private static final Random random = new Random();
 
@@ -26,21 +26,23 @@ public class HitFakeParticle
     public Vector2d vecDirection;
     public int lifetime;
     public int maxLifetime;
-    public ResourceLocation rl;
+    public Identifier rl;
 
     public void render(GuiGraphics guiGraphics, int width, int height)
     {
-        PoseStack poseStack = guiGraphics.pose();
-        poseStack.pushPose();
-        poseStack.translate(pos.x, pos.y, 0);
-        RenderSystem.setShaderColor(r, g, b, a);
+        // In 1.21.11, guiGraphics.pose() returns Matrix3x2fStack
+        Matrix3x2fStack poseStack = guiGraphics.pose();
+        poseStack.pushMatrix();
+        poseStack.translate((float)pos.x, (float)pos.y);
+
+        // In 1.21.11, color tinting is applied via blit color parameter
+        int color = ARGB.color((int)(a * 255), (int)(r * 255), (int)(g * 255), (int)(b * 255));
 
         guiGraphics.blit(
-                TEXTURE, width / 2 - 8, height / 2 - 8,
-                16, 16, 80, 160, 16, 16, 256, 256);
+                RenderPipelines.GUI_TEXTURED, TEXTURE, width / 2 - 8, height / 2 - 8,
+                16, 16, 80, 160, 16, 16, 256, 256, color);
 
-        RenderSystem.setShaderColor(1, 1, 1, 1);
-        poseStack.popPose();
+        poseStack.popMatrix();
     }
 
     public HitFakeParticle(int x, int y, Vector2d vec)

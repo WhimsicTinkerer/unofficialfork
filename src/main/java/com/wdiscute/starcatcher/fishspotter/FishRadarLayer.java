@@ -11,25 +11,25 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
+import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class FishRadarLayer implements LayeredDraw.Layer
+public class FishRadarLayer implements GuiLayer
 {
 
-    private static final ResourceLocation ONE_ROW = Starcatcher.rl("textures/gui/fish_radar/1_row.png");
-    private static final ResourceLocation TWO_ROWS = Starcatcher.rl("textures/gui/fish_radar/2_row.png");
-    private static final ResourceLocation THREE_ROWS = Starcatcher.rl("textures/gui/fish_radar/3_row.png");
-    private static final ResourceLocation FOUR_ROWS = Starcatcher.rl("textures/gui/fish_radar/4_row.png");
-    private static final ResourceLocation FIVE_ROWS = Starcatcher.rl("textures/gui/fish_radar/5_row.png");
-    private static final ResourceLocation SIX_ROWS = Starcatcher.rl("textures/gui/fish_radar/6_row.png");
+    private static final Identifier ONE_ROW = Starcatcher.rl("textures/gui/fish_radar/1_row.png");
+    private static final Identifier TWO_ROWS = Starcatcher.rl("textures/gui/fish_radar/2_row.png");
+    private static final Identifier THREE_ROWS = Starcatcher.rl("textures/gui/fish_radar/3_row.png");
+    private static final Identifier FOUR_ROWS = Starcatcher.rl("textures/gui/fish_radar/4_row.png");
+    private static final Identifier FIVE_ROWS = Starcatcher.rl("textures/gui/fish_radar/5_row.png");
+    private static final Identifier SIX_ROWS = Starcatcher.rl("textures/gui/fish_radar/6_row.png");
 
     int uiX;
     int uiY;
@@ -88,8 +88,8 @@ public class FishRadarLayer implements LayeredDraw.Layer
             offScreen = 0;
 
 
-        guiGraphics.pose().pushPose();
-        guiGraphics.pose().translate(-offScreen, 0, 0);
+        guiGraphics.pose().pushMatrix();
+        guiGraphics.pose().translate(-offScreen, 0);
 
         switch (fpsInArea.size())
         {
@@ -140,11 +140,11 @@ public class FishRadarLayer implements LayeredDraw.Layer
         }
 
 
-        guiGraphics.pose().popPose();
+        guiGraphics.pose().popMatrix();
 
     }
 
-    private void renderImage(GuiGraphics guiGraphics, ResourceLocation rl)
+    private void renderImage(GuiGraphics guiGraphics, Identifier rl)
     {
         guiGraphics.blit(rl, uiX, uiY, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
     }

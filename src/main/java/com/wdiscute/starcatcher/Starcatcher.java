@@ -1,7 +1,7 @@
 package com.wdiscute.starcatcher;
 
 import com.mojang.logging.LogUtils;
-import com.wdiscute.starcatcher.registry.custom.tackleskin.AbstractTackleSkin;
+import com.wdiscute.starcatcher.registry.custom.tackleskin.ITackleSkin;
 import com.wdiscute.starcatcher.registry.custom.tackleskin.ModTackleSkins;
 import com.wdiscute.starcatcher.registry.custom.catchmodifiers.AbstractCatchModifier;
 import com.wdiscute.starcatcher.registry.custom.catchmodifiers.ModCatchModifiers;
@@ -21,7 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
@@ -54,7 +54,7 @@ public class Starcatcher
     public static final ResourceKey<Registry<Supplier<AbstractCatchModifier>>> CATCH_MODIFIERS =
             ResourceKey.createRegistryKey(Starcatcher.rl("catch_modifiers"));
 
-    public static final ResourceKey<Registry<Supplier<AbstractTackleSkin>>> TACKLE_SKIN =
+    public static final ResourceKey<Registry<Supplier<ITackleSkin>>> TACKLE_SKIN =
             ResourceKey.createRegistryKey(Starcatcher.rl("bobber_skin"));
 
     public static final Registry<Supplier<? extends AbstractSweetSpotBehaviour>> SWEET_SPOT_BEHAVIOUR_REGISTRY = new RegistryBuilder<>(SWEET_SPOT_BEHAVIOUR)
@@ -72,7 +72,7 @@ public class Starcatcher
             .defaultKey(Starcatcher.rl("decrease_lure_time"))
             .create();
 
-    public static final Registry<Supplier<AbstractTackleSkin>> TACKLE_SKIN_REGISTRY = new RegistryBuilder<>(TACKLE_SKIN)
+    public static final Registry<Supplier<ITackleSkin>> TACKLE_SKIN_REGISTRY = new RegistryBuilder<>(TACKLE_SKIN)
             .sync(true)
             .defaultKey(Starcatcher.rl("pearl"))
             .create();
@@ -89,15 +89,15 @@ public class Starcatcher
         }
     }
 
-    public static ResourceLocation rl(String s)
+    public static Identifier rl(String s)
     {
-        return ResourceLocation.fromNamespaceAndPath(Starcatcher.MOD_ID, s);
+        return Identifier.fromNamespaceAndPath(Starcatcher.MOD_ID, s);
     }
 
     @OnlyIn(Dist.CLIENT)
     public static void fishCaughtToast(FishProperties fp, boolean newFish, int sizeCM, int weightCM)
     {
-        if (newFish) Minecraft.getInstance().getToasts().addToast(new FishCaughtToast(fp));
+        if (newFish) Minecraft.getInstance().getToastManager().addToast(new FishCaughtToast(fp));
 
         SettingsScreen.Units units = Config.UNIT.get();
 

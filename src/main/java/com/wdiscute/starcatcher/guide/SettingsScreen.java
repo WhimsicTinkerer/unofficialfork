@@ -1,6 +1,7 @@
 package com.wdiscute.starcatcher.guide;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.RenderPipelines;
+import org.joml.Matrix3x2fStack;
 import com.wdiscute.starcatcher.Config;
 import com.wdiscute.starcatcher.U;
 import com.wdiscute.starcatcher.registry.ModItems;
@@ -13,7 +14,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.ModList;
@@ -27,10 +28,10 @@ import java.util.Optional;
 
 public class SettingsScreen extends Screen
 {
-    private static final ResourceLocation TEXTURE = Starcatcher.rl("textures/gui/minigame/minigame.png");
-    private static final ResourceLocation TANK = Starcatcher.rl("textures/gui/minigame/surface.png");
-    private static final ResourceLocation SETTINGS = Starcatcher.rl("textures/gui/minigame/settings.png");
-    private static final ResourceLocation GUI_SCALE = Starcatcher.rl("textures/gui/minigame/gui_scale.png");
+    private static final Identifier TEXTURE = Starcatcher.rl("textures/gui/minigame/minigame.png");
+    private static final Identifier TANK = Starcatcher.rl("textures/gui/minigame/surface.png");
+    private static final Identifier SETTINGS = Starcatcher.rl("textures/gui/minigame/settings.png");
+    private static final Identifier GUI_SCALE = Starcatcher.rl("textures/gui/minigame/gui_scale.png");
 
     private static final int SIZE_1 = 5;
     private static final int SIZE_2 = 7;
@@ -147,7 +148,7 @@ public class SettingsScreen extends Screen
         super.renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         partial = partialTick;
-        PoseStack poseStack = guiGraphics.pose();
+        // In 1.21.11, guiGraphics.pose() returns Matrix3x2fStack (unused here)
 
         int imageWidth = 512;
         int imageHeight = 256;
@@ -160,12 +161,12 @@ public class SettingsScreen extends Screen
 
         //settings
         guiGraphics.blit(
-                SETTINGS, width / 2 - 100, height / 2 - 128,
+                RenderPipelines.GUI_TEXTURED, SETTINGS, width / 2 - 100, height / 2 - 128,
                 256, 256, 0, 0, 256, 256, 256, 256);
 
         //GUI SCALE
         guiGraphics.blit(
-                GUI_SCALE, width / 2 - 50, 0,
+                RenderPipelines.GUI_TEXTURED, GUI_SCALE, width / 2 - 50, 0,
                 100, 50, 0, 0, 100, 50, 100, 50);
 
 
@@ -207,7 +208,7 @@ public class SettingsScreen extends Screen
             comp.add(Component.literal("For most people, a delay of 0 works fine."));
             comp.add(Component.literal("Play around and see what feels natural to you"));
 
-            guiGraphics.renderTooltip(this.font, comp, Optional.empty(), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(this.font, comp, Optional.empty(), mouseX, mouseY);
         }
 
         //speed
@@ -294,9 +295,11 @@ public class SettingsScreen extends Screen
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button)
+    public boolean mouseClicked(net.minecraft.client.input.MouseButtonEvent event, boolean focused)
     {
-        super.mouseClicked(mouseX, mouseY, button);
+        double mouseX = event.x();
+        double mouseY = event.y();
+        super.mouseClicked(event, focused);
 
         int imageWidth = 512;
         int imageHeight = 256;

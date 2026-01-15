@@ -28,7 +28,7 @@ import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -62,7 +62,7 @@ public class ModClientEvents
 
         if (ModDataComponents.has(stack, ModDataComponents.MINIGAME_MODIFIERS) || ModDataComponents.has(stack, ModDataComponents.CATCH_MODIFIERS))
         {
-            List<ResourceLocation> modifiers = new ArrayList<>();
+            List<Identifier> modifiers = new ArrayList<>();
 
             if (ModDataComponents.has(stack, ModDataComponents.CATCH_MODIFIERS))
                 modifiers.addAll(Objects.requireNonNull(ModDataComponents.get(stack, ModDataComponents.CATCH_MODIFIERS)));
@@ -73,7 +73,7 @@ public class ModClientEvents
             {
                 comp.add(Component.translatable("tooltip.starcatcher.modifiers").withStyle(ChatFormatting.GRAY));
 
-                for (ResourceLocation rl : modifiers)
+                for (Identifier rl : modifiers)
                 {
                     for (int i = 0; i < 100; i++)
                     {
@@ -107,7 +107,7 @@ public class ModClientEvents
         //tackle skin
         if (ModDataComponents.has(stack, ModDataComponents.TACKLE_SKIN))
         {
-            ResourceLocation rl = ModDataComponents.get(stack, ModDataComponents.TACKLE_SKIN);
+            Identifier rl = ModDataComponents.get(stack, ModDataComponents.TACKLE_SKIN);
             comp.add(Component.translatable("tooltip.starcatcher.tackle").withStyle(ChatFormatting.GRAY));
 
             for (int i = 0; i < 100; i++)
@@ -237,13 +237,14 @@ public class ModClientEvents
     @SubscribeEvent
     public static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event)
     {
-        //tackle skins
-        event.registerLayerDefinition(new BaseTackleSkin().getLayerLocation(), BaseTackleSkin::createBodyLayer);
-        event.registerLayerDefinition(new PearlTackleSkin().getLayerLocation(), PearlTackleSkin::createBodyLayer);
-        event.registerLayerDefinition(new KimbeTackleSkin().getLayerLocation(), KimbeTackleSkin::createBodyLayer);
-        event.registerLayerDefinition(new FrogTackleSkin().getLayerLocation(), FrogTackleSkin::createBodyLayer);
-        event.registerLayerDefinition(new ColorfulTackleSkin().getLayerLocation(), ColorfulTackleSkin::createBodyLayer);
-        event.registerLayerDefinition(new ClearTackleSkin().getLayerLocation(), ClearTackleSkin::createBodyLayer);
+        //tackle skins - using TackleSkinModels for client-only layer definitions
+        event.registerLayerDefinition(TackleSkinModels.BASE_LAYER, TackleSkinModels::createBaseLayer);
+        event.registerLayerDefinition(TackleSkinModels.PEARL_LAYER, TackleSkinModels::createPearlLayer);
+        event.registerLayerDefinition(TackleSkinModels.KIMBE_LAYER, TackleSkinModels::createKimbeLayer);
+        event.registerLayerDefinition(TackleSkinModels.FROG_LAYER, TackleSkinModels::createFrogLayer);
+        event.registerLayerDefinition(TackleSkinModels.COLORFUL_LAYER, TackleSkinModels::createColorfulLayer);
+        event.registerLayerDefinition(TackleSkinModels.CLEAR_LAYER, TackleSkinModels::createClearLayer);
+        event.registerLayerDefinition(TackleSkinModels.KING_LAYER, TackleSkinModels::createKingLayer);
 
         //fishes
         event.registerLayerDefinition(AgaveBream.LAYER_LOCATION, AgaveBream::createBodyLayer);

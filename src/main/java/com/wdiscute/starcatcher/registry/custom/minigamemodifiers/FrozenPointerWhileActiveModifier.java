@@ -4,6 +4,7 @@ import com.wdiscute.starcatcher.U;
 import com.wdiscute.starcatcher.minigame.FishingMinigameScreen;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.sounds.SoundEvents;
 
 public class FrozenPointerWhileActiveModifier extends AbstractTimedModifier
@@ -56,6 +57,6 @@ public class FrozenPointerWhileActiveModifier extends AbstractTimedModifier
     public void renderForeground(GuiGraphics guiGraphics, float partialTick, int width, int height)
     {
         super.renderForeground(guiGraphics, partialTick, width, height);
-        guiGraphics.blit(FishingMinigameScreen.TEXTURE, width / 2 - 16, height / 2 - 16, 32, 32, 0, 0, 32, 32, 256, 256);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FishingMinigameScreen.TEXTURE, width / 2 - 16, height / 2 - 16, 0, 0, 32, 32, 256, 256);
     }
 }

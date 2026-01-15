@@ -9,36 +9,42 @@ import com.wdiscute.starcatcher.registry.ModRecipes;
 import com.wdiscute.starcatcher.registry.custom.catchmodifiers.AbstractCatchModifier;
 import com.wdiscute.starcatcher.registry.custom.minigamemodifiers.AbstractMinigameModifier;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.item.crafting.display.RecipeDisplay;
+import net.minecraft.world.item.crafting.display.ShapedCraftingRecipeDisplay;
+import net.minecraft.world.item.crafting.display.SlotDisplay;
 import net.minecraft.world.level.Level;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class ModifierShapedRecipe implements CraftingRecipe
 {
     public final ShapedRecipePattern pattern;
     final ItemStack result;
-    final List<ResourceLocation> minigameModifiers;
-    final List<ResourceLocation> catchModifiers;
-    final ResourceLocation bobberSkin;
+    final List<Identifier> minigameModifiers;
+    final List<Identifier> catchModifiers;
+    final Identifier bobberSkin;
     final String group;
     final CraftingBookCategory category;
     final boolean showNotification;
+    private @Nullable PlacementInfo placementInfo;
 
     public ModifierShapedRecipe(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack result,
                                 boolean showNotification,
-                                List<ResourceLocation> minigameModifiers,
-                                List<ResourceLocation> catchModifiers,
-                                ResourceLocation bobberSkin
+                                List<Identifier> minigameModifiers,
+                                List<Identifier> catchModifiers,
+                                Identifier bobberSkin
     )
     {
         this.group = group;
@@ -52,13 +58,13 @@ public class ModifierShapedRecipe implements CraftingRecipe
     }
 
     @Override
-    public RecipeSerializer<?> getSerializer()
+    public RecipeSerializer<? extends CraftingRecipe> getSerializer()
     {
         return ModRecipes.MODIFIER_SHAPED_RECIPE.get();
     }
 
     @Override
-    public String getGroup()
+    public String group()
     {
         return this.group;
     }
@@ -70,27 +76,19 @@ public class ModifierShapedRecipe implements CraftingRecipe
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.Provider registries)
+    public PlacementInfo placementInfo()
     {
-        return this.result;
-    }
-
-    @Override
-    public NonNullList<Ingredient> getIngredients()
-    {
-        return this.pattern.ingredients();
+        if (this.placementInfo == null)
+        {
+            this.placementInfo = PlacementInfo.createFromOptionals(this.pattern.ingredients());
+        }
+        return this.placementInfo;
     }
 
     @Override
     public boolean showNotification()
     {
         return this.showNotification;
-    }
-
-    @Override
-    public boolean canCraftInDimensions(int width, int height)
-    {
-        return width >= this.pattern.width() && height >= this.pattern.height();
     }
 
     public boolean matches(CraftingInput input, Level level)
@@ -100,12 +98,12 @@ public class ModifierShapedRecipe implements CraftingRecipe
 
     public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries)
     {
-        var itemstack = this.getResultItem(registries).copy();
+        var itemstack = this.result.copy();
 
-        List<ResourceLocation> catchModifiers = new ArrayList<>();
-        List<ResourceLocation> minigameModifiers = new ArrayList<>();
+        List<Identifier> catchModifiers = new ArrayList<>();
+        List<Identifier> minigameModifiers = new ArrayList<>();
 
-        for (ResourceLocation rl : this.minigameModifiers)
+        for (Identifier rl : this.minigameModifiers)
         {
             ResourceKey<Supplier<AbstractCatchModifier>> catchRK = ResourceKey.create(Starcatcher.CATCH_MODIFIERS, rl);
             ResourceKey<Supplier<AbstractMinigameModifier>> minigameRK = ResourceKey.create(Starcatcher.MINIGAME_MODIFIERS, rl);
@@ -136,10 +134,17 @@ public class ModifierShapedRecipe implements CraftingRecipe
     }
 
     @Override
-    public boolean isIncomplete()
+    public List<RecipeDisplay> display()
     {
-        NonNullList<Ingredient> nonnulllist = this.getIngredients();
-        return nonnulllist.isEmpty() || nonnulllist.stream().filter(p_151277_ -> !p_151277_.isEmpty()).anyMatch(Ingredient::hasNoItems);
+        return List.of(
+            new ShapedCraftingRecipeDisplay(
+                this.pattern.width(),
+                this.pattern.height(),
+                this.pattern.ingredients().stream().map(opt -> opt.map(Ingredient::display).orElse(SlotDisplay.Empty.INSTANCE)).toList(),
+                new SlotDisplay.ItemStackSlotDisplay(this.result),
+                new SlotDisplay.ItemSlotDisplay(Items.CRAFTING_TABLE)
+            )
+        );
     }
 
     public static class Serializer implements RecipeSerializer<ModifierShapedRecipe>
@@ -151,9 +156,9 @@ public class ModifierShapedRecipe implements CraftingRecipe
                                 ShapedRecipePattern.MAP_CODEC.forGetter(shapedRecipe -> shapedRecipe.pattern),
                                 ItemStack.STRICT_CODEC.fieldOf("result").forGetter(shapedRecipe -> shapedRecipe.result),
                                 Codec.BOOL.optionalFieldOf("show_notification", Boolean.TRUE).forGetter(shapedRecipe -> shapedRecipe.showNotification),
-                                ResourceLocation.CODEC.listOf().optionalFieldOf("minigame_modifiers", List.of()).forGetter(shapedRecipe -> shapedRecipe.minigameModifiers),
-                                ResourceLocation.CODEC.listOf().optionalFieldOf("catch_modifiers", List.of()).forGetter(shapedRecipe -> shapedRecipe.catchModifiers),
-                                ResourceLocation.CODEC.optionalFieldOf("bobber_skin", Starcatcher.rl("missingno")).forGetter(shapedRecipe -> shapedRecipe.bobberSkin)
+                                Identifier.CODEC.listOf().optionalFieldOf("minigame_modifiers", List.of()).forGetter(shapedRecipe -> shapedRecipe.minigameModifiers),
+                                Identifier.CODEC.listOf().optionalFieldOf("catch_modifiers", List.of()).forGetter(shapedRecipe -> shapedRecipe.catchModifiers),
+                                Identifier.CODEC.optionalFieldOf("bobber_skin", Starcatcher.rl("missingno")).forGetter(shapedRecipe -> shapedRecipe.bobberSkin)
                         )
                         .apply(group, ModifierShapedRecipe::new)
         );
@@ -180,9 +185,9 @@ public class ModifierShapedRecipe implements CraftingRecipe
             ShapedRecipePattern shapedrecipepattern = ShapedRecipePattern.STREAM_CODEC.decode(buffer);
             ItemStack itemstack = ItemStack.STREAM_CODEC.decode(buffer);
             boolean flag = buffer.readBoolean();
-            List<ResourceLocation> minigameModifiers = ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer);
-            List<ResourceLocation> catchModifiers = ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer);
-            ResourceLocation bobberSkin = ResourceLocation.STREAM_CODEC.decode(buffer);
+            List<Identifier> minigameModifiers = Identifier.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer);
+            List<Identifier> catchModifiers = Identifier.STREAM_CODEC.apply(ByteBufCodecs.list()).decode(buffer);
+            Identifier bobberSkin = Identifier.STREAM_CODEC.decode(buffer);
             return new ModifierShapedRecipe(s, craftingbookcategory, shapedrecipepattern, itemstack, flag, minigameModifiers, catchModifiers, bobberSkin);
         }
 
@@ -193,9 +198,9 @@ public class ModifierShapedRecipe implements CraftingRecipe
             ShapedRecipePattern.STREAM_CODEC.encode(buffer, recipe.pattern);
             ItemStack.STREAM_CODEC.encode(buffer, recipe.result);
             buffer.writeBoolean(recipe.showNotification);
-            ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.minigameModifiers);
-            ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.catchModifiers);
-            ResourceLocation.STREAM_CODEC.encode(buffer, recipe.bobberSkin);
+            Identifier.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.minigameModifiers);
+            Identifier.STREAM_CODEC.apply(ByteBufCodecs.list()).encode(buffer, recipe.catchModifiers);
+            Identifier.STREAM_CODEC.encode(buffer, recipe.bobberSkin);
         }
     }
 

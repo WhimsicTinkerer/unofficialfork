@@ -1,37 +1,29 @@
 package com.wdiscute.starcatcher.registry.custom.tackleskin;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.wdiscute.starcatcher.bob.FishingBobEntity;
-import com.wdiscute.starcatcher.bob.FishingBobModel;
-import net.minecraft.client.model.geom.ModelLayerLocation;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class AbstractTackleSkin
+/**
+ * Server-safe base class for tackle skins.
+ * Rendering is handled by TackleSkinRenderHelper on client side.
+ */
+public abstract class AbstractTackleSkin implements ITackleSkin
 {
-    public abstract ModelLayerLocation getLayerLocation();
-    public abstract ResourceLocation getTexture();
+    /**
+     * Returns the model layer location identifier for this tackle skin.
+     * Format: "modid:name" - will be combined with "main" layer on client.
+     */
+    public abstract Identifier getLayerLocationId();
 
-    RenderType renderType = null;
-    protected FishingBobModel<FishingBobEntity> model;
+    /**
+     * Returns the texture identifier for this tackle skin.
+     */
+    public abstract Identifier getTexture();
 
-    public void renderTackle(EntityRendererProvider.Context context, FishingBobEntity fishingBobEntity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight)
-    {
-        if (renderType == null)
-        {
-            this.model = new FishingBobModel<>(context.bakeLayer(getLayerLocation()));
-            this.renderType = RenderType.entityCutout(getTexture());
-        }
-        this.model.renderToBuffer(poseStack, buffer.getBuffer(renderType), packedLight, OverlayTexture.NO_OVERLAY, -1);
-    }
-
+    @Override
     public void onCast(Player player)
     {
         player.level().playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.FISHING_BOBBER_THROW, SoundSource.NEUTRAL, 0.5F, 0.4F / (player.level().getRandom().nextFloat() * 0.4F + 0.8F));

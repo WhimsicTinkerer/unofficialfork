@@ -5,7 +5,7 @@ import com.wdiscute.starcatcher.io.ModDataAttachments;
 import com.wdiscute.starcatcher.io.attachments.FishingGuideAttachment;
 import com.wdiscute.starcatcher.storage.TrophyProperties;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,12 +22,12 @@ public class RevokeAllTrophies extends Item
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand)
+    public InteractionResult use(Level level, Player player, InteractionHand usedHand)
     {
         FishingGuideAttachment.getTrophiesCaught(player).keySet().removeIf(loc -> U.getTpFromRl(level, loc).trophyType() == TrophyProperties.TrophyType.TROPHY);
         FishingGuideAttachment.sync(player);
 
-        return InteractionResultHolder.success(player.getItemInHand(usedHand));
+        return InteractionResult.SUCCESS;
     }
 
 }

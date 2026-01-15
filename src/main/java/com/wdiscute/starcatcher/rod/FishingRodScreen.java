@@ -1,20 +1,17 @@
 package com.wdiscute.starcatcher.rod;
 
-import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.wdiscute.starcatcher.Starcatcher;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.ClickType;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.client.input.KeyEvent;
 
 public class FishingRodScreen extends AbstractContainerScreen<FishingRodMenu>
 {
-    private static final ResourceLocation BACKGROUND = Starcatcher.rl("textures/gui/rod_screen.png");
+    private static final Identifier BACKGROUND = Starcatcher.rl("textures/gui/rod_screen.png");
 
 
     public FishingRodScreen(FishingRodMenu menu, Inventory playerInventory, Component title)
@@ -23,16 +20,16 @@ public class FishingRodScreen extends AbstractContainerScreen<FishingRodMenu>
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers)
+    public boolean keyPressed(KeyEvent event)
     {
-        InputConstants.Key mouseKey = InputConstants.getKey(keyCode, scanCode);
-        if (this.minecraft.options.keyInventory.isActiveAndMatches(mouseKey))
+        // Check if inventory key was pressed
+        if (this.minecraft.options.keyInventory.matches(event))
         {
             this.onClose();
             return true;
         }
 
-        return super.keyPressed(keyCode, scanCode, modifiers);
+        return super.keyPressed(event);
     }
 
     @Override
@@ -45,13 +42,9 @@ public class FishingRodScreen extends AbstractContainerScreen<FishingRodMenu>
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float v, int i, int i1)
     {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, BACKGROUND);
-
         int x = (width - imageWidth) / 2;
         int y = (height - imageHeight) / 2;
 
-        guiGraphics.blit(BACKGROUND, x, y, 0, 0, imageWidth, imageHeight);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, BACKGROUND, x, y, 0, 0, imageWidth, imageHeight, 256, 256);
     }
 }

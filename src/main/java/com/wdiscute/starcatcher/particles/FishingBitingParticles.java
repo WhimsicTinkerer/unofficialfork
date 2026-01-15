@@ -4,18 +4,18 @@ package com.wdiscute.starcatcher.particles;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
-public class FishingBitingParticles extends TextureSheetParticle
+public class FishingBitingParticles extends SingleQuadParticle
 {
     private final SpriteSet sprites;
 
     protected FishingBitingParticles(ClientLevel level, double x, double y, double z, SpriteSet spriteSet)
     {
-        super(level, x, y, z);
-
+        super(level, x, y, z, spriteSet.get(0, 1));
 
         Random r = new Random();
 
@@ -36,7 +36,6 @@ public class FishingBitingParticles extends TextureSheetParticle
     {
         this.setSpriteFromAge(this.sprites);
 
-
         this.yd -= 0.01f;
 
         this.xd *= 0.95f;
@@ -52,9 +51,9 @@ public class FishingBitingParticles extends TextureSheetParticle
     }
 
     @Override
-    public ParticleRenderType getRenderType()
+    protected SingleQuadParticle.Layer getLayer()
     {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return SingleQuadParticle.Layer.TRANSLUCENT;
     }
 
 
@@ -69,7 +68,7 @@ public class FishingBitingParticles extends TextureSheetParticle
 
         @Nullable
         @Override
-        public Particle createParticle(SimpleParticleType simpleParticleType, ClientLevel clientLevel, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed)
+        public Particle createParticle(SimpleParticleType simpleParticleType, ClientLevel clientLevel, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed, RandomSource randomSource)
         {
             return new FishingBitingParticles(clientLevel, x, y, z, this.spriteSet);
         }

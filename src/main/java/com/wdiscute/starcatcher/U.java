@@ -2,7 +2,7 @@ package com.wdiscute.starcatcher;
 
 import com.mojang.logging.LogUtils;
 import com.wdiscute.starcatcher.bob.FishingBobEntity;
-import com.wdiscute.starcatcher.datagen.TrustedHolder;
+import com.wdiscute.starcatcher.util.TrustedHolder;
 import com.wdiscute.starcatcher.fishentity.FishEntity;
 import com.wdiscute.starcatcher.io.*;
 import com.wdiscute.starcatcher.registry.custom.catchmodifiers.AbstractCatchModifier;
@@ -18,7 +18,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -103,7 +103,7 @@ public class U
                     y *= 2;
                     z *= 2.5;
 
-                    Entity entity = fp.catchInfo().entityToSpawn().value().create(level);
+                    Entity entity = fp.catchInfo().entityToSpawn().value().create(level, null, fbe.blockPosition(), net.minecraft.world.entity.EntitySpawnReason.TRIGGERED, false, false);
 
                     if (entity == null)
                     {
@@ -194,7 +194,7 @@ public class U
                 ModTackleSkins.get(level, fbe.rod).onFailedMinigame(player);
             }
 
-            fbe.kill();
+            fbe.kill(level);
         }
 
         ModDataAttachments.remove(player, ModDataAttachments.FISHING_BOB.get());
@@ -228,169 +228,173 @@ public class U
         return is;
     }
 
-    //List<TrophyProperties> -> List<ResourceLocation>
-    public static List<TrophyProperties> getTpsFromRls(Registry<TrophyProperties> registry, List<ResourceLocation> resourceLocations)
+    //List<TrophyProperties> -> List<Identifier>
+    public static List<TrophyProperties> getTpsFromRls(Registry<TrophyProperties> registry, List<Identifier> resourceLocations)
     {
         List<TrophyProperties> tps = new ArrayList<>();
 
-        for (ResourceLocation rl : resourceLocations)
+        for (Identifier rl : resourceLocations)
         {
-            TrophyProperties trophyProperties = registry.get(rl);
-            if (trophyProperties != null) tps.add(trophyProperties);
+            // 1.21.11: registry.get() now returns Optional<Reference<T>>
+            registry.get(rl).map(ref -> ref.value()).ifPresent(tps::add);
         }
         return tps;
     }
 
-    public static List<TrophyProperties> getTpsFromRls(RegistryAccess registryAccess, List<ResourceLocation> rls)
+    public static List<TrophyProperties> getTpsFromRls(RegistryAccess registryAccess, List<Identifier> rls)
     {
-        return getTpsFromRls(registryAccess.registryOrThrow(Starcatcher.TROPHY_REGISTRY), rls);
+        return getTpsFromRls(registryAccess.lookupOrThrow(Starcatcher.TROPHY_REGISTRY), rls);
     }
 
-    public static List<TrophyProperties> getTpsFromRls(Level level, List<ResourceLocation> rls)
+    public static List<TrophyProperties> getTpsFromRls(Level level, List<Identifier> rls)
     {
         return getTpsFromRls(level.registryAccess(), rls);
     }
 
 
-    //List<FishProperties> -> List<ResourceLocation>
-    public static List<ResourceLocation> getRlsFromFps(Registry<FishProperties> registry, List<FishProperties> fishProperties)
+    //List<FishProperties> -> List<Identifier>
+    public static List<Identifier> getRlsFromFps(Registry<FishProperties> registry, List<FishProperties> fishProperties)
     {
-        List<ResourceLocation> rls = new ArrayList<>();
+        List<Identifier> rls = new ArrayList<>();
 
         for (FishProperties fp : fishProperties)
         {
-            ResourceLocation resourceLocation = registry.getKey(fp);
+            Identifier resourceLocation = registry.getKey(fp);
             if (resourceLocation != null) rls.add(resourceLocation);
         }
         return rls;
     }
 
-    public static List<ResourceLocation> getRlsFromFps(RegistryAccess registryAccess, List<FishProperties> fps)
+    public static List<Identifier> getRlsFromFps(RegistryAccess registryAccess, List<FishProperties> fps)
     {
-        return getRlsFromFps(registryAccess.registryOrThrow(Starcatcher.FISH_REGISTRY), fps);
+        return getRlsFromFps(registryAccess.lookupOrThrow(Starcatcher.FISH_REGISTRY), fps);
     }
 
-    public static List<ResourceLocation> getRlsFromFps(Level level, List<FishProperties> fps)
+    public static List<Identifier> getRlsFromFps(Level level, List<FishProperties> fps)
     {
         return getRlsFromFps(level.registryAccess(), fps);
     }
 
 
-    //List<TrophyProperties> -> List<ResourceLocation>
-    public static List<ResourceLocation> getRlsFromTps(Registry<TrophyProperties> registry, List<TrophyProperties> trophyProperties)
+    //List<TrophyProperties> -> List<Identifier>
+    public static List<Identifier> getRlsFromTps(Registry<TrophyProperties> registry, List<TrophyProperties> trophyProperties)
     {
-        List<ResourceLocation> rls = new ArrayList<>();
+        List<Identifier> rls = new ArrayList<>();
 
         for (TrophyProperties tp : trophyProperties)
         {
-            ResourceLocation resourceLocation = registry.getKey(tp);
+            Identifier resourceLocation = registry.getKey(tp);
             if (resourceLocation != null) rls.add(resourceLocation);
         }
         return rls;
     }
 
-    public static List<ResourceLocation> getRlsFromTps(RegistryAccess registryAccess, List<TrophyProperties> tps)
+    public static List<Identifier> getRlsFromTps(RegistryAccess registryAccess, List<TrophyProperties> tps)
     {
-        return getRlsFromTps(registryAccess.registryOrThrow(Starcatcher.TROPHY_REGISTRY), tps);
+        return getRlsFromTps(registryAccess.lookupOrThrow(Starcatcher.TROPHY_REGISTRY), tps);
     }
 
-    public static List<ResourceLocation> getRlsFromTps(Level level, List<TrophyProperties> tps)
+    public static List<Identifier> getRlsFromTps(Level level, List<TrophyProperties> tps)
     {
         return getRlsFromTps(level.registryAccess(), tps);
     }
 
 
-    //ResourceLocation -> TrophyProperties
-    public static TrophyProperties getTpFromRl(Registry<TrophyProperties> registry, ResourceLocation resourceLocation)
+    //Identifier -> TrophyProperties
+    public static TrophyProperties getTpFromRl(Registry<TrophyProperties> registry, Identifier resourceLocation)
     {
-        TrophyProperties tp = registry.get(resourceLocation);
-        return tp == null ? TrophyProperties.builder().build() : tp;
+        // 1.21.11: registry.get() now returns Optional<Reference<T>>
+        return registry.get(resourceLocation)
+                .map(ref -> ref.value())
+                .orElseGet(() -> TrophyProperties.builder().build());
     }
 
-    public static TrophyProperties getTpFromRl(RegistryAccess registryAccess, ResourceLocation rl)
+    public static TrophyProperties getTpFromRl(RegistryAccess registryAccess, Identifier rl)
     {
-        return getTpFromRl(registryAccess.registryOrThrow(Starcatcher.TROPHY_REGISTRY), rl);
+        return getTpFromRl(registryAccess.lookupOrThrow(Starcatcher.TROPHY_REGISTRY), rl);
     }
 
-    public static TrophyProperties getTpFromRl(Level level, ResourceLocation rl)
+    public static TrophyProperties getTpFromRl(Level level, Identifier rl)
     {
         return getTpFromRl(level.registryAccess(), rl);
     }
 
 
-    //TrophyProperties -> ResourceLocation
-    public static ResourceLocation getRlFromTp(Registry<TrophyProperties> registry, TrophyProperties tp)
+    //TrophyProperties -> Identifier
+    public static Identifier getRlFromTp(Registry<TrophyProperties> registry, TrophyProperties tp)
     {
-        ResourceLocation rl = registry.getKey(tp);
+        Identifier rl = registry.getKey(tp);
         return rl == null ? Starcatcher.rl("missingno_rl") : rl;
     }
 
-    public static ResourceLocation getRlFromTp(RegistryAccess registryAccess, TrophyProperties tp)
+    public static Identifier getRlFromTp(RegistryAccess registryAccess, TrophyProperties tp)
     {
-        return getRlFromTp(registryAccess.registryOrThrow(Starcatcher.TROPHY_REGISTRY), tp);
+        return getRlFromTp(registryAccess.lookupOrThrow(Starcatcher.TROPHY_REGISTRY), tp);
     }
 
-    public static ResourceLocation getRlFromTp(Level level, TrophyProperties tp)
+    public static Identifier getRlFromTp(Level level, TrophyProperties tp)
     {
         return getRlFromTp(level.registryAccess(), tp);
     }
 
 
-    //List<ResourceLocation> -> List<TrophyProperties>
-    public static List<FishProperties> getFpsFromRls(Registry<FishProperties> registry, List<ResourceLocation> resourceLocations)
+    //List<Identifier> -> List<FishProperties>
+    public static List<FishProperties> getFpsFromRls(Registry<FishProperties> registry, List<Identifier> resourceLocations)
     {
         List<FishProperties> fps = new ArrayList<>();
 
-        for (ResourceLocation rl : resourceLocations)
+        for (Identifier rl : resourceLocations)
         {
-            FishProperties fishProperties = registry.get(rl);
-            if (fishProperties != null) fps.add(fishProperties);
+            // 1.21.11: registry.get() now returns Optional<Reference<T>>
+            registry.get(rl).map(ref -> ref.value()).ifPresent(fps::add);
         }
         return fps;
     }
 
-    public static List<FishProperties> getFpsFromRls(RegistryAccess registryAccess, List<ResourceLocation> rls)
+    public static List<FishProperties> getFpsFromRls(RegistryAccess registryAccess, List<Identifier> rls)
     {
-        return getFpsFromRls(registryAccess.registryOrThrow(Starcatcher.FISH_REGISTRY), rls);
+        return getFpsFromRls(registryAccess.lookupOrThrow(Starcatcher.FISH_REGISTRY), rls);
     }
 
-    public static List<FishProperties> getFpsFromRls(Level level, List<ResourceLocation> rls)
+    public static List<FishProperties> getFpsFromRls(Level level, List<Identifier> rls)
     {
         return getFpsFromRls(level.registryAccess(), rls);
     }
 
 
-    //ResourceLocation -> FishProperties
-    public static FishProperties getFpFromRl(Registry<FishProperties> registry, ResourceLocation resourceLocation)
+    //Identifier -> FishProperties
+    public static FishProperties getFpFromRl(Registry<FishProperties> registry, Identifier resourceLocation)
     {
-        FishProperties fp = registry.get(resourceLocation);
-        return fp == null ? FishProperties.builder().build() : fp;
+        // 1.21.11: registry.get() now returns Optional<Reference<T>>
+        return registry.get(resourceLocation)
+                .map(ref -> ref.value())
+                .orElseGet(() -> FishProperties.builder().build());
     }
 
-    public static FishProperties getFpFromRl(RegistryAccess registryAccess, ResourceLocation rl)
+    public static FishProperties getFpFromRl(RegistryAccess registryAccess, Identifier rl)
     {
-        return getFpFromRl(registryAccess.registryOrThrow(Starcatcher.FISH_REGISTRY), rl);
+        return getFpFromRl(registryAccess.lookupOrThrow(Starcatcher.FISH_REGISTRY), rl);
     }
 
-    public static FishProperties getFpFromRl(Level level, ResourceLocation rl)
+    public static FishProperties getFpFromRl(Level level, Identifier rl)
     {
         return getFpFromRl(level.registryAccess(), rl);
     }
 
 
     //resource location from fish properties
-    public static ResourceLocation getRlFromFp(Registry<FishProperties> registry, FishProperties fp)
+    public static Identifier getRlFromFp(Registry<FishProperties> registry, FishProperties fp)
     {
-        ResourceLocation rl = registry.getKey(fp);
+        Identifier rl = registry.getKey(fp);
         return rl == null ? Starcatcher.rl("missingno_rl") : rl;
     }
 
-    public static ResourceLocation getRlFromFp(RegistryAccess registryAccess, FishProperties tp)
+    public static Identifier getRlFromFp(RegistryAccess registryAccess, FishProperties tp)
     {
-        return getRlFromFp(registryAccess.registryOrThrow(Starcatcher.FISH_REGISTRY), tp);
+        return getRlFromFp(registryAccess.lookupOrThrow(Starcatcher.FISH_REGISTRY), tp);
     }
 
-    public static ResourceLocation getRlFromFp(Level level, FishProperties tp)
+    public static Identifier getRlFromFp(Level level, FishProperties tp)
     {
         return getRlFromFp(level.registryAccess(), tp);
     }
@@ -452,14 +456,16 @@ public class U
         return !containsAny(list, contains);
     }
 
-    public static ResourceLocation rl(String ns, String path)
+    public static Identifier rl(String ns, String path)
     {
-        return ResourceLocation.fromNamespaceAndPath(ns, path);
+        return Identifier.fromNamespaceAndPath(ns, path);
     }
 
     public static Holder<Item> holderItem(String ns, String path)
     {
-        return TrustedHolder.createStandAlone(BuiltInRegistries.ITEM.holderOwner(), ResourceKey.create(Registries.ITEM, rl(ns, path)));
+        return BuiltInRegistries.ITEM.get(rl(ns, path))
+                .map(ref -> (Holder<Item>) ref)
+                .orElseGet(() -> Holder.direct(net.minecraft.world.item.Items.AIR));
     }
 
     public static Holder<Item> holderItem(DeferredItem<Item> item)
@@ -477,9 +483,12 @@ public class U
         return Holder.direct(entityType);
     }
 
+    @SuppressWarnings("unchecked")
     public static Holder<EntityType<?>> holderEntity(String ns, String path)
     {
-        return TrustedHolder.createStandAlone(BuiltInRegistries.ENTITY_TYPE.holderOwner(), ResourceKey.create(Registries.ENTITY_TYPE, rl(ns, path)));
+        return BuiltInRegistries.ENTITY_TYPE.get(rl(ns, path))
+                .map(ref -> (Holder<EntityType<?>>) (Holder<?>) ref)
+                .orElseGet(() -> Holder.direct(EntityType.PIG));
     }
 
     public static Holder<EntityType<?>> holderEntity(Supplier<EntityType<FishEntity>> entity)

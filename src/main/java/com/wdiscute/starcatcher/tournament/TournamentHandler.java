@@ -86,7 +86,7 @@ public class TournamentHandler
 
     public static void addScore(Player playerToAwardScoreTo, FishProperties fp, boolean perfectCatch, int size, int weight)
     {
-        if (playerToAwardScoreTo.level().isClientSide) return;
+        if (playerToAwardScoreTo.level().isClientSide()) return;
         for (Tournament t : activeTournaments)
         {
             t.playerScores.forEach(p ->
@@ -138,8 +138,13 @@ public class TournamentHandler
 
                 String winnerString = "???";
 
-                if (winner != null)
-                    winnerString = server.getProfileCache().get(winner).get().getName();
+                if (winner != null) {
+                    // getProfileCache() was removed in 1.21.11 - use PlayerList instead
+                    ServerPlayer winnerPlayer = server.getPlayerList().getPlayer(winner);
+                    if (winnerPlayer != null) {
+                        winnerString = winnerPlayer.getGameProfile().name();
+                    }
+                }
 
                 for (var playerScore : t.playerScores)
                 {

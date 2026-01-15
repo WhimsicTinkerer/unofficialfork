@@ -12,7 +12,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MobSpawnType;
+import net.minecraft.world.entity.EntitySpawnReason;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.BucketItem;
@@ -24,8 +24,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class StarcaughtBucket extends BucketItem
 {
@@ -39,8 +39,8 @@ public class StarcaughtBucket extends BucketItem
         entity = ModEntities.FISH.get();
     }
 
-    @Override
-    public void checkExtraContent(@Nullable Player player, Level level, ItemStack containerStack, BlockPos pos)
+    // Note: checkExtraContent was removed in 1.21.11 - spawn logic should be handled elsewhere
+    public void onBucketUse(@Nullable Player player, Level level, ItemStack containerStack, BlockPos pos)
     {
         if (level instanceof ServerLevel)
         {
@@ -51,7 +51,7 @@ public class StarcaughtBucket extends BucketItem
 
     private void spawn(ServerLevel serverLevel, ItemStack bucketedMobStack, BlockPos pos)
     {
-        FishEntity fishEntity = this.entity.spawn(serverLevel, bucketedMobStack, null, pos, MobSpawnType.BUCKET, true, false);
+        FishEntity fishEntity = this.entity.spawn(serverLevel, bucketedMobStack, null, pos, EntitySpawnReason.BUCKET, true, false);
         if(ModDataComponents.has(bucketedMobStack, ModDataComponents.BUCKETED_FISH))
             fishEntity.setFish(getFish(bucketedMobStack));
         else
@@ -63,14 +63,14 @@ public class StarcaughtBucket extends BucketItem
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag)
+    public void appendHoverText(ItemStack stack, TooltipContext context, net.minecraft.world.item.component.TooltipDisplay tooltipDisplay, Consumer<Component> tooltipConsumer, TooltipFlag tooltipFlag)
     {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        super.appendHoverText(stack, context, tooltipDisplay, tooltipConsumer, tooltipFlag);
         ItemStack fish = getFish(stack);
         if (fish.isEmpty())
         {
-            tooltipComponents.add(1, Component.translatable("tooltip.starcatcher.starcaught_bucket.creative.1").withColor(0x888888));
-            tooltipComponents.add(1, Component.translatable("tooltip.starcatcher.starcaught_bucket.creative.0").withColor(0x888888));
+            tooltipConsumer.accept(Component.translatable("tooltip.starcatcher.starcaught_bucket.creative.0").withColor(0x888888));
+            tooltipConsumer.accept(Component.translatable("tooltip.starcatcher.starcaught_bucket.creative.1").withColor(0x888888));
         }
     }
 
