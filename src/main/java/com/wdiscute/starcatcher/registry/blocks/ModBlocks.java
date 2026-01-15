@@ -2,50 +2,44 @@ package com.wdiscute.starcatcher.registry.blocks;
 
 import com.wdiscute.starcatcher.registry.ModItems;
 import com.wdiscute.starcatcher.Starcatcher;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.function.Supplier;
-
 public interface ModBlocks
 {
     DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(Starcatcher.MOD_ID);
 
-    DeferredBlock<Block> TROPHY_GOLD = registerBlock("trophy_gold", TrophyBlock::new);
-    DeferredBlock<Block> TROPHY_SILVER = registerBlock("trophy_silver", TrophyBlock::new);
-    DeferredBlock<Block> TROPHY_BRONZE = registerBlock("trophy_bronze", TrophyBlock::new);
+    // NeoForge 1.21.11: Use registerBlock with constructor reference and properties
+    DeferredBlock<TrophyBlock> TROPHY_GOLD = BLOCKS.registerBlock("trophy_gold", TrophyBlock::new, TrophyBlock.createProperties());
+    DeferredBlock<TrophyBlock> TROPHY_SILVER = BLOCKS.registerBlock("trophy_silver", TrophyBlock::new, TrophyBlock.createProperties());
+    DeferredBlock<TrophyBlock> TROPHY_BRONZE = BLOCKS.registerBlock("trophy_bronze", TrophyBlock::new, TrophyBlock.createProperties());
 
-    DeferredBlock<Block> STAND = registerStand("tournament_stand", StandBlock::new);
+    DeferredBlock<StandBlock> STAND = registerStand("tournament_stand");
 
-
-
-
-    private static <T extends Block> DeferredBlock<T> registerStand(String name, Supplier<T> block)
+    private static DeferredBlock<StandBlock> registerStand(String name)
     {
-        DeferredBlock<T> toReturn = BLOCKS.register(name, block);
-
-        ModItems.BLOCKITEMS_REGISTRY.register(name, () -> new StandBlockItem(toReturn.get()));
+        DeferredBlock<StandBlock> toReturn = BLOCKS.registerBlock(name, StandBlock::new, StandBlock.createProperties());
+        // In 1.21.11, register() lambda receives Identifier (ResourceLocation), convert to ResourceKey for setId
+        ModItems.BLOCKITEMS_REGISTRY.register(name, id -> new StandBlockItem(toReturn.get(),
+            new net.minecraft.world.item.Item.Properties().setId(ResourceKey.create(Registries.ITEM, id))));
         return toReturn;
     }
 
-    private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block)
+    // Register block items for trophy blocks
+    static void registerBlockItems()
     {
-        DeferredBlock<T> toReturn = BLOCKS.register(name, block);
-        registerBlockItem(name, toReturn);
-        return toReturn;
-    }
-
-    private static <T extends Block> void registerBlockItem(String name, DeferredBlock<T> block)
-    {
-        ModItems.ITEMS_REGISTRY.register(name, () -> new BlockItem(block.get(), new Item.Properties()));
+        ModItems.BLOCKITEMS_REGISTRY.registerSimpleBlockItem(TROPHY_GOLD);
+        ModItems.BLOCKITEMS_REGISTRY.registerSimpleBlockItem(TROPHY_SILVER);
+        ModItems.BLOCKITEMS_REGISTRY.registerSimpleBlockItem(TROPHY_BRONZE);
     }
 
     static void register(IEventBus eventBus)
     {
+        registerBlockItems();
         BLOCKS.register(eventBus);
     }
 }

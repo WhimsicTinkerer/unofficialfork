@@ -3,11 +3,8 @@ package com.wdiscute.starcatcher.io.network.tournament;
 
 import com.mojang.authlib.GameProfile;
 import com.wdiscute.starcatcher.Starcatcher;
-import com.wdiscute.starcatcher.tournament.StandScreen;
 import com.wdiscute.starcatcher.tournament.Tournament;
-import com.wdiscute.starcatcher.tournament.TournamentOverlay;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,7 +13,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.ArrayList;
@@ -74,7 +71,16 @@ public record CBActiveTournamentUpdatePayload(List<GameProfile> listSignups, Tou
 
     public void handle(IPayloadContext context)
     {
-        TournamentOverlay.onTournamentReceived(tour, listSignups);
+        // Only run on client - FMLEnvironment.getDist() is safe to call on both sides
+        if (FMLEnvironment.getDist() == Dist.CLIENT) {
+            ClientHandler.updateTournament(tour, listSignups);
+        }
     }
 
+    // Inner class to isolate client code - only loaded when DistExecutor runs on CLIENT
+    private static class ClientHandler {
+        static void updateTournament(Tournament tour, List<GameProfile> listSignups) {
+            com.wdiscute.starcatcher.tournament.TournamentOverlay.onTournamentReceived(tour, listSignups);
+        }
+    }
 }

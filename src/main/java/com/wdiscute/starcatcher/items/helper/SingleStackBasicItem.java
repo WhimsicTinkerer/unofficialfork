@@ -4,8 +4,8 @@ import net.minecraft.world.item.Item;
 
 public class SingleStackBasicItem extends Item
 {
-    public SingleStackBasicItem()
+    public SingleStackBasicItem(Item.Properties props)
     {
-        super(new Properties().stacksTo(1));
+        super(props.stacksTo(1));
     }
 }

@@ -1,5 +1,7 @@
 package com.wdiscute.starcatcher.guide;
 
+import com.wdiscute.starcatcher.client.ClientHelper;
+import com.wdiscute.starcatcher.io.Units;
 import net.minecraft.client.renderer.RenderPipelines;
 import org.joml.Matrix3x2fStack;
 import com.wdiscute.starcatcher.Config;
@@ -289,7 +291,7 @@ public class SettingsScreen extends Screen
         );
 
         //Units
-        guiGraphics.drawString(this.font, Component.translatable(unitSelected.translationKey), width / 2 - 50, height / 2 + 102, 0x000000, false);
+        guiGraphics.drawString(this.font, Component.translatable(unitSelected.getTranslationKey()), width / 2 - 50, height / 2 + 102, 0x000000, false);
 
         hitParticles.forEach(p -> p.render(guiGraphics, width, height));
     }
@@ -496,106 +498,8 @@ public class SettingsScreen extends Screen
         }
     }
 
-    public enum Units
-    {
-        METRIC("gui.guide.units.metric", 1f, 1f),
-        IMPERIAL("gui.guide.units.imperial", 0.3937f, 0.0352739619495804f),
-        CHEESEBURGER("gui.guide.units.cheeseburger", 0.09f, 0.0087f),
-        FOOTBALL("gui.guide.units.football", 0.04545f, 0.00233f),
-        DEVELOPER_HEIGHT("gui.guide.units.developer", 0.00592f, 0.0000140845f),
-        BANANA("gui.guide.units.banana", 0.05f, 0.00833f),
-        DUCK("gui.guide.units.duck", 0.02f, 0.0006667f),
-        SPACE_WHALE("gui.guide.units.space_whale", 1f, 1f),
-        SCIENTIFIC("gui.guide.units.scientific", 1f, 1f),
-        ;
-
-        private static final Units[] vals = values();
-        private final String translationKey;
-        private final float multiplierSize;
-        private final float multiplierWeight;
-
-        Units(String translationKey, float multiplierSize, float multiplierWeight)
-        {
-            this.translationKey = translationKey;
-            this.multiplierSize = multiplierSize;
-            this.multiplierWeight = multiplierWeight;
-        }
-
-        public String getTranslationKey()
-        {
-            return this.translationKey;
-        }
-
-        public float getMultiplierSize()
-        {
-            return this.multiplierSize;
-        }
-
-        public float getMultiplierWeight()
-        {
-            return this.multiplierWeight;
-        }
-
-        public Units next()
-        {
-            return vals[(this.ordinal() + 1) % vals.length];
-        }
-
-        public Units previous()
-        {
-            if (this.ordinal() == 0) return vals[vals.length - 1];
-            return vals[(this.ordinal() - 1) % vals.length];
-        }
-
-        public String getSizeAsString(int sizeInCm)
-        {
-            //space whale is always infinite
-            if (this.equals(Units.SPACE_WHALE)) return "∞ space whales";
-            if (this.equals(Units.SCIENTIFIC)) return "0 AU";
-
-            float size = sizeInCm * this.getMultiplierSize();
-            String sizeString = ((float) (int) (size * 100)) / 100 + " " + I18n.get(this.getTranslationKey() + ".size");
-
-            if (this.equals(Units.METRIC))
-            {
-                sizeString = ((int) size) + "cm";
-                if (size > 100) sizeString = (float) ((int) (size / 100 * 100)) / 100 + "m";
-            }
-
-            if (this.equals(Units.IMPERIAL))
-            {
-                sizeString = ((int) size) + "''";
-                if (size > 12) sizeString = ((int) (size / 12)) + "'" + ((int) (size % 12)) + "''";
-            }
-
-            return sizeString;
-        }
-
-        public String getWeightAsString(int weightInGrams)
-        {
-            //space whale is always infinite
-            if (this.equals(Units.SPACE_WHALE)) return "∞ space whales";
-            if (this.equals(Units.SCIENTIFIC)) return "0 R136a1's";
-
-            float weight = weightInGrams * this.getMultiplierWeight();
-            String weightString = ((float) (int) (weight * 100)) / 100 + " " + I18n.get(this.getTranslationKey() + ".weight");
-
-            if (this.equals(Units.METRIC))
-            {
-                if (weight < 1000) weightString = ((int) weight) + "g";
-                if (weight > 1000) weightString = (float) ((int) (weight / 1000 * 100)) / 100 + "kg";
-            }
-
-            if (this.equals(Units.IMPERIAL))
-            {
-                weightString = ((int) weight) + "oz";
-                if (weight > 12) weightString = ((int) (weight / 16)) + " lb " + ((int) (weight % 16)) + " oz";
-            }
-
-            return weightString;
-        }
-
-    }
+    // Units enum has been moved to com.wdiscute.starcatcher.io.Units
+    // String formatting methods are in ClientHelper.getSizeAsString/getWeightAsString
 
     @Override
     public boolean isPauseScreen()

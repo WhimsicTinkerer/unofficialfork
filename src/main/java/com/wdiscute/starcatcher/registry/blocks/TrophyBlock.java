@@ -19,13 +19,17 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class TrophyBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock, EntityBlock
 {
-    public TrophyBlock()
+    public TrophyBlock(BlockBehaviour.Properties props)
     {
-        super(BlockBehaviour.Properties.of()
+        super(props);
+    }
+
+    public static BlockBehaviour.Properties createProperties()
+    {
+        return BlockBehaviour.Properties.of()
                 .noOcclusion()
                 .lightLevel((state) -> 5)
-                .sound(SoundType.AMETHYST)
-        );
+                .sound(SoundType.AMETHYST);
     }
 
     @Override

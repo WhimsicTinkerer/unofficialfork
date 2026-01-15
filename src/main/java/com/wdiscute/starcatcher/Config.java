@@ -1,7 +1,7 @@
 package com.wdiscute.starcatcher;
 
-import com.wdiscute.starcatcher.guide.FishingGuideScreen;
-import com.wdiscute.starcatcher.guide.SettingsScreen;
+import com.wdiscute.starcatcher.io.FishSort;
+import com.wdiscute.starcatcher.io.Units;
 import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class Config
@@ -18,11 +18,11 @@ public class Config
     public static final ModConfigSpec.DoubleValue HIT_DELAY = BUILDER
             .defineInRange("hit_delay", 0.0d, -20, 20);
 
-    public static final ModConfigSpec.EnumValue<SettingsScreen.Units> UNIT = BUILDER
-            .defineEnum("units", SettingsScreen.Units.METRIC);
+    public static final ModConfigSpec.EnumValue<Units> UNIT = BUILDER
+            .defineEnum("units", Units.METRIC);
 
-    public static final ModConfigSpec.EnumValue<FishingGuideScreen.Sort> SORT = BUILDER
-            .defineEnum("sort", FishingGuideScreen.Sort.ALPHABETICAL_DOWN);
+    public static final ModConfigSpec.EnumValue<FishSort> SORT = BUILDER
+            .defineEnum("sort", FishSort.ALPHABETICAL_DOWN);
 
     public static final ModConfigSpec.BooleanValue VANILLA_PARTIAL_TICK = BUILDER
             .comment("Whether to use the vanilla partial ticks for minigame smoothing or a custom implementation from 1.20")

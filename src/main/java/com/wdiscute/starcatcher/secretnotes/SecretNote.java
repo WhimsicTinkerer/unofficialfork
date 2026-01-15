@@ -2,7 +2,6 @@ package com.wdiscute.starcatcher.secretnotes;
 
 import com.mojang.serialization.Codec;
 import com.wdiscute.starcatcher.io.ModDataComponents;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
@@ -10,31 +9,36 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.codec.NeoForgeStreamCodecs;
 import org.jetbrains.annotations.NotNull;
 
 public class SecretNote extends Item
 {
-    public SecretNote()
+    public SecretNote(Item.Properties props)
     {
-        super(new Properties().stacksTo(1).component(ModDataComponents.SECRET_NOTE, Note.SAMPLE_NOTE));
+        super(props.stacksTo(1).component(ModDataComponents.SECRET_NOTE, Note.SAMPLE_NOTE));
     }
 
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand usedHand)
     {
-        if(level.isClientSide()) openScreen(ModDataComponents.get(player.getItemInHand(usedHand), ModDataComponents.SECRET_NOTE));
+        if(level.isClientSide() && FMLEnvironment.getDist() == Dist.CLIENT)
+        {
+            ClientHandler.openScreen(ModDataComponents.get(player.getItemInHand(usedHand), ModDataComponents.SECRET_NOTE));
+        }
         return super.use(level, player, usedHand);
     }
 
-    @OnlyIn(Dist.CLIENT)
-    private void openScreen(Note note)
+    // Inner class to isolate client code - only loaded when on CLIENT
+    private static class ClientHandler
     {
-        Minecraft.getInstance().setScreen(new SecretNoteScreen(note));
+        static void openScreen(Note note)
+        {
+            net.minecraft.client.Minecraft.getInstance().setScreen(new SecretNoteScreen(note));
+        }
     }
 
     public enum Note implements StringRepresentable

@@ -13,15 +13,15 @@ import java.util.function.Supplier;
 public class CatchModifierItem extends Item
 {
     @SafeVarargs
-    public CatchModifierItem(Pair<Identifier, Supplier<AbstractCatchModifier>>... modifiers)
+    public CatchModifierItem(Item.Properties props, Pair<Identifier, Supplier<AbstractCatchModifier>>... modifiers)
     {
-        this(1, modifiers);
+        this(props, 1, modifiers);
     }
 
     @SafeVarargs
-    public CatchModifierItem(int maxStackSize, Pair<Identifier, Supplier<AbstractCatchModifier>>... modifiers)
+    public CatchModifierItem(Item.Properties props, int maxStackSize, Pair<Identifier, Supplier<AbstractCatchModifier>>... modifiers)
     {
-        super(new Item.Properties()
+        super(props
                 .component(ModDataComponents.CATCH_MODIFIERS, getAsList(modifiers))
                 .stacksTo(maxStackSize)
         );

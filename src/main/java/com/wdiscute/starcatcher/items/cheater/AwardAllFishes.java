@@ -18,9 +18,9 @@ import java.util.Map;
 
 public class AwardAllFishes extends Item
 {
-    public AwardAllFishes()
+    public AwardAllFishes(Item.Properties props)
     {
-        super(new Item.Properties().stacksTo(1));
+        super(props.stacksTo(1));
     }
 
     @Override

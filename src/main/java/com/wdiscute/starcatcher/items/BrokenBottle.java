@@ -18,9 +18,9 @@ import net.minecraft.world.level.Level;
 public class BrokenBottle extends Item implements ProjectileItem
 {
 
-    public BrokenBottle()
+    public BrokenBottle(Item.Properties props)
     {
-        super(new Item.Properties().stacksTo(16));
+        super(props.stacksTo(16));
     }
 
     @Override

@@ -2,12 +2,8 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "starcatcher:starcatcher_rod"
-    },
-    {
-      "item": "minecraft:book"
-    }
+    "starcatcher:starcatcher_rod",
+    "minecraft:book"
   ],
   "result": {
     "id": "starcatcher:starcatcher_guide",

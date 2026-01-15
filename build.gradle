@@ -41,8 +41,9 @@ repositories
 }
 
 dependencies {
-    // libtooltips via Modrinth maven (favouriteless maven is down)
-    jarJar(implementation("maven.modrinth:libtooltips:1.4"))
+    // libtooltips - local ported version for 1.21.11
+    // TODO: Add jarJar once libtooltips has Automatic-Module-Name in manifest
+    implementation(files("../libtooltips/build/libs/libtooltips-1.5-NEOFORGE-1.21.11.jar"))
 
     // TODO: Re-enable when 1.21.11 versions are available
     //tiny multiblock lib - commented out until 1.21.11 version available

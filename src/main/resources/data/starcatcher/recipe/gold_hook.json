@@ -2,15 +2,9 @@
   "type": "starcatcher:modifier_shaped_recipe",
   "category": "misc",
   "key": {
-    "H": {
-      "item": "starcatcher:hook"
-    },
-    "N": {
-      "item": "minecraft:gold_nugget"
-    },
-    "G": {
-      "item": "minecraft:gold_ingot"
-    }
+    "H": "starcatcher:hook",
+    "N": "minecraft:gold_nugget",
+    "G": "minecraft:gold_ingot"
   },
   "pattern": [
     "N  ",
@@ -21,5 +15,7 @@
     "count": 1,
     "id": "starcatcher:gold_hook"
   },
-  "modifiers" : ["starcatcher:extra_exp_based_on_performance"]
+  "modifiers": [
+    "starcatcher:extra_exp_based_on_performance"
+  ]
 }

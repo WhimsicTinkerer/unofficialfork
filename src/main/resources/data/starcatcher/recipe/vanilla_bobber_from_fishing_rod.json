@@ -2,13 +2,13 @@
   "type": "starcatcher:modifier_shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:fishing_rod"
-    }
+    "minecraft:fishing_rod"
   ],
   "result": {
     "id": "starcatcher:vanilla_bobber",
     "count": 1
   },
-  "modifiers" : ["starcatcher:vanilla_loot"]
+  "modifiers": [
+    "starcatcher:vanilla_loot"
+  ]
 }

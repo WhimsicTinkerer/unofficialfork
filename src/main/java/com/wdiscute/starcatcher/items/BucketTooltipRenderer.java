@@ -1,14 +1,14 @@
 package com.wdiscute.starcatcher.items;
 
 import com.wdiscute.starcatcher.Config;
-import com.wdiscute.starcatcher.guide.SettingsScreen;
+import com.wdiscute.starcatcher.client.ClientHelper;
 import com.wdiscute.starcatcher.io.ModDataComponents;
 import com.wdiscute.starcatcher.io.SizeAndWeightInstance;
+import com.wdiscute.starcatcher.io.Units;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
@@ -23,10 +23,10 @@ public class BucketTooltipRenderer implements ClientTooltipComponent {
         if (ModDataComponents.has(tooltip.fish(),ModDataComponents.SIZE_AND_WEIGHT)) {
             SizeAndWeightInstance sw = ModDataComponents.get(tooltip.fish(), ModDataComponents.SIZE_AND_WEIGHT);
 
-            SettingsScreen.Units units = Config.UNIT.get();
+            Units units = Config.UNIT.get();
 
-            String size = units.getSizeAsString(sw.sizeInCentimeters());
-            String weight = units.getWeightAsString(sw.weightInGrams());
+            String size = ClientHelper.getSizeAsString(units, sw.sizeInCentimeters());
+            String weight = ClientHelper.getWeightAsString(units, sw.weightInGrams());
 
             this.text = size + " - " + weight;
         }

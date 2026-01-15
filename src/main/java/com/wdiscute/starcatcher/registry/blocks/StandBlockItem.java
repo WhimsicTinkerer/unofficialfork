@@ -6,8 +6,8 @@ import net.minecraft.world.level.block.Block;
 
 public class StandBlockItem extends BlockItem
 {
-    public StandBlockItem(Block block)
+    public StandBlockItem(Block block, Item.Properties props)
     {
-        super(block, new Item.Properties());
+        super(block, props);
     }
 }

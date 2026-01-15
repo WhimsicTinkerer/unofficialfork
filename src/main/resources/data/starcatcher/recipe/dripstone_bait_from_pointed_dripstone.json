@@ -2,16 +2,14 @@
   "type": "starcatcher:modifier_shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:bone_meal"
-    },
-    {
-      "item": "minecraft:pointed_dripstone"
-    }
+    "minecraft:bone_meal",
+    "minecraft:pointed_dripstone"
   ],
   "result": {
     "id": "starcatcher:dripstone_bait",
     "count": 4
   },
-  "modifiers" : ["starcatcher:decrease_time_to_bite"]
+  "modifiers": [
+    "starcatcher:decrease_time_to_bite"
+  ]
 }

@@ -14,9 +14,9 @@ import java.util.HashMap;
 
 public class RevokeAllFishes extends Item
 {
-    public RevokeAllFishes()
+    public RevokeAllFishes(Item.Properties props)
     {
-        super(new Properties().stacksTo(1));
+        super(props.stacksTo(1));
     }
 
     @Override

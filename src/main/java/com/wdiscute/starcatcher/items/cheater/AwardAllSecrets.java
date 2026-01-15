@@ -20,9 +20,9 @@ import java.util.Map;
 
 public class AwardAllSecrets extends Item
 {
-    public AwardAllSecrets()
+    public AwardAllSecrets(Item.Properties props)
     {
-        super(new Properties().stacksTo(1));
+        super(props.stacksTo(1));
     }
 
     @Override

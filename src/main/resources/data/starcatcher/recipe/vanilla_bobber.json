@@ -2,15 +2,9 @@
   "type": "starcatcher:modifier_shaped_recipe",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "starcatcher:bobber"
-    },
-    "R": {
-      "item": "minecraft:red_wool"
-    },
-    "S": {
-      "item": "minecraft:stick"
-    }
+    "B": "starcatcher:bobber",
+    "R": "minecraft:red_wool",
+    "S": "minecraft:stick"
   },
   "pattern": [
     " RS",
@@ -21,5 +15,7 @@
     "count": 1,
     "id": "starcatcher:vanilla_bobber"
   },
-  "modifiers" : ["starcatcher:vanilla_loot"]
+  "modifiers": [
+    "starcatcher:vanilla_loot"
+  ]
 }

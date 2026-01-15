@@ -2,16 +2,14 @@
   "type": "starcatcher:modifier_shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:bone_meal"
-    },
-    {
-      "item": "minecraft:moss_block"
-    }
+    "minecraft:bone_meal",
+    "minecraft:moss_block"
   ],
   "result": {
     "id": "starcatcher:lush_bait",
     "count": 4
   },
-  "modifiers" : ["starcatcher:decrease_time_to_bite"]
+  "modifiers": [
+    "starcatcher:decrease_time_to_bite"
+  ]
 }

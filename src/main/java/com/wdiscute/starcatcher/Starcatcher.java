@@ -9,21 +9,15 @@ import com.wdiscute.starcatcher.registry.custom.minigamemodifiers.ModMinigameMod
 import com.wdiscute.starcatcher.registry.custom.sweetspotbehaviour.ModSweetSpotsBehaviour;
 import com.wdiscute.starcatcher.registry.blocks.ModBlockEntities;
 import com.wdiscute.starcatcher.registry.blocks.ModBlocks;
-import com.wdiscute.starcatcher.guide.FishCaughtToast;
-import com.wdiscute.starcatcher.guide.SettingsScreen;
 import com.wdiscute.starcatcher.io.*;
 import com.wdiscute.starcatcher.registry.custom.minigamemodifiers.AbstractMinigameModifier;
 import com.wdiscute.starcatcher.registry.custom.sweetspotbehaviour.AbstractSweetSpotBehaviour;
 import com.wdiscute.starcatcher.registry.*;
 import com.wdiscute.starcatcher.storage.FishProperties;
 import com.wdiscute.starcatcher.storage.TrophyProperties;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -93,26 +87,6 @@ public class Starcatcher
     {
         return Identifier.fromNamespaceAndPath(Starcatcher.MOD_ID, s);
     }
-
-    @OnlyIn(Dist.CLIENT)
-    public static void fishCaughtToast(FishProperties fp, boolean newFish, int sizeCM, int weightCM)
-    {
-        if (newFish) Minecraft.getInstance().getToastManager().addToast(new FishCaughtToast(fp));
-
-        SettingsScreen.Units units = Config.UNIT.get();
-
-        String size = units.getSizeAsString(sizeCM);
-        String weight = units.getWeightAsString(weightCM);
-
-        Minecraft.getInstance().player.displayClientMessage(
-                Component.literal("")
-                        .append(Component.translatable(fp.catchInfo().fish().value().getDescriptionId()))
-                        .append(Component.literal(" - " + size + " - " + weight))
-                , true);
-
-        Minecraft.getInstance().gui.overlayMessageTime = 180;
-    }
-
 
     public Starcatcher(IEventBus modEventBus, ModContainer modContainer)
     {

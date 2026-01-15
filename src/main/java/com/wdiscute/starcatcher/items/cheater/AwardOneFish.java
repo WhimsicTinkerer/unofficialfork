@@ -22,9 +22,9 @@ import java.util.Optional;
 
 public class AwardOneFish extends Item
 {
-    public AwardOneFish()
+    public AwardOneFish(Item.Properties props)
     {
-        super(new Properties().stacksTo(1));
+        super(props.stacksTo(1));
     }
 
     @Override

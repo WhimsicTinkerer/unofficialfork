@@ -2,15 +2,13 @@ package com.wdiscute.starcatcher.io.network;
 
 import com.wdiscute.starcatcher.Starcatcher;
 import com.wdiscute.starcatcher.storage.FishProperties;
-import com.wdiscute.starcatcher.minigame.FishingMinigameScreen;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record FishingStartedPayload(FishProperties fp, ItemStack rod) implements CustomPacketPayload {
@@ -30,13 +28,21 @@ public record FishingStartedPayload(FishProperties fp, ItemStack rod) implements
         return TYPE;
     }
 
-
     public void handle(IPayloadContext context) {
-        context.enqueueWork(()-> client(this, context));
+        context.enqueueWork(() -> {
+            // Only run on client - FMLEnvironment.getDist() is safe to call on both sides
+            if (FMLEnvironment.getDist() == Dist.CLIENT) {
+                ClientHandler.openMinigameScreen(fp(), rod());
+            }
+        });
     }
 
-    @OnlyIn(Dist.CLIENT)
-    public static void client(FishingStartedPayload data, IPayloadContext context) {
-        Minecraft.getInstance().setScreen(new FishingMinigameScreen(data.fp(), data.rod()));
+    // Inner class to isolate client code - only loaded when DistExecutor runs on CLIENT
+    private static class ClientHandler {
+        static void openMinigameScreen(FishProperties fp, ItemStack rod) {
+            net.minecraft.client.Minecraft.getInstance().setScreen(
+                new com.wdiscute.starcatcher.minigame.FishingMinigameScreen(fp, rod)
+            );
+        }
     }
 }

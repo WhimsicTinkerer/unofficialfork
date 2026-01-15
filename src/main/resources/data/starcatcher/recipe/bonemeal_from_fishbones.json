@@ -2,9 +2,7 @@
   "type": "minecraft:crafting_shapeless",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "starcatcher:fish_bones"
-    }
+    "starcatcher:fish_bones"
   ],
   "result": {
     "id": "minecraft:bone_meal",

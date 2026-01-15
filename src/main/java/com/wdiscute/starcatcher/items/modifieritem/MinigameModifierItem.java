@@ -13,15 +13,15 @@ import java.util.function.Supplier;
 public class MinigameModifierItem extends Item
 {
     @SafeVarargs
-    public MinigameModifierItem(Pair<Identifier, Supplier<AbstractMinigameModifier>>... modifiers)
+    public MinigameModifierItem(Item.Properties props, Pair<Identifier, Supplier<AbstractMinigameModifier>>... modifiers)
     {
-        this(1, modifiers);
+        this(props, 1, modifiers);
     }
 
     @SafeVarargs
-    public MinigameModifierItem(int maxStackSize, Pair<Identifier, Supplier<AbstractMinigameModifier>>... modifiers)
+    public MinigameModifierItem(Item.Properties props, int maxStackSize, Pair<Identifier, Supplier<AbstractMinigameModifier>>... modifiers)
     {
-        super(new Item.Properties()
+        super(props
                 .component(ModDataComponents.MINIGAME_MODIFIERS, getAsList(modifiers))
                 .stacksTo(maxStackSize)
         );

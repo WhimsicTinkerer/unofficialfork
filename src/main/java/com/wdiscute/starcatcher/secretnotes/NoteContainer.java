@@ -14,23 +14,23 @@ public class NoteContainer extends Item
     public final SecretNote.Note note;
     final Item turnsInto;
 
-    public NoteContainer(SecretNote.Note noteName)
+    public NoteContainer(Item.Properties props, SecretNote.Note noteName)
     {
-        super(new Properties().stacksTo(1));
+        super(props.stacksTo(1));
         this.note = noteName;
         this.turnsInto = ModItems.BROKEN_BOTTLE.get();
     }
 
-    public NoteContainer(Properties p, SecretNote.Note noteName)
+    public NoteContainer(Item.Properties props, SecretNote.Note noteName, boolean customProps)
     {
-        super(p);
+        super(props);
         this.note = noteName;
         this.turnsInto = ModItems.BROKEN_BOTTLE.get();
     }
 
-    public NoteContainer(Properties p, Item turnsInto, SecretNote.Note noteName)
+    public NoteContainer(Item.Properties props, Item turnsInto, SecretNote.Note noteName)
     {
-        super(p);
+        super(props);
         this.note = noteName;
         this.turnsInto = turnsInto;
     }

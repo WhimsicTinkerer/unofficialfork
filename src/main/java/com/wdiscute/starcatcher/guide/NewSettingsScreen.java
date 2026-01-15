@@ -2,6 +2,7 @@ package com.wdiscute.starcatcher.guide;
 
 import com.wdiscute.starcatcher.Config;
 import com.wdiscute.starcatcher.Starcatcher;
+import com.wdiscute.starcatcher.io.Units;
 import com.wdiscute.starcatcher.minigame.FishingMinigameScreen;
 import com.wdiscute.starcatcher.registry.custom.minigamemodifiers.AbstractMinigameModifier;
 import com.wdiscute.starcatcher.storage.FishProperties;
@@ -32,7 +33,7 @@ public class NewSettingsScreen extends FishingMinigameScreen {
     boolean moveMarkers = false;
     boolean isHoveringWidgets = false;
 
-    SettingsScreen.Units unitSelected;
+    Units unitSelected;
 
     public NewSettingsScreen(FishProperties fp, ItemStack rod) {
         super(fp, rod);

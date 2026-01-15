@@ -32,9 +32,9 @@ import java.util.List;
 
 public class StarcatcherFishingRodItem extends Item implements MenuProvider
 {
-    public StarcatcherFishingRodItem()
+    public StarcatcherFishingRodItem(Item.Properties props)
     {
-        super(new Item.Properties()
+        super(props
                 .rarity(Rarity.EPIC)
                 .fireResistant()
                 .stacksTo(1)

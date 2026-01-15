@@ -2,15 +2,9 @@
   "type": "starcatcher:modifier_shaped_recipe",
   "category": "misc",
   "key": {
-    "H": {
-      "item": "starcatcher:hook"
-    },
-    "N": {
-      "item": "minecraft:iron_nugget"
-    },
-    "D": {
-      "item": "minecraft:diamond"
-    }
+    "H": "starcatcher:hook",
+    "N": "minecraft:iron_nugget",
+    "D": "minecraft:diamond"
   },
   "pattern": [
     "N  ",
@@ -21,5 +15,7 @@
     "count": 1,
     "id": "starcatcher:shiny_hook"
   },
-  "modifiers" : ["starcatcher:spawn_treasure_on_three_hits"]
+  "modifiers": [
+    "starcatcher:spawn_treasure_on_three_hits"
+  ]
 }

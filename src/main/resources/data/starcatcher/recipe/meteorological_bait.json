@@ -2,16 +2,15 @@
   "type": "starcatcher:modifier_shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:bone_meal"
-    },
-    {
-      "item": "minecraft:heart_of_the_sea"
-    }
+    "minecraft:bone_meal",
+    "minecraft:heart_of_the_sea"
   ],
   "result": {
     "id": "starcatcher:meteorological_bait",
     "count": 32
   },
-  "modifiers" : ["starcatcher:decrease_time_to_bite", "ignore_daytime_and_weather_restrictions"]
+  "modifiers": [
+    "starcatcher:decrease_time_to_bite",
+    "ignore_daytime_and_weather_restrictions"
+  ]
 }

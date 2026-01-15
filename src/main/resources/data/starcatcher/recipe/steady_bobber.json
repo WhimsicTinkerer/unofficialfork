@@ -2,18 +2,10 @@
   "type": "starcatcher:modifier_shaped_recipe",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "starcatcher:bobber"
-    },
-    "C": {
-      "item": "minecraft:copper_ingot"
-    },
-    "I": {
-      "item": "minecraft:iron_ingot"
-    },
-    "S": {
-      "item": "minecraft:stick"
-    }
+    "B": "starcatcher:bobber",
+    "C": "minecraft:copper_ingot",
+    "I": "minecraft:iron_ingot",
+    "S": "minecraft:stick"
   },
   "pattern": [
     " CS",
@@ -24,5 +16,7 @@
     "count": 1,
     "id": "starcatcher:steady_bobber"
   },
-  "modifiers" : ["starcatcher:bigger_green_sweet_spots"]
+  "modifiers": [
+    "starcatcher:bigger_green_sweet_spots"
+  ]
 }

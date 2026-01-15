@@ -10,6 +10,8 @@ import com.wdiscute.starcatcher.Starcatcher;
 import com.wdiscute.starcatcher.StarcatcherTags;
 import com.wdiscute.starcatcher.U;
 import com.wdiscute.starcatcher.io.FishCaughtCounter;
+import com.wdiscute.starcatcher.io.FishSort;
+import com.wdiscute.starcatcher.io.Units;
 import com.wdiscute.starcatcher.io.attachments.FishingGuideAttachment;
 import com.wdiscute.starcatcher.registry.blocks.ModBlocks;
 import com.wdiscute.starcatcher.compat.EclipticSeasonsCompat;
@@ -1260,9 +1262,9 @@ public class FishingGuideScreen extends Screen
             List<Component> components = new ArrayList<>();
             float averageTicks = (int) ((fcc.averageTicks() / 20) * 100) / 100.0f;
 
-            SettingsScreen.Units unit = Config.UNIT.get();
-            String size = unit.getSizeAsString(fcc.size());
-            String weight = unit.getWeightAsString(fcc.weight());
+            Units unit = Config.UNIT.get();
+            String size = com.wdiscute.starcatcher.client.ClientHelper.getSizeAsString(unit, fcc.size());
+            String weight = com.wdiscute.starcatcher.client.ClientHelper.getWeightAsString(unit, fcc.weight());
 
             components.add(Component.literal("Fastest Catch: ").append(Component.literal((((float) fcc.fastestTicks()) / 20) + "s").withStyle(ChatFormatting.BOLD)));
             components.add(Component.literal("Average Catch: ").append(Component.literal(averageTicks + "s").withStyle(ChatFormatting.BOLD)));
@@ -1766,57 +1768,12 @@ public class FishingGuideScreen extends Screen
         return false;
     }
 
-    public enum Sort
-    {
-        ALPHABETICAL_UP("gui.guide.sort.alphabetical_up"),
-        ALPHABETICAL_DOWN("gui.guide.sort.alphabetical_down"),
-        MOD_UP("gui.guide.sort.mod_up"),
-        MOD_DOWN("gui.guide.sort.mod_down"),
-        RARITY_UP("gui.guide.sort.rarity_up"),
-        RARITY_DOWN("gui.guide.sort.rarity_down"),
-        CAUGHT_UP("gui.guide.sort.caught_up"),
-        CAUGHT_DOWN("gui.guide.sort.caught_down"),
-        FLUID_UP("gui.guide.sort.fluid_up"),
-        FLUID_DOWN("gui.guide.sort.fluid_down"),
-        SEASON_UP("gui.guide.sort.season_up"),
-        SEASON_DOWN("gui.guide.sort.season_down");
+    // Sort enum has been moved to com.wdiscute.starcatcher.io.FishSort
 
-        private static final Sort[] vals = values();
-
-        private final String translationKey;
-
-        String getTranslationKey()
-        {
-            return this.translationKey;
-        }
-
-        Sort(String translationKey)
-        {
-            this.translationKey = translationKey;
-        }
-
-        public Sort previous()
-        {
-            int lenght = vals.length - 2;
-            if (ModList.get().isLoaded("sereneseasons") || ModList.get().isLoaded("eclipticseasons")) lenght += 2;
-
-            if (this.ordinal() == 0) return vals[lenght - 1];
-            return vals[(this.ordinal() - 1) % lenght];
-        }
-
-        public Sort next()
-        {
-            int lenght = vals.length - 2;
-            if (ModList.get().isLoaded("sereneseasons") || ModList.get().isLoaded("eclipticseasons")) lenght += 2;
-
-            return vals[(this.ordinal() + 1) % lenght];
-        }
-    }
-
-    public static List<FishProperties> sortEntries(Sort sort, List<FishProperties> entriesToSort, Player player)
+    public static List<FishProperties> sortEntries(FishSort sort, List<FishProperties> entriesToSort, Player player)
     {
         //rarity
-        if (sort.equals(Sort.RARITY_DOWN) || sort.equals(Sort.RARITY_UP))
+        if (sort.equals(FishSort.RARITY_DOWN) || sort.equals(FishSort.RARITY_UP))
         {
             //sort alphabetical first
             entriesToSort = entriesToSort.stream().sorted(Comparator.comparing(o -> o.catchInfo().fish().unwrapKey().get().identifier().getPath())).toList();
@@ -1844,18 +1801,18 @@ public class FishingGuideScreen extends Screen
                 if (e.rarity().equals(FishProperties.Rarity.LEGENDARY)) entriesSorted.add(e);
             });
 
-            return sort.equals(Sort.RARITY_UP) ? entriesSorted : entriesSorted.reversed();
+            return sort.equals(FishSort.RARITY_UP) ? entriesSorted : entriesSorted.reversed();
         }
 
         //alphabetical
-        if (sort.equals(Sort.ALPHABETICAL_DOWN) || sort.equals(Sort.ALPHABETICAL_UP))
+        if (sort.equals(FishSort.ALPHABETICAL_DOWN) || sort.equals(FishSort.ALPHABETICAL_UP))
         {
             List<FishProperties> entriesSorted = entriesToSort.stream().sorted(Comparator.comparing(o -> o.catchInfo().fish().unwrapKey().get().identifier().getPath())).toList();
-            return sort.equals(Sort.ALPHABETICAL_UP) ? entriesSorted : entriesSorted.reversed();
+            return sort.equals(FishSort.ALPHABETICAL_UP) ? entriesSorted : entriesSorted.reversed();
         }
 
         //mod
-        if (sort.equals(Sort.MOD_DOWN) || sort.equals(Sort.MOD_UP))
+        if (sort.equals(FishSort.MOD_DOWN) || sort.equals(FishSort.MOD_UP))
         {
             //sort alphabetical first
             entriesToSort = entriesToSort.stream().sorted(Comparator.comparing(o -> o.catchInfo().fish().unwrapKey().get().identifier().getPath())).toList();
@@ -1879,11 +1836,11 @@ public class FishingGuideScreen extends Screen
 
             }
 
-            entriesToSort = sort.equals(Sort.MOD_UP) ? entriesSorted : entriesSorted.reversed();
+            entriesToSort = sort.equals(FishSort.MOD_UP) ? entriesSorted : entriesSorted.reversed();
         }
 
         //fluid
-        if (sort.equals(Sort.FLUID_DOWN) || sort.equals(Sort.FLUID_UP))
+        if (sort.equals(FishSort.FLUID_DOWN) || sort.equals(FishSort.FLUID_UP))
         {
             //sort alphabetical first
             entriesToSort = entriesToSort.stream().sorted(Comparator.comparing(o -> o.catchInfo().fish().unwrapKey().get().identifier().getPath())).toList();
@@ -1905,11 +1862,11 @@ public class FishingGuideScreen extends Screen
                 });
             }
 
-            entriesToSort = sort.equals(Sort.FLUID_UP) ? entriesSorted : entriesSorted.reversed();
+            entriesToSort = sort.equals(FishSort.FLUID_UP) ? entriesSorted : entriesSorted.reversed();
         }
 
         //caught
-        if (sort.equals(Sort.CAUGHT_UP) || sort.equals(Sort.CAUGHT_DOWN))
+        if (sort.equals(FishSort.CAUGHT_UP) || sort.equals(FishSort.CAUGHT_DOWN))
         {
             //sort alphabetical first
             entriesToSort = entriesToSort.stream().sorted(Comparator.comparing(o -> o.catchInfo().fish().unwrapKey().get().identifier().getPath())).toList();
@@ -1932,7 +1889,7 @@ public class FishingGuideScreen extends Screen
             });
 
 
-            if (sort.equals(Sort.CAUGHT_UP))
+            if (sort.equals(FishSort.CAUGHT_UP))
             {
                 toReturn.addAll(hasCaught);
                 toReturn.addAll(hasNotCaught);
@@ -1946,7 +1903,7 @@ public class FishingGuideScreen extends Screen
         }
 
         //SEASONS
-        if (sort.equals(Sort.SEASON_DOWN) || sort.equals(Sort.SEASON_UP))
+        if (sort.equals(FishSort.SEASON_DOWN) || sort.equals(FishSort.SEASON_UP))
         {
             //sort alphabetical first
             entriesToSort = entriesToSort.stream().sorted(Comparator.comparing(o -> o.catchInfo().fish().unwrapKey().get().identifier().getPath())).toList();
@@ -2022,7 +1979,7 @@ public class FishingGuideScreen extends Screen
                 if (fp.wr().seasons().contains(Seasons.LATE_WINTER)) entriesSorted.add(fp);
             entriesUnsorted.removeAll(entriesSorted);
 
-            return sort.equals(Sort.SEASON_UP) ? entriesSorted : entriesSorted.reversed();
+            return sort.equals(FishSort.SEASON_UP) ? entriesSorted : entriesSorted.reversed();
         }
 
         return entriesToSort;

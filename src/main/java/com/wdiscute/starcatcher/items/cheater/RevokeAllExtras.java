@@ -16,9 +16,9 @@ import java.util.List;
 
 public class RevokeAllExtras extends Item
 {
-    public RevokeAllExtras()
+    public RevokeAllExtras(Item.Properties props)
     {
-        super(new Properties().stacksTo(1));
+        super(props.stacksTo(1));
     }
 
     @Override

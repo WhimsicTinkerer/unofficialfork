@@ -2,15 +2,9 @@
   "type": "starcatcher:modifier_shaped_recipe",
   "category": "misc",
   "key": {
-    "B": {
-      "item": "starcatcher:bobber"
-    },
-    "G": {
-      "item": "minecraft:glass"
-    },
-    "S": {
-      "item": "minecraft:stick"
-    }
+    "B": "starcatcher:bobber",
+    "G": "minecraft:glass",
+    "S": "minecraft:stick"
   },
   "pattern": [
     " GS",
@@ -21,5 +15,7 @@
     "count": 1,
     "id": "starcatcher:clear_bobber"
   },
-  "modifiers" : ["starcatcher:slower_vanishing"]
+  "modifiers": [
+    "starcatcher:slower_vanishing"
+  ]
 }

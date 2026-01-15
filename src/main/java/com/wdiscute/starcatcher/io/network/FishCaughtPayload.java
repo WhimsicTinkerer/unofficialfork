@@ -6,6 +6,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public record FishCaughtPayload(FishProperties fp, boolean newFish, int size, int weight) implements CustomPacketPayload {
@@ -31,7 +33,17 @@ public record FishCaughtPayload(FishProperties fp, boolean newFish, int size, in
 
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
-            Starcatcher.fishCaughtToast(fp(), newFish(), size(), weight());
+            // Only run on client - FMLEnvironment.getDist() is safe to call on both sides
+            if (FMLEnvironment.getDist() == Dist.CLIENT) {
+                ClientHandler.showToast(fp(), newFish(), size(), weight());
+            }
         });
+    }
+
+    // Inner class to isolate client code - only loaded when DistExecutor runs on CLIENT
+    private static class ClientHandler {
+        static void showToast(FishProperties fp, boolean newFish, int size, int weight) {
+            com.wdiscute.starcatcher.client.ClientHelper.fishCaughtToast(fp, newFish, size, weight);
+        }
     }
 }

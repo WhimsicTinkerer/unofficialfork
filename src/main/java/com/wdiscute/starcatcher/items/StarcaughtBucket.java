@@ -1,8 +1,6 @@
 package com.wdiscute.starcatcher.items;
 
-import com.wdiscute.starcatcher.Config;
 import com.wdiscute.starcatcher.fishentity.FishEntity;
-import com.wdiscute.starcatcher.guide.SettingsScreen;
 import com.wdiscute.starcatcher.io.ModDataComponents;
 import com.wdiscute.starcatcher.io.SingleStackContainer;
 import com.wdiscute.starcatcher.io.SizeAndWeightInstance;
@@ -30,13 +28,23 @@ import java.util.function.Consumer;
 public class StarcaughtBucket extends BucketItem
 {
     EntityType<FishEntity> entity;
+    static Fluid storedFluid;
 
-    public StarcaughtBucket(Fluid fluid)
+    public StarcaughtBucket(Item.Properties props, Fluid fluid)
     {
-        super(
-                fluid, new Item.Properties().stacksTo(16));
-
+        super(fluid, props.stacksTo(16));
         entity = ModEntities.FISH.get();
+    }
+
+    // Factory method for registration
+    public static StarcaughtBucket create(Item.Properties props)
+    {
+        return new StarcaughtBucket(props, storedFluid);
+    }
+
+    public static void setFluid(Fluid fluid)
+    {
+        storedFluid = fluid;
     }
 
     // Note: checkExtraContent was removed in 1.21.11 - spawn logic should be handled elsewhere

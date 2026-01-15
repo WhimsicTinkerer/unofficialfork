@@ -7,9 +7,10 @@ import com.wdiscute.starcatcher.bob.FishingBobRenderer;
 import com.wdiscute.starcatcher.fishentity.FishRenderer;
 import com.wdiscute.starcatcher.fishentity.fishmodels.*;
 import com.wdiscute.starcatcher.fishspotter.FishRadarLayer;
-import com.wdiscute.starcatcher.guide.SettingsScreen;
+import com.wdiscute.starcatcher.client.ClientHelper;
 import com.wdiscute.starcatcher.io.ModDataComponents;
 import com.wdiscute.starcatcher.io.SizeAndWeightInstance;
+import com.wdiscute.starcatcher.io.Units;
 import com.wdiscute.starcatcher.items.BucketTooltipRenderer;
 import com.wdiscute.starcatcher.items.StarcaughtBucket;
 import com.wdiscute.starcatcher.particles.FishingBitingLavaParticles;
@@ -96,10 +97,10 @@ public class ModClientEvents
         {
             SizeAndWeightInstance sw = ModDataComponents.get(stack, ModDataComponents.SIZE_AND_WEIGHT);
 
-            SettingsScreen.Units units = Config.UNIT.get();
+            Units units = Config.UNIT.get();
 
-            String size = units.getSizeAsString(sw.sizeInCentimeters());
-            String weight = units.getWeightAsString(sw.weightInGrams());
+            String size = ClientHelper.getSizeAsString(units, sw.sizeInCentimeters());
+            String weight = ClientHelper.getWeightAsString(units, sw.weightInGrams());
 
             comp.add(1, Component.literal(size + " - " + weight).withColor(0x888888));
         }

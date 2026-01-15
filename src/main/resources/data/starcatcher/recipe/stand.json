@@ -2,15 +2,9 @@
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {
-    "G": {
-      "item": "starcatcher:starcatcher_guide"
-    },
-    "P": {
-      "tag": "minecraft:planks"
-    },
-    "B": {
-      "tag": "c:barrels/wooden"
-    }
+    "G": "starcatcher:starcatcher_guide",
+    "P": "#minecraft:planks",
+    "B": "#c:barrels/wooden"
   },
   "pattern": [
     " G ",

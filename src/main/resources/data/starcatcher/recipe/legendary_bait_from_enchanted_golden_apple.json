@@ -2,16 +2,14 @@
   "type": "starcatcher:modifier_shapeless_recipe",
   "category": "misc",
   "ingredients": [
-    {
-      "item": "minecraft:bone_meal"
-    },
-    {
-      "item": "minecraft:enchanted_golden_apple"
-    }
+    "minecraft:bone_meal",
+    "minecraft:enchanted_golden_apple"
   ],
   "result": {
     "id": "starcatcher:legendary_bait",
     "count": 64
   },
-  "modifiers" : ["starcatcher:decrease_time_to_bite"]
+  "modifiers": [
+    "starcatcher:decrease_time_to_bite"
+  ]
 }

@@ -16,9 +16,9 @@ import java.util.List;
 
 public class RevokeAllTrophies extends Item
 {
-    public RevokeAllTrophies()
+    public RevokeAllTrophies(Item.Properties props)
     {
-        super(new Properties().stacksTo(1));
+        super(props.stacksTo(1));
     }
 
     @Override

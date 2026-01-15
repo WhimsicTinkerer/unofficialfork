@@ -2,15 +2,9 @@
   "type": "starcatcher:modifier_shaped_recipe",
   "category": "misc",
   "key": {
-    "H": {
-      "item": "starcatcher:hook"
-    },
-    "N": {
-      "item": "minecraft:iron_nugget"
-    },
-    "S": {
-      "item": "minecraft:stone"
-    }
+    "H": "starcatcher:hook",
+    "N": "minecraft:iron_nugget",
+    "S": "minecraft:stone"
   },
   "pattern": [
     "N  ",
@@ -21,5 +15,7 @@
     "count": 1,
     "id": "starcatcher:stone_hook"
   },
-  "modifiers" : ["starcatcher:stop_decay_on_hit"]
+  "modifiers": [
+    "starcatcher:stop_decay_on_hit"
+  ]
 }

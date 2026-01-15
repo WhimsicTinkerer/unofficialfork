@@ -2,15 +2,9 @@
   "type": "starcatcher:modifier_shaped_recipe",
   "category": "misc",
   "key": {
-    "H": {
-      "item": "starcatcher:hook"
-    },
-    "N": {
-      "item": "minecraft:iron_nugget"
-    },
-    "M": {
-      "item": "minecraft:moss_block"
-    }
+    "H": "starcatcher:hook",
+    "N": "minecraft:iron_nugget",
+    "M": "minecraft:moss_block"
   },
   "pattern": [
     "N  ",
@@ -21,5 +15,7 @@
     "count": 1,
     "id": "starcatcher:mossy_hook"
   },
-  "modifiers" : ["starcatcher:harder_with_treasure_on_perfect"]
+  "modifiers": [
+    "starcatcher:harder_with_treasure_on_perfect"
+  ]
 }
