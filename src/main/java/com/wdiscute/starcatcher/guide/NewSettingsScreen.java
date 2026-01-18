@@ -176,6 +176,12 @@ public class NewSettingsScreen extends FishingMinigameScreen {
 
         @Override
         protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+            // Draw button texture first
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED,
+                    texture, getX(), getY(),
+                    uOffset, vOffset, getWidth(), getHeight(), textureWidth, textureHeight);
+
+            // Then draw text on top
             Object o = value.get();
             if (o instanceof Float number){
                number = Math.round(number * 10) / 10f;
@@ -184,11 +190,6 @@ public class NewSettingsScreen extends FishingMinigameScreen {
 
             MutableComponent component = Component.empty().append(name).append(": ").append(String.valueOf(o));
             guiGraphics.drawCenteredString(getMinecraft().font, component, getX() + (getWidth() / 2), getY() + (getHeight() / 4), 0xff000000);
-
-            guiGraphics.blit(RenderPipelines.GUI_TEXTURED,
-                    texture, getX(), getY(),
-                    uOffset, vOffset, getWidth(), getHeight(), textureWidth, textureHeight);
-
         }
 
         @Override
