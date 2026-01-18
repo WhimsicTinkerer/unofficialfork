@@ -89,37 +89,37 @@ public class FishRadarLayer implements GuiLayer
             offScreen = 0;
 
 
-        guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().translate(-offScreen, 0);
+        // Apply offset for slide animation
+        int renderX = (int)(uiX + offScreen);
 
         switch (fpsInArea.size())
         {
             case 0, 1, 2, 3, 4, 5:
-                renderImage(guiGraphics, ONE_ROW);
+                renderImage(guiGraphics, ONE_ROW, renderX);
                 break;
 
             case 6, 7, 8, 9, 10:
-                renderImage(guiGraphics, TWO_ROWS);
+                renderImage(guiGraphics, TWO_ROWS, renderX);
                 break;
 
             case 11, 12, 13, 14, 15:
-                renderImage(guiGraphics, THREE_ROWS);
+                renderImage(guiGraphics, THREE_ROWS, renderX);
                 break;
 
             case 16, 17, 18, 19, 20:
-                renderImage(guiGraphics, FOUR_ROWS);
+                renderImage(guiGraphics, FOUR_ROWS, renderX);
                 break;
 
             case 21, 22, 23, 24, 25:
-                renderImage(guiGraphics, FIVE_ROWS);
+                renderImage(guiGraphics, FIVE_ROWS, renderX);
                 break;
 
             default:
-                renderImage(guiGraphics, SIX_ROWS);
+                renderImage(guiGraphics, SIX_ROWS, renderX);
         }
 
         int animationFrame = ((int) (level.getGameTime() / 2 % 32 + 1));
-        renderImage(guiGraphics, Starcatcher.rl("textures/gui/fish_radar/radar_animation" + animationFrame + ".png"));
+        renderImage(guiGraphics, Starcatcher.rl("textures/gui/fish_radar/radar_animation" + animationFrame + ".png"), renderX);
 
         //recalculate every 100 ticks?
         counterSinceLastRefresh += 1 * deltaTracker.getGameTimeDeltaTicks();
@@ -136,22 +136,19 @@ public class FishRadarLayer implements GuiLayer
 
             guiGraphics.renderItem(
                     is,
-                    uiX + 9 + i * 18 % 90,
+                    renderX + 9 + i * 18 % 90,
                     uiY + 48 + i / 5 * 18);
         }
 
-
-        guiGraphics.pose().popMatrix();
-
     }
 
-    private void renderImage(GuiGraphics guiGraphics, Identifier rl)
+    private void renderImage(GuiGraphics guiGraphics, Identifier rl, int x)
     {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, rl, uiX, uiY, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, rl, x, uiY, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
     }
 
     private void drawComp(GuiGraphics guiGraphics, Component comp, int xOffset, int yOffset)
     {
-        guiGraphics.drawString(font, comp, uiX + xOffset, uiY + yOffset, 0, false);
+        guiGraphics.drawString(font, comp, uiX + xOffset, uiY + yOffset, 0xffffffff, false);
     }
 }

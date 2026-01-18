@@ -67,29 +67,28 @@ public class TournamentOverlay implements GuiLayer
         font = Minecraft.getInstance().font;
 
 
-        guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().translate(0, 0);
-        //add scale with config like minigame
-
         //if small
         if (expandedType.equals(ExpandedType.SMALL))
         {
             renderImage(guiGraphics, BACKGROUND_TINY);
 
-            guiGraphics.drawString(this.font, tournament.name, 58, 35, 0x635040, false);
+            guiGraphics.drawString(this.font, tournament.name, 58, 35, 0xff635040, false);
 
-            guiGraphics.drawString(this.font, playerPlace.getFirst(), 48, 70, -1, false);
-            guiGraphics.drawString(this.font, playerPlace.getSecond() + "", 160, 70, -1, false);
+            guiGraphics.drawString(this.font, playerPlace.getFirst(), 48, 70, 0xffffffff, false);
+            guiGraphics.drawString(this.font, playerPlace.getSecond() + "", 160, 70, 0xffffffff, false);
 
-            guiGraphics.drawString(this.font, getDisplayTimeLeft(tournament.lastsUntilEpoch - System.currentTimeMillis()), 21, 35, -1, false);
+            guiGraphics.drawString(this.font, getDisplayTimeLeft(tournament.lastsUntilEpoch - System.currentTimeMillis()), 21, 35, 0xffffffff, false);
             switch (playerRank)
             {
                 case 1:
-                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FIRST_PLACE_FISH, 30, 72, 11, 6, 0, 0, 11, 6, 11, 6);
+                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, FIRST_PLACE_FISH, 30, 72, 0, 0, 11, 6, 11, 6);
+                    break;
                 case 2:
-                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SECOND_PLACE_FISH, 30, 72, 11, 6, 0, 0, 11, 6, 11, 6);
+                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SECOND_PLACE_FISH, 30, 72, 0, 0, 11, 6, 11, 6);
+                    break;
                 case 3:
-                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, THIRD_PLACE_FISH, 30, 72, 11, 6, 0, 0, 11, 6, 11, 6);
+                    guiGraphics.blit(RenderPipelines.GUI_TEXTURED, THIRD_PLACE_FISH, 30, 72, 0, 0, 11, 6, 11, 6);
+                    break;
             }
         }
         //if big
@@ -97,20 +96,20 @@ public class TournamentOverlay implements GuiLayer
         {
             renderImage(guiGraphics, BACKGROUND_EXPANDED);
 
-            guiGraphics.drawString(this.font, tournament.name, 58, 16, 0x635040, false);
+            guiGraphics.drawString(this.font, tournament.name, 58, 16, 0xff635040, false);
 
             //render first/second/third player + scores
-            if(firstPlace.getSecond() != 0)guiGraphics.drawString(this.font, firstPlace.getFirst(), 48, 71, -1, false);
-            if(firstPlace.getSecond() != 0)guiGraphics.drawString(this.font, firstPlace.getSecond() + "", 154, 71, -1, false);
-            if(secondPlace.getSecond() != 0)guiGraphics.drawString(this.font, secondPlace.getFirst(), 48, 92, -1, false);
-            if(secondPlace.getSecond() != 0)guiGraphics.drawString(this.font, secondPlace.getSecond() + "", 154, 92, -1, false);
-            if(thirdPlace.getSecond() != 0)guiGraphics.drawString(this.font, thirdPlace.getFirst(), 48, 113, -1, false);
-            if(thirdPlace.getSecond() != 0) guiGraphics.drawString(this.font, thirdPlace.getSecond() + "", 154, 113, -1, false);
+            if(firstPlace.getSecond() != 0)guiGraphics.drawString(this.font, firstPlace.getFirst(), 48, 71, 0xffffffff, false);
+            if(firstPlace.getSecond() != 0)guiGraphics.drawString(this.font, firstPlace.getSecond() + "", 154, 71, 0xffffffff, false);
+            if(secondPlace.getSecond() != 0)guiGraphics.drawString(this.font, secondPlace.getFirst(), 48, 92, 0xffffffff, false);
+            if(secondPlace.getSecond() != 0)guiGraphics.drawString(this.font, secondPlace.getSecond() + "", 154, 92, 0xffffffff, false);
+            if(thirdPlace.getSecond() != 0)guiGraphics.drawString(this.font, thirdPlace.getFirst(), 48, 113, 0xffffffff, false);
+            if(thirdPlace.getSecond() != 0) guiGraphics.drawString(this.font, thirdPlace.getSecond() + "", 154, 113, 0xffffffff, false);
 
-            guiGraphics.drawString(this.font, playerPlace.getFirst(), 48, 141, -1, false);
-            guiGraphics.drawString(this.font, playerPlace.getSecond() + "", 154, 141, -1, false);
+            guiGraphics.drawString(this.font, playerPlace.getFirst(), 48, 141, 0xffffffff, false);
+            guiGraphics.drawString(this.font, playerPlace.getSecond() + "", 154, 141, 0xffffffff, false);
 
-            guiGraphics.drawString(this.font, getDisplayTimeLeft(tournament.lastsUntilEpoch - System.currentTimeMillis()), 12, 31, -1, false);
+            guiGraphics.drawString(this.font, getDisplayTimeLeft(tournament.lastsUntilEpoch - System.currentTimeMillis()), 12, 31, 0xffffffff, false);
 
             //render fish icon for first/second/third place
             if (playerRank != 0)
@@ -124,10 +123,8 @@ public class TournamentOverlay implements GuiLayer
                             default:
                                 yield THIRD_PLACE_FISH;
                         },
-                        30, 142, 11, 6, 0, 0, 11, 6, 11, 6);
+                        30, 142, 0, 0, 11, 6, 11, 6);
         }
-
-        guiGraphics.pose().popMatrix();
     }
 
 
@@ -223,7 +220,7 @@ public class TournamentOverlay implements GuiLayer
 
     private void renderImage(GuiGraphics guiGraphics, Identifier rl)
     {
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, rl, 0, 0, imageWidth, imageHeight, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, rl, 0, 0, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
     }
 
     public enum ExpandedType
