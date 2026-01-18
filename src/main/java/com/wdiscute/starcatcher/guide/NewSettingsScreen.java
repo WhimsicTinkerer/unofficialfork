@@ -181,6 +181,9 @@ public class NewSettingsScreen extends FishingMinigameScreen {
                     texture, getX(), getY(),
                     uOffset, vOffset, getWidth(), getHeight(), textureWidth, textureHeight);
 
+            // Flush to ensure texture is rendered before text
+            guiGraphics.flush();
+
             // Then draw text on top
             Object o = value.get();
             if (o instanceof Float number){
@@ -189,7 +192,9 @@ public class NewSettingsScreen extends FishingMinigameScreen {
             }
 
             MutableComponent component = Component.empty().append(name).append(": ").append(String.valueOf(o));
-            guiGraphics.drawCenteredString(getMinecraft().font, component, getX() + (getWidth() / 2), getY() + (getHeight() / 4), 0xff000000);
+            int textX = getX() + (getWidth() / 2);
+            int textY = getY() + (getHeight() / 2) - 4;
+            guiGraphics.drawString(getMinecraft().font, component, textX - getMinecraft().font.width(component) / 2, textY, 0xff000000, false);
         }
 
         @Override
