@@ -18,6 +18,7 @@ import com.wdiscute.starcatcher.compat.EclipticSeasonsCompat;
 import com.wdiscute.starcatcher.compat.SereneSeasonsCompat;
 import com.wdiscute.starcatcher.compat.TerraFirmaCraftSeasonsCompat;
 import com.wdiscute.starcatcher.io.ModDataComponents;
+import com.wdiscute.starcatcher.io.SingleStackContainer;
 import com.wdiscute.starcatcher.io.network.FPsSeenPayload;
 import com.wdiscute.starcatcher.registry.ModItems;
 import com.wdiscute.starcatcher.secretnotes.NoteContainer;
@@ -424,11 +425,15 @@ public class FishingGuideScreen extends Screen
             //render settings screen
             case -1 ->
             {
+                // Create a rod with empty components to avoid NPE
+                ItemStack settingsRod = new ItemStack(ModItems.ROD.get());
+                ModDataComponents.set(settingsRod, ModDataComponents.BOBBER, SingleStackContainer.EMPTY);
+                ModDataComponents.set(settingsRod, ModDataComponents.BAIT, SingleStackContainer.EMPTY);
+                ModDataComponents.set(settingsRod, ModDataComponents.HOOK, SingleStackContainer.EMPTY);
                 Minecraft.getInstance().setScreen(
                         new NewSettingsScreen(
                                 FishProperties.builder().withFish(ModItems.AURORA).build(),
-                                new ItemStack(ModItems.ROD.get()
-                                )
+                                settingsRod
                         ));
                 return;
             }

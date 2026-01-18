@@ -80,14 +80,14 @@ public class FishCaughtToast implements Toast
 
         guiGraphics.renderItem(is, 6, 29);
 
-        guiGraphics.drawString(font, this.title, 40, 13, 0x635040, false);
+        guiGraphics.drawString(font, this.title, 40, 13, 0xff635040, false);
 
         int lettersRevealed = (int) Math.clamp((timeSinceLastVisible - 500) / 150, 0, description.length());
 
         Component comp = Tooltips.decodeString(pre + description.substring(0, lettersRevealed) + post).copy()
-                .append(Component.literal(gibberish.substring(0, description.length() - lettersRevealed + 2)).withStyle(Style.EMPTY.withColor(0x635040)));
+                .append(Component.literal(gibberish.substring(0, description.length() - lettersRevealed + 2)).withStyle(Style.EMPTY.withColor(0xff635040)));
 
-        guiGraphics.drawString(font, comp, 40, 22, 0x635040, false);
+        guiGraphics.drawString(font, comp, 40, 22, 0xff635040, false);
     }
 
 }

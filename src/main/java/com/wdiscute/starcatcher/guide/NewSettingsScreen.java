@@ -183,7 +183,7 @@ public class NewSettingsScreen extends FishingMinigameScreen {
             }
 
             MutableComponent component = Component.empty().append(name).append(": ").append(String.valueOf(o));
-            guiGraphics.drawCenteredString(getMinecraft().font, component, getX() + (getWidth() / 2), getY() + (getHeight() / 4), 0x000000);
+            guiGraphics.drawCenteredString(getMinecraft().font, component, getX() + (getWidth() / 2), getY() + (getHeight() / 4), 0xff000000);
 
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED,
                     texture, getX(), getY(),
