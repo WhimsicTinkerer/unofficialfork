@@ -41,7 +41,7 @@ public class StandBlock extends AbstractMultiBlock implements IPreviewableMultib
     public StandBlock(Properties props)
     {
         super(props);
-        registerDefaultState(defaultBlockState().setValue(PART, StandPart.BOTTOM_LEFT));
+        registerDefaultState(defaultBlockState().setValue(PART, StandPart.BOTTOM_LEFT).setValue(FACING, Direction.NORTH));
     }
 
     public static Properties createProperties()
@@ -69,7 +69,9 @@ public class StandBlock extends AbstractMultiBlock implements IPreviewableMultib
     @Override
     public BlockState getStateForEachBlock(BlockState state, BlockPos pos, BlockPos centerOffset, Level level, @Nullable Direction direction) {
        state = state.setValue(PART, IBlockPosOffsetEnum.fromOffset(StandPart.class, centerOffset, direction, StandPart.BOTTOM_LEFT));
-
+       if (direction != null) {
+           state = state.setValue(FACING, direction);
+       }
         return state;
     }
 
@@ -186,8 +188,7 @@ public class StandBlock extends AbstractMultiBlock implements IPreviewableMultib
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
     {
         super.createBlockStateDefinition(builder);
-        //the facing gets added automatically by the lib
-        builder.add(PART);
+        builder.add(PART, FACING);
     }
 
     @Override

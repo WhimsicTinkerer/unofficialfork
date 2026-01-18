@@ -11,6 +11,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.neoforged.neoforge.client.gui.GuiLayer;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
@@ -146,7 +147,7 @@ public class FishRadarLayer implements GuiLayer
 
     private void renderImage(GuiGraphics guiGraphics, Identifier rl)
     {
-        guiGraphics.blit(rl, uiX, uiY, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, rl, uiX, uiY, 0, 0, imageWidth, imageHeight, imageWidth, imageHeight);
     }
 
     private void drawComp(GuiGraphics guiGraphics, Component comp, int xOffset, int yOffset)

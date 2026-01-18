@@ -33,7 +33,7 @@ public class RemoveFishSizeAndWeightWhenStacking
     @Inject(at = @At("HEAD"), method = "overrideStackedOnOther")
     private void stackedOnMe(Slot slot, ClickAction action, Player player, CallbackInfoReturnable<Boolean> cir)
     {
-        ItemStack itemBeingClickedOn = player.getSlot(slot.index).get();
+        ItemStack itemBeingClickedOn = slot.getItem();
         ItemStack itemInHand = (ItemStack) (Object)this;
 
         if(itemBeingClickedOn.is(itemInHand.getItem()))

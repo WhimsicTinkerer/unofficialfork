@@ -391,23 +391,29 @@ public class FishingMinigameScreen extends Screen implements GuiEventListener
 
     public void renderKimbeMarker(GuiGraphics guiGraphics)
     {
-        PoseStack poseStack = new PoseStack();
-        poseStack.pushPose();
+        // Only render if alpha is positive
+        if (kimbeMarkerAlpha <= 0) return;
+
+        // Clamp alpha to [0, 1] range
+        float clampedAlpha = Math.min(1.0f, Math.max(0.0f, kimbeMarkerAlpha));
+
+        Matrix3x2fStack poseStack = guiGraphics.pose();
+        poseStack.pushMatrix();
 
         float centerX = width / 2f;
         float centerY = height / 2f;
 
-        poseStack.translate(centerX, centerY, 0);
-        poseStack.mulPose(Axis.ZP.rotationDegrees(kimbeMarkerPos));
-        poseStack.translate(-centerX, -centerY, 0);
+        poseStack.translate(centerX, centerY);
+        poseStack.rotate(kimbeMarkerPos * (float)(Math.PI / 180.0));
+        poseStack.translate(-centerX, -centerY);
 
-        int color = ARGB.color((int)(kimbeMarkerAlpha * 255), U.intToRed(kimbeMarkerColor), U.intToGreen(kimbeMarkerColor), U.intToBlue(kimbeMarkerColor));
+        int color = ARGB.color((int)(clampedAlpha * 255), U.intToRed(kimbeMarkerColor), U.intToGreen(kimbeMarkerColor), U.intToBlue(kimbeMarkerColor));
 
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED,
                 TEXTURE, width / 2 - 32, height / 2 - 32 - 16,
                 128, 128, 64, 64, 256, 256, color);
 
-        poseStack.popPose();
+        poseStack.popMatrix();
     }
 
     public void renderPointer(GuiGraphics guiGraphics, Matrix3x2fStack poseStack, float partialTick)

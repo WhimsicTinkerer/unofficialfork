@@ -37,8 +37,9 @@ public class HitFakeParticle
         // In 1.21.11, color tinting is applied via blit color parameter
         int color = ARGB.color((int)(a * 255), (int)(r * 255), (int)(g * 255), (int)(b * 255));
 
+        // Draw centered at the translated position (-8 to center the 16x16 sprite)
         guiGraphics.blit(
-                RenderPipelines.GUI_TEXTURED, TEXTURE, width / 2 - 8, height / 2 - 8,
+                RenderPipelines.GUI_TEXTURED, TEXTURE, -8, -8,
                 16, 16, 80, 160, 16, 16, 256, 256, color);
 
         poseStack.popMatrix();

@@ -44,7 +44,7 @@ public class TackleSkinRenderHelper
             // Construct ModelLayerLocation from the identifier
             ModelLayerLocation layerLoc = new ModelLayerLocation(skin.getLayerLocationId(), "main");
             data.model = new FishingBobModel(context.bakeLayer(layerLoc));
-            data.renderType = RenderTypes.entityCutout(textureId);
+            data.renderType = RenderTypes.entityCutoutNoCull(textureId);
         }
 
         data.model.setupAnim(renderState);

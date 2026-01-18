@@ -1,0 +1,9 @@
+{
+  "sources": [
+    {
+      "type": "directory",
+      "source": "item/background",
+      "prefix": "item/background/"
+    }
+  ]
+}

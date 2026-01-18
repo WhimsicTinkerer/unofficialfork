@@ -4,9 +4,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.nikdo53.tinymultiblocklib.block.IMultiBlock;
 
-// TODO: Re-enable when TinyMultiblockLib 1.21.11 is available
-// Stub class for compilation
+/**
+ * Base block entity class for multiblock structures
+ */
 public abstract class AbstractMultiBlockEntity extends BlockEntity {
 
     public AbstractMultiBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -20,8 +22,13 @@ public abstract class AbstractMultiBlockEntity extends BlockEntity {
         }
     }
 
-    // Stub method - in real TinyMultiblockLib this checks if this block entity is the center of a multiblock
+    /**
+     * Check if this block entity is at the center position of the multiblock
+     * @return true if this is the center block entity
+     */
     public boolean isCenter() {
-        return true;
+        if (level == null) return true;
+        BlockPos center = IMultiBlock.getCenter(level, worldPosition);
+        return center.equals(worldPosition);
     }
 }

@@ -2,6 +2,7 @@ package com.wdiscute.starcatcher.bob;
 
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 // In 1.21.11, Model.renderToBuffer() and root() are final - no overriding needed
 public class FishingBobModel extends EntityModel<FishingBobRenderState>
@@ -10,7 +11,8 @@ public class FishingBobModel extends EntityModel<FishingBobRenderState>
     private final ModelPart rootPart;
 
     public FishingBobModel(ModelPart root) {
-        super(root);
+        // Pass a RenderType function to the parent - this is required for proper texture rendering
+        super(root, rl -> RenderTypes.entityCutoutNoCull(rl));
         // The model has a child called "root" that we use for animations
         this.rootPart = root.getChild("root");
     }
