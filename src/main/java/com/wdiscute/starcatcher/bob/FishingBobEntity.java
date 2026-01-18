@@ -317,11 +317,14 @@ public class FishingBobEntity extends Projectile
         }
     }
 
-    @Override
+    /**
+     * Custom kill method that cleans up the fishing bob attachment.
+     * In 1.21.11, Entity.kill() takes no parameters - we use discard() for removal.
+     */
     public void kill(ServerLevel level)
     {
         ModDataAttachments.remove(player, ModDataAttachments.FISHING_BOB);
-        super.kill(level);
+        this.discard();
     }
 
     @Override

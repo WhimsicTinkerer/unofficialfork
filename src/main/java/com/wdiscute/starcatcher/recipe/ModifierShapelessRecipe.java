@@ -41,7 +41,7 @@ public class ModifierShapelessRecipe implements CraftingRecipe
     }
 
     @Override
-    public RecipeSerializer<? extends CraftingRecipe> getSerializer()
+    public RecipeSerializer<ModifierShapelessRecipe> getSerializer()
     {
         return ModRecipes.MODIFIER_SHAPELESS_RECIPE.get();
     }
@@ -68,6 +68,7 @@ public class ModifierShapelessRecipe implements CraftingRecipe
         return this.placementInfo;
     }
 
+    @Override
     public boolean matches(CraftingInput input, Level level)
     {
         if (input.ingredientCount() != this.ingredients.size())
@@ -90,6 +91,7 @@ public class ModifierShapelessRecipe implements CraftingRecipe
         }
     }
 
+    @Override
     public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries)
     {
         return this.result.copy();

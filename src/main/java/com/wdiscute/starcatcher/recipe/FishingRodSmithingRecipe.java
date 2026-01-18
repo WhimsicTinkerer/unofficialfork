@@ -91,7 +91,7 @@ public record FishingRodSmithingRecipe(
     }
 
     @Override
-    public RecipeSerializer<? extends SmithingRecipe> getSerializer()
+    public RecipeSerializer<FishingRodSmithingRecipe> getSerializer()
     {
         return ModRecipes.FISHING_ROD_SMITHING.get();
     }

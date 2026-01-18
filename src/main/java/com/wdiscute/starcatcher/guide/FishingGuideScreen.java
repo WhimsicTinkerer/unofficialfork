@@ -45,6 +45,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraft.client.renderer.RenderPipelines;
 
 import java.awt.*;
 import java.util.*;
@@ -1024,7 +1025,7 @@ public class FishingGuideScreen extends Screen
         // In 1.21.11, color tinting is handled via RenderPipeline or blitWithColor
         // For now, render the glow with the ARGB color applied
         int tintedColor = ARGB.color((int)(alpha * 255), (int)(red * 255), (int)(green * 255), (int)(blue * 255));
-        guiGraphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, GLOW, xOffset - 1, yOffset - 1, 18, 18, tintedColor);
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, GLOW, xOffset - 1, yOffset - 1, 18, 18, tintedColor);
 
         //render fish with missingno if not caught
         if (caught != 0)
@@ -1034,7 +1035,7 @@ public class FishingGuideScreen extends Screen
 
         //render fish notification icon
         if (fishCaughtCounter != null && fishCaughtCounter.hasGuideNotification())
-            guiGraphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, STAR, xOffset + 10, yOffset + 7, 0, 0, 10, 10, 10, 10);
+            guiGraphics.blit(RenderPipelines.GUI_TEXTURED, STAR, xOffset + 10, yOffset + 7, 0, 0, 10, 10, 10, 10);
 
 
         //render tooltip
@@ -1171,19 +1172,19 @@ public class FishingGuideScreen extends Screen
 
             //spring
             if (U.containsAny(seasons, Seasons.ALL, Seasons.SPRING, Seasons.EARLY_SPRING, Seasons.MID_SPRING, Seasons.LATE_SPRING))
-                guiGraphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, SEASONS, uiX + xOffset + seasonX, uiY + seasonY, 8, 8, 0, 0, 8, 8, 32, 8);
+                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SEASONS, uiX + xOffset + seasonX, uiY + seasonY, 8, 8, 0, 0, 8, 8, 32, 8);
 
             //summer
             if (U.containsAny(seasons, Seasons.ALL, Seasons.SUMMER, Seasons.EARLY_SUMMER, Seasons.MID_SUMMER, Seasons.LATE_SUMMER))
-                guiGraphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, SEASONS, uiX + xOffset + seasonX + spacing * 1, uiY + seasonY, 8, 8, 8, 0, 8, 8, 32, 8);
+                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SEASONS, uiX + xOffset + seasonX + spacing * 1, uiY + seasonY, 8, 8, 8, 0, 8, 8, 32, 8);
 
             //autumn
             if (U.containsAny(seasons, Seasons.ALL, Seasons.AUTUMN, Seasons.EARLY_AUTUMN, Seasons.MID_AUTUMN, Seasons.LATE_AUTUMN))
-                guiGraphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, SEASONS, uiX + xOffset + seasonX + spacing * 2, uiY + seasonY, 8, 8, 16, 0, 8, 8, 32, 8);
+                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SEASONS, uiX + xOffset + seasonX + spacing * 2, uiY + seasonY, 8, 8, 16, 0, 8, 8, 32, 8);
 
             //winter
             if (U.containsAny(seasons, Seasons.ALL, Seasons.WINTER, Seasons.EARLY_WINTER, Seasons.MID_WINTER, Seasons.LATE_WINTER))
-                guiGraphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, SEASONS, uiX + xOffset + seasonX + spacing * 3, uiY + seasonY, 8, 8, 24, 0, 8, 8, 32, 8);
+                guiGraphics.blit(RenderPipelines.GUI_TEXTURED, SEASONS, uiX + xOffset + seasonX + spacing * 3, uiY + seasonY, 8, 8, 24, 0, 8, 8, 32, 8);
 
 
             if (x > xOffset + 70 && x < xOffset + 140 && y > 46 && y < 57)
@@ -1245,7 +1246,7 @@ public class FishingGuideScreen extends Screen
 
         // In 1.21.11, color tinting is handled via RenderPipeline
         int tintedColor2 = ARGB.color((int)(alpha * 255), (int)(red * 255), (int)(green * 255), (int)(blue * 255));
-        if (fcc != null) guiGraphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, GLOW, uiX + xOffset + 10, uiY + 55, 48, 48, tintedColor2);
+        if (fcc != null) guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, GLOW, uiX + xOffset + 10, uiY + 55, 48, 48, tintedColor2);
 
         //render new fish icon
         FishCaughtCounter counter = fishCaughtCounterMap.get(U.getRlFromFp(level, fp));
@@ -1711,12 +1712,12 @@ public class FishingGuideScreen extends Screen
 
     private void renderImage(GuiGraphics guiGraphics, Identifier rl, int xOffset, int yOffset)
     {
-        guiGraphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, rl, uiX + xOffset, uiY + yOffset, 0, 0, 420, 260, 420, 260);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, rl, uiX + xOffset, uiY + yOffset, 0, 0, 420, 260, 420, 260);
     }
 
     private void renderImageWithColor(GuiGraphics guiGraphics, Identifier rl, int xOffset, int yOffset, int color)
     {
-        guiGraphics.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, rl, uiX + xOffset, uiY + yOffset, 0, 0, 420, 260, 420, 260, color);
+        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, rl, uiX + xOffset, uiY + yOffset, 0, 0, 420, 260, 420, 260, color);
     }
 
     private void renderItem(ItemStack stack, int x, int y)

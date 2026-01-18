@@ -14,6 +14,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.client.renderer.RenderPipelines;
 
 public class FishCaughtToast implements Toast
 {
@@ -75,7 +76,7 @@ public class FishCaughtToast implements Toast
     @Override
     public void render(GuiGraphics guiGraphics, Font font, long timeSinceLastVisible)
     {
-        guiGraphics.blitSprite(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, width(), height());
+        guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, width(), height());
 
         guiGraphics.renderItem(is, 6, 29);
 

@@ -14,6 +14,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
@@ -186,26 +187,33 @@ public class NewSettingsScreen extends FishingMinigameScreen {
 
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED,
                     texture, getX(), getY(),
-                    getWidth(), getHeight(), uOffset, vOffset, getWidth(), getHeight(), textureWidth, textureHeight);
+                    uOffset, vOffset, getWidth(), getHeight(), textureWidth, textureHeight);
 
         }
 
+        @Override
+        public boolean mouseClicked(MouseButtonEvent event, boolean focused) {
+            double mouseX = event.x();
+            double mouseY = event.y();
+            if (!this.isMouseOver(mouseX, mouseY)) return false;
 
-        public void onClick(double mouseX, double mouseY) {
             //left button
             if (mouseX < getX() + buttonWidth){
-                if (leftLimit != null && value.get().compareTo(leftLimit) <= 0) return;
+                if (leftLimit != null && value.get().compareTo(leftLimit) <= 0) return true;
 
                 leftAction.run();
+                return true;
             }
 
 
             //right button
             if (mouseX > getRight() - buttonWidth){
-                if (rightLimit != null && value.get().compareTo(rightLimit) >= 0) return;
+                if (rightLimit != null && value.get().compareTo(rightLimit) >= 0) return true;
 
                 rightAction.run();
+                return true;
             }
+            return false;
         }
 
         @Override
@@ -229,11 +237,16 @@ public class NewSettingsScreen extends FishingMinigameScreen {
             //GUI SCALE
             guiGraphics.blit(RenderPipelines.GUI_TEXTURED,
                     GUI_SCALE, getX(), getY(),
-                    getWidth(), getHeight(), 0, 0, getWidth(), getHeight(), getWidth(), getHeight());
+                    0, 0, getWidth(), getHeight(), getWidth(), getHeight());
 
         }
 
-        public void onClick(double mouseX, double mouseY) {
+        @Override
+        public boolean mouseClicked(MouseButtonEvent event, boolean focused) {
+            double mouseX = event.x();
+            double mouseY = event.y();
+            if (!this.isMouseOver(mouseX, mouseY)) return false;
+
             int current = guiScale().get();
 
             // if it's on the right half
@@ -244,6 +257,7 @@ public class NewSettingsScreen extends FishingMinigameScreen {
             } else {
                 guiScale().set(current + 1);
             }
+            return true;
         }
 
         @Override

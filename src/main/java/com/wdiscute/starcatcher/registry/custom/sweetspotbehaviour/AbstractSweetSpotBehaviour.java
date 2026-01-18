@@ -1,7 +1,7 @@
 package com.wdiscute.starcatcher.registry.custom.sweetspotbehaviour;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wdiscute.starcatcher.minigame.ActiveSweetSpot;
+import org.joml.Matrix3x2fStack;
 import com.wdiscute.starcatcher.minigame.FishingMinigameScreen;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.ARGB;
@@ -44,7 +44,7 @@ public abstract class AbstractSweetSpotBehaviour
     {
     }
 
-    public void render(GuiGraphics guiGraphics, PoseStack poseStack, float partialTick)
+    public void render(GuiGraphics guiGraphics, Matrix3x2fStack poseStack, float partialTick)
     {
         if (ass.removed) return;
 

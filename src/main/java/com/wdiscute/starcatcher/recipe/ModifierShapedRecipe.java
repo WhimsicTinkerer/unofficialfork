@@ -58,7 +58,7 @@ public class ModifierShapedRecipe implements CraftingRecipe
     }
 
     @Override
-    public RecipeSerializer<? extends CraftingRecipe> getSerializer()
+    public RecipeSerializer<ModifierShapedRecipe> getSerializer()
     {
         return ModRecipes.MODIFIER_SHAPED_RECIPE.get();
     }
@@ -91,11 +91,13 @@ public class ModifierShapedRecipe implements CraftingRecipe
         return this.showNotification;
     }
 
+    @Override
     public boolean matches(CraftingInput input, Level level)
     {
         return this.pattern.matches(input);
     }
 
+    @Override
     public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries)
     {
         var itemstack = this.result.copy();

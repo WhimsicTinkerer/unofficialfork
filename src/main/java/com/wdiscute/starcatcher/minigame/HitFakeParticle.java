@@ -30,7 +30,6 @@ public class HitFakeParticle
 
     public void render(GuiGraphics guiGraphics, int width, int height)
     {
-        // In 1.21.11, guiGraphics.pose() returns Matrix3x2fStack
         Matrix3x2fStack poseStack = guiGraphics.pose();
         poseStack.pushMatrix();
         poseStack.translate((float)pos.x, (float)pos.y);

@@ -3,7 +3,6 @@ package com.wdiscute.starcatcher.guide;
 import com.wdiscute.starcatcher.client.ClientHelper;
 import com.wdiscute.starcatcher.io.Units;
 import net.minecraft.client.renderer.RenderPipelines;
-import org.joml.Matrix3x2fStack;
 import com.wdiscute.starcatcher.Config;
 import com.wdiscute.starcatcher.U;
 import com.wdiscute.starcatcher.registry.ModItems;

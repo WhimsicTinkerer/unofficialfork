@@ -1,8 +1,8 @@
 package com.wdiscute.starcatcher.registry.custom.minigamemodifiers;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wdiscute.starcatcher.Starcatcher;
+import org.joml.Matrix3x2fStack;
 import com.wdiscute.starcatcher.minigame.ActiveSweetSpot;
 import com.wdiscute.starcatcher.minigame.FishingMinigameScreen;
 import net.minecraft.client.Minecraft;
@@ -10,7 +10,6 @@ import net.minecraft.client.Options;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
-import org.joml.Matrix3x2fStack;
 
 public class Nikdo53Modifier extends AbstractMinigameModifier
 {
@@ -86,7 +85,7 @@ public class Nikdo53Modifier extends AbstractMinigameModifier
     }
 
     @Override
-    public void renderOnPointer(GuiGraphics guiGraphics, PoseStack poseStack, float partialTick) {
+    public void renderOnPointer(GuiGraphics guiGraphics, Matrix3x2fStack poseStack, float partialTick) {
         if (pointerLayer == 0) {
             FishingMinigameScreen.renderPoseCentered(guiGraphics, POINTER_SMALL, 128);
         } else {
@@ -96,14 +95,14 @@ public class Nikdo53Modifier extends AbstractMinigameModifier
 
 
     @Override
-    public void renderOnSweetSpot(GuiGraphics guiGraphics, PoseStack poseStack, ActiveSweetSpot spot, float partialTick) {
+    public void renderOnSweetSpot(GuiGraphics guiGraphics, Matrix3x2fStack poseStack, ActiveSweetSpot spot, float partialTick) {
         if (spot.behaviour == null) return;
 
-        poseStack.pushPose();
+        poseStack.pushMatrix();
 
         int layer = getSpotLayer(spot);
 
-        poseStack.translate(0, -9 * layer, 0);
+        poseStack.translate(0, -9 * layer);
 
         // Dim when not in use
         // TODO: RenderSystem.setShaderColor was removed in 1.21.11, find replacement
@@ -114,7 +113,7 @@ public class Nikdo53Modifier extends AbstractMinigameModifier
 
         // RenderSystem.setShaderColor(1, 1, 1, 1);
 
-        poseStack.popPose();
+        poseStack.popMatrix();
     }
 
     @Override
